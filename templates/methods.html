@@ -1,0 +1,85 @@
+<h1>Data Seyance</h1>
+
+[ <a href="index">Home</a>
+| <a href="seances">Seances</a> | <a href="locations">Locations</a>  | <a href="channelings">Channelings</a>
+| <a href="spirits">Spirits</a> | <a href="attendees">Attendees</a> | <a href="mediums">Mediums</a>
+| <a href="methods">Methods</a> | <a href="seanceattendees">Seance Guest Lists</a>
+]
+<div>
+&nbsp;
+</div>
+
+<table border="5" cellpadding="10">
+  <tr>
+    <th>method_id</th>
+    <th>name</th>
+    <th>description</th>
+    <th>Delete</th>
+    <th>Edit</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>Spirit Board</td>
+    <td>Medium asks questions of the spirit and the spirit guides their hand over a board of letters and symbols</td>
+    <td><a href="_">Delete</a></td>
+    <td><a href="_">Edit</a></td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Cabinets</td>
+    <td>Medium is placed into a cabinet and the spirit manipulates objects in the room</td>
+    <td><a href="_">Delete</a></td>
+    <td><a href="_">Edit</a></td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>Trance</td>
+    <td>Medium goes into a trance and delivers messages from the summoned spirit. Medium may or may not remember the messages once they wake.</td>
+    <td><a href="_">Delete</a></td>
+    <td><a href="_">Edit</a></td>
+  </tr>
+</table>
+
+<div id="insert" style="display: block">
+  <form id="InsertMethod">
+      <legend><strong>Insert Method</strong></legend>
+          <fieldset class="fields">
+        <label> Name: </label> <input  type="text"  name="name">
+        <label> Description: </label> <textarea rows="3" cols="100" name="description" form="InsertMethod"></textarea>
+    </fieldset>
+    <input class="btn" type="submit" id="InsertMethod" value="Insert Method">
+  </form>
+</div>
+
+<div>
+&nbsp;
+</div>
+
+<div id="update" style="display: block">
+  <form id="UpdateMethod">
+      <legend><strong>Update Method</strong></legend>
+        <fieldset class="fields">
+            <label> Current Name (To be updated): </label> <input type="text" name="current name">
+        </fieldset>
+        <fieldset class="fields">
+         <label> Name: </label> <input  type="text"  name="name">
+         <label> Description: </label> <textarea rows="3" cols="100" name="description" form="UpdateMethod"></textarea>
+    </fieldset>
+    <input class="btn" type="submit" id="UpdateMethod" value="Update Method">
+  </form>
+</div>
+
+
+<div>
+&nbsp;
+</div>
+
+<div id="insert" style="display: block">
+  <form id="DeleteMethod">
+      <legend><strong>Delete Method</strong></legend>
+          <fieldset class="fields">
+             <label> Name: </label> <input  type="text"  name="name">
+    </fieldset>
+    <input class="btn" type="submit" id="DeleteMethod" value="Delete Method">
+  </form>
+</div>
