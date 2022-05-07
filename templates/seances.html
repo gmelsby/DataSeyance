@@ -2,12 +2,47 @@
 
 [ <a href="index">Home</a>
 | <a href="seances">Seances</a> | <a href="locations">Locations</a>  | <a href="channelings">Channelings</a>
-| <a href="spirits">Spirits</a> | <a href="attendees">Attendees</a> | <a href="mediums">Medium</a>
+| <a href="spirits">Spirits</a> | <a href="attendees">Attendees</a> | <a href="mediums">Mediums</a>
+| <a href="methods">Methods</a> | <a href="seanceattendees">Seance Guest Lists</a>
 ]
 
 <div>
 &nbsp;
 </div>
+
+<table border="5" cellpadding="10">
+  <tr>
+    <th>seance_id</th>
+    <th>Location Name</th>
+    <th>Date</th>
+    <th>Delete</th>
+    <th>Edit</th>
+    <th>Add Attendee</th>
+    <th>List Attendees</th>
+    <th>Remove Attendee</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>Edgar Cayce's Houston A.R.E. Center</td>
+    <td>1920-08-26</td>
+    <td><a href="_">Delete</a></td>
+    <td><a href="_">Edit</a></td>
+    <td><a href="_">Add Attendee</a></td>
+    <td><a href="_">List Attendees</a></td>
+    <td><a href="_">Remove Attendee</a></td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Beachland Ballroom & Tavern</td>
+    <td>1857-11-21</td>
+    <td><a href="_">Delete</a></td>
+    <td><a href="_">Edit</a></td>
+    <td><a href="seanceattendees">Add Attendee</a></td>
+    <td><a href="seanceattendees">List Attendees</a></td>
+    <td><a href="seanceattendees">Remove Attendee</a></td>
+</tr>
+</table>
+
 
 <div id="insert" style="display: block">
   <form id="InsertSeance">
@@ -17,7 +52,6 @@
             <label> Location: </label> <input type="text"  >
     </fieldset>
     <input class="btn" type="submit" id="InsertSeance" value="Insert Seance">
-          <input class="btn" type="button" value="cancel" >
   </form>
 </div>
 <div>
@@ -26,12 +60,17 @@
 <div id="update" style="display: block">
   <form id="updateSeance">
       <legend><strong>Update Seance</strong></legend>
-          <fieldset class="fields">
+      <legend>Current Information (To be updated)</legend>
+      <fieldset class="fields">
+         <label> Date: </label> <input type="date"  name="date">
+         <label> Location: </label> <input type="text"  >
+      </fieldset>
+     <legend>New Information</legend>
+      <fieldset class="fields">
             <label> Date: </label> <input type="date"  name="date">
             <label> Location: </label> <input type="text"  >
     </fieldset>
     <input class="btn" type="submit" id="UpdateSeance" value="Update Seance">
-          <input class="btn" type="button" value="cancel" >
   </form>
 </div>
 
@@ -46,6 +85,5 @@
             <label> Location: </label> <input type="text"  >
     </fieldset>
     <input class="btn" type="submit" id="DeleteSeance" value="Delete Seance">
-          <input class="btn" type="button" value="cancel" >
   </form>
 </div>

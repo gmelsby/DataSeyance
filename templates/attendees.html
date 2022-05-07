@@ -2,11 +2,39 @@
 
 [ <a href="index">Home</a>
 | <a href="seances">Seances</a> | <a href="locations">Locations</a>  | <a href="channelings">Channelings</a>
-| <a href="spirits">Spirits</a> | <a href="attendees">Attendees</a> | <a href="mediums">Medium</a>
+| <a href="spirits">Spirits</a> | <a href="attendees">Attendees</a> | <a href="mediums">Mediums</a>
+| <a href="methods">Methods</a> | <a href="seanceattendees">Seance Guest Lists</a>
 ]
 <div>
 &nbsp;
 </div>
+
+<table border="5" cellpadding="10">
+  <tr>
+    <th>attendee_id</th>
+    <th>full_name</th>
+    <th>Delete</th>
+    <th>Edit</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>Bess Houdini</td>
+    <td><a href="_">Delete</a></td>
+    <td><a href="_">Edit</a></td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Sir Arthur Conan Doyle</td>
+    <td><a href="_">Delete</a></td>
+    <td><a href="_">Edit</a></td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>Hilma Klimt</td>
+    <td><a href="_">Delete</a></td>
+    <td><a href="_">Edit</a></td>
+  </tr>
+</table>
 
 <div id="insert" style="display: block">
   <form id="InsertAttendee">
@@ -14,11 +42,10 @@
           <fieldset class="fields">
         <label> Name Prefix: </label> <input  type="text"  name="date">
         <label> First Name: </label> <input  type="text"  name="date">
-        <label> Last Prefix: </label> <input  type="text"  name="date">
+        <label> Last Name: </label> <input  type="text"  name="date">
         <label> Name Suffix: </label> <input  type="text"  name="date">
     </fieldset>
     <input class="btn" type="submit" id="InsertAttendee" value="Insert Attendee">
-          <input class="btn" type="button" value="cancel" >
   </form>
 </div>
 
@@ -29,14 +56,18 @@
 <div id="update" style="display: block">
   <form id="UpdateAttendee">
       <legend><strong>Update Attendee</strong></legend>
+      <fieldset>
+       <label> Current Full Name (To Be Changed): </label> <input  type="text"  name="date">
+      </fieldset>
+      <br>
+      <legend>New Information</legend>
           <fieldset class="fields">
         <label> Name Prefix: </label> <input  type="text"  name="date">
         <label> First Name: </label> <input  type="text"  name="date">
-        <label> Last Prefix: </label> <input  type="text"  name="date">
+        <label> Last Name: </label> <input  type="text"  name="date">
         <label> Name Suffix: </label> <input  type="text"  name="date">
     </fieldset>
     <input class="btn" type="submit" id="UpdateAttendee" value="Update Attendee">
-          <input class="btn" type="button" value="cancel" >
   </form>
 </div>
 
@@ -49,12 +80,8 @@
   <form id="DeleteAttendee">
       <legend><strong>Delete Attendee</strong></legend>
           <fieldset class="fields">
-        <label> Name Prefix: </label> <input  type="text"  name="date">
-        <label> First Name: </label> <input  type="text"  name="date">
-        <label> Last Prefix: </label> <input  type="text"  name="date">
-        <label> Name Suffix: </label> <input  type="text"  name="date">
+        <label> Full Name: </label> <input  type="text"  name="date">
     </fieldset>
     <input class="btn" type="submit" id="DeleteAttendee" value="Delete Attendee">
-          <input class="btn" type="button" value="cancel" >
   </form>
 </div>

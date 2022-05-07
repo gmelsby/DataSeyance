@@ -2,12 +2,41 @@
 
 [ <a href="index">Home</a>
 | <a href="seances">Seances</a> | <a href="locations">Locations</a>  | <a href="channelings">Channelings</a>
-| <a href="spirits">Spirits</a> | <a href="attendees">Attendees</a> | <a href="mediums">Medium</a>
+| <a href="spirits">Spirits</a> | <a href="attendees">Attendees</a> | <a href="mediums">Mediums</a>
+| <a href="methods">Methods</a> | <a href="seanceattendees">Seance Guest Lists</a>
 ]
 
 <div>
 &nbsp;
 </div>
+
+<table border="5" cellpadding="10">
+  <tr>
+    <th>spirit_id</th>
+    <th>full_name</th>
+    <th>Delete</th>
+    <th>Edit</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>Black Hawk</td>
+    <td><a href="_">Delete</a></td>
+    <td><a href="_">Edit</a></td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Harry Houdini</td>
+    <td><a href="_">Delete</a></td>
+    <td><a href="_">Edit</a></td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>Bartholomew Governor of the House of Strangers</td>
+    <td><a href="_">Delete</a></td>
+    <td><a href="_">Edit</a></td>
+  </tr>
+</table>
+
 
 <div id="insert" style="display: block">
   <form id="InsertSpirit">
@@ -19,7 +48,6 @@
         <label> Name Suffix: </label> <input  type="text"  name="date">
     </fieldset>
     <input class="btn" type="submit" id="InsertSpirit" value="Insert Spirit">
-          <input class="btn" type="button" value="cancel" >
   </form>
 </div>
 
@@ -30,14 +58,19 @@
 <div id="update" style="display: block">
   <form id="UpdateSpirit">
       <legend><strong>Update Spirit</strong></legend>
-          <fieldset class="fields">
+        <fieldset class="fields">
+        <label> Current Full Name (To Be Changed): </label> <input  type="text"  name="date">
+        </fieldset>
+
+      <br>
+      <legend>New Information</legend>
+        <fieldset class="fields">
         <label> Name Prefix: </label> <input  type="text"  name="date">
         <label> First Name: </label> <input  type="text"  name="date">
         <label> Last Prefix: </label> <input  type="text"  name="date">
         <label> Name Suffix: </label> <input  type="text"  name="date">
     </fieldset>
     <input class="btn" type="submit" id="UpdateSpirit" value="Update Spirit">
-          <input class="btn" type="button" value="cancel" >
   </form>
 </div>
 
@@ -55,6 +88,5 @@
         <label> Name Suffix: </label> <input  type="text"  name="date">
     </fieldset>
     <input class="btn" type="submit" id="DeleteSpirit" value="Delete Spirit">
-          <input class="btn" type="button" value="cancel" >
   </form>
 </div>

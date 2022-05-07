@@ -2,12 +2,52 @@
 
 [ <a href="index">Home</a>
 | <a href="seances">Seances</a> | <a href="locations">Locations</a>  | <a href="channelings">Channelings</a>
-| <a href="spirits">Spirits</a> | <a href="attendees">Attendees</a> | <a href="mediums">Medium</a>
+| <a href="spirits">Spirits</a> | <a href="attendees">Attendees</a> | <a href="mediums">Mediums</a>
+| <a href="methods">Methods</a> | <a href="seanceattendees">Seance Guest Lists</a>
 ]
 
 <div>
 &nbsp;
 </div>
+
+<table border="5" cellpadding="10">
+  <tr>
+    <th>location_id</th>
+    <th>name</th>
+    <th>street_address</th>
+    <th>city</th>
+    <th>zip</th>
+    <th>state</th>
+    <th>country</th>
+    <th>Delete</th>
+    <th>Edit</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>Barnum's Hotel</td>
+    <td>170 Broadway</td>
+    <td>New York</td>
+    <td>10007</td>
+    <td>NY</td>
+    <td>US</td>
+    <td><a href="_">Delete</a></td>
+    <td><a href="_">Edit</a></td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Beachland Ballroom & Tavern</td>
+    <td>15711 Waterloo Rd</td>
+    <td>Cleveland</td>
+    <td>44110</td>
+    <td>OH</td>
+    <td>US</td>
+    <td><a href="_">Delete</a></td>
+    <td><a href="_">Edit</a></td>
+  </tr>
+</table>
+
+
+
 
 <div id="insert" style="display: block">
   <form id="InsertLocation">
@@ -21,7 +61,6 @@
           <label> Country: </label> <input type="text"  >
     </fieldset>
     <input class="btn" type="submit" id="InsertLocation" value="Insert Location">
-          <input class="btn" type="button" value="cancel" >
   </form>
 </div>
 
@@ -31,18 +70,29 @@
 </div>
 
 <div id="update" style="display: block">
-  <form id="UpdateLocation">
+    <form id="UpdateLocation">
       <legend><strong>Update Location</strong></legend>
-          <fieldset class="fields">
+      <legend>Current Information (To be updated)</legend>
+      <fieldset class="fields">
+        <label> Name: </label> <input  type="text"  name="date">
+        <label> Street Address: </label> <input  type="text"  name="date">
+        <label> City: </label> <input  type="text"  name="date">
+        <label> Zip: </label> <input  type="text"  name="date">
+        <label> State: </label> <input  type="text"  name="date">
+        <label> Country: </label> <input  type="text"  name="date">
+      </fieldset>
+
+      <br>
+      <legend>New Information</legend>
+      <fieldset class="fields">
         <label> Name: </label> <input type="text"  name="name">
         <label> Street Address: </label> <input type="text"  >
         <label> City: </label> <input type="text"  >
         <label> Zip: </label> <input type="text"  >
         <label> State: </label> <input type="text"  >
-          <label> Country: </label> <input type="text"  >
+        <label> Country: </label> <input type="text"  >
     </fieldset>
     <input class="btn" type="submit" id="UpdateLocation" value="Update Location">
-          <input class="btn" type="button" value="cancel" >
   </form>
 </div>
 
@@ -53,16 +103,15 @@
 <div id="delete" style="display: block">
   <form id="DeleteLocation">
       <legend><strong>Delete Location</strong></legend>
-          <fieldset class="fields">
+      <fieldset class="fields">
         <label> Name: </label> <input type="text"  name="name">
         <label> Street Address: </label> <input type="text"  >
         <label> City: </label> <input type="text"  >
         <label> Zip: </label> <input type="text"  >
         <label> State: </label> <input type="text"  >
-          <label> Country: </label> <input type="text"  >
+        <label> Country: </label> <input type="text"  >
     </fieldset>
     <input class="btn" type="submit" id="DeleteLocation" value="Delete Location">
-          <input class="btn" type="button" value="cancel" >
   </form>
 </div>
 

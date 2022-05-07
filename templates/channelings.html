@@ -2,12 +2,55 @@
 
 [ <a href="index">Home</a>
 | <a href="seances">Seances</a> | <a href="locations">Locations</a>  | <a href="channelings">Channelings</a>
-| <a href="spirits">Spirits</a> | <a href="attendees">Attendees</a> | <a href="mediums">Medium</a>
+| <a href="spirits">Spirits</a> | <a href="attendees">Attendees</a> | <a href="mediums">Mediums</a>
+| <a href="methods">Methods</a> | <a href="seanceattendees">Seance Guest Lists</a>
 ]
 
 <div>
 &nbsp;
 </div>
+
+<table border="5" cellpadding="10">
+  <tr>
+    <th>channeling_id</th>
+    <th>Medium Name</th>
+    <th>Spirit Name</th>
+    <th>Method</th>
+    <th>Date</th>
+    <th>Location</th>
+    <th>is_successful</th>
+    <th>length_in_minutes</th>
+    <th>Delete</th>
+    <th>Edit</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>Arthur Ford</td>
+    <td>Harry Houdini</td>
+    <td>Trance</td>
+    <td>1920-08-26</td>
+    <td>Edgar Cayce's Houston A.R.E. Center</td>
+    <td>1</td>
+    <td>30</td>
+    <td><a href="_">Delete</a></td>
+    <td><a href="_">Edit</a></td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Kate Fox</td>
+    <td>Black Hawk</td>
+    <td>Cabinets</td>
+    <td>1857-11-21</td>
+    <td>Beachland Ballroom & Tavern</td>
+    <td>0</td>
+    <td>150</td>
+    <td><a href="_">Delete</a></td>
+    <td><a href="_">Edit</a></td>
+  </tr>
+</table>
+
+
+
 <div id="insert" style="display: block">
   <form id="InsertChanneling">
       <legend><strong>Insert Channeling</strong></legend>
@@ -16,13 +59,11 @@
         <label> Seance Date: </label> <input  type="text"  name="date">
         <label> Medium Full Name: </label> <input  type="text"  name="medium">
         <label> Spirit Full Name: </label> <input  type="text"  name="spirit">
-          </fieldset>
-      <fieldset class="fields">
+        <br>
         <label> Channeling Was Successful: </label><input  type="checkbox"  name="success">
       <label> Channeling Length (in minutes): </label> <input  type="number"  name="length">
-    </fieldset>
+          </fieldset>
     <input class="btn" type="submit" id="InsertChanneling" value="Insert Channeling">
-          <input class="btn" type="button" value="cancel" >
   </form>
 </div>
 
@@ -33,18 +74,28 @@
 <div id="update" style="display: block">
   <form id="UpdateChanneling">
       <legend><strong>Update Channeling</strong></legend>
-          <fieldset class="fields">
+      <legend>Current Information (To be updated)</legend>
+        <fieldset class="fields">
+         <label> Seance Location: </label> <input  type="text"  name="Location">
+          <label> Seance Date: </label> <input  type="text"  name="date">
+          <label> Medium Full Name: </label> <input  type="text"  name="medium">
+          <label> Spirit Full Name: </label> <input  type="text"  name="spirit">
+        <br>
+          <label> Channeling Was Successful: </label><input  type="checkbox"  name="success">
+        <label> Channeling Length (in minutes): </label> <input  type="number"  name="length">
+        </fieldset>
+        <br>
+      <legend>New Information</legend>
+        <fieldset class="fields">
         <label> Seance Location: </label> <input  type="text"  name="Location">
         <label> Seance Date: </label> <input  type="text"  name="date">
         <label> Medium Full Name: </label> <input  type="text"  name="medium">
         <label> Spirit Full Name: </label> <input  type="text"  name="spirit">
-          </fieldset>
-      <fieldset class="fields">
+        <br>
         <label> Channeling Was Successful: </label><input  type="checkbox"  name="success">
       <label> Channeling Length (in minutes): </label> <input  type="number"  name="length">
-    </fieldset>
+        </fieldset>
     <input class="btn" type="submit" id="UpdateChanneling" value="Update Channeling">
-          <input class="btn" type="button" value="cancel" >
   </form>
 </div>
 
@@ -55,17 +106,15 @@
 <div id="delete" style="display: block">
   <form id="DeleteChanneling">
       <legend><strong>Delete Channeling</strong></legend>
-          <fieldset class="fields">
+        <fieldset class="fields">
         <label> Seance Location: </label> <input  type="text"  name="Location">
         <label> Seance Date: </label> <input  type="text"  name="date">
         <label> Medium Full Name: </label> <input  type="text"  name="medium">
         <label> Spirit Full Name: </label> <input  type="text"  name="spirit">
-          </fieldset>
-      <fieldset class="fields">
+          <br>
         <label> Channeling Was Successful: </label><input  type="checkbox"  name="success">
       <label> Channeling Length (in minutes): </label> <input  type="number"  name="length">
-    </fieldset>
+      </fieldset>
     <input class="btn" type="submit" id="DeleteChanneling" value="Delete Channeling">
-          <input class="btn" type="button" value="cancel" >
   </form>
 </div>
