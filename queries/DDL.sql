@@ -173,7 +173,7 @@ seanceattendees_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
 attendee_id INT,
 seance_id INT,
 FOREIGN KEY(attendee_id) REFERENCES Attendees(attendee_id) ON DELETE SET NULL,
-FOREIGN KEY(seance_id) REFERENCES Seances(seance_id) ON DELETE SET NULL
+FOREIGN KEY(seance_id) REFERENCES Seances(seance_id) ON DELETE CASCADE
 );
 
 INSERT INTO SeanceAttendees (attendee_id, seance_id)
