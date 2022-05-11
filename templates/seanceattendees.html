@@ -9,7 +9,7 @@
 &nbsp;
 </div>
 
-<label for="seance-select">Choose a seance:</label>
+<label for="seance-select">Choose a seance to view attendees for:</label>
 <select name="seances" id="seance-select">
     <option value="">Select an option</option>
     <option value="seance1_id">2020-12-25 at Costco</option>
@@ -21,6 +21,7 @@
 </div>
 
 <table border="5" cellpadding="10">
+  <caption>Seance Attendees for Seance that took place on 1920-08-26 at Edgar Cayce's Houston A.R.E. Center</caption>
   <tr>
     <th>attendee_id</th>
     <th>full_name</th>
@@ -42,13 +43,10 @@
 </table>
 
 <div id="insert" style="display: block">
-  <form id="InsertAttendee">
+  <form id="InsertSeanceAttendee">
       <legend><strong>Insert Attendee</strong></legend>
           <fieldset class="fields">
-        <label> Name Prefix: </label> <input  type="text"  name="date">
-        <label> First Name: </label> <input  type="text"  name="date">
-        <label> Last Name: </label> <input  type="text"  name="date">
-        <label> Name Suffix: </label> <input  type="text"  name="date">
+        <label> Full Name: </label> <input  type="text"  name="full_name">
     </fieldset>
     <input class="btn" type="submit" id="InsertAttendee" value="Insert Attendee">
   </form>
@@ -59,7 +57,7 @@
 </div>
 
 <div id="update" style="display: block">
-  <form id="UpdateAttendee">
+  <form id="UpdateSeanceAttendee">
       <legend><strong>Update Attendee</strong></legend>
       <fieldset>
        <label> Current Full Name (To Be Changed): </label> <input  type="text"  name="date">
