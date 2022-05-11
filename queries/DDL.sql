@@ -12,60 +12,48 @@ DROP TABLE IF EXISTS Spirits;
 CREATE TABLE Attendees
 (
 attendee_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY
-, name_prefix VARCHAR(60)
-, first_name VARCHAR(60)
-, last_name VARCHAR(60)
-, name_suffix VARCHAR(60)
-, full_name VARCHAR(243) GENERATED ALWAYS AS (TRIM(REPLACE(CONCAT(IFNULL(name_prefix,''), ' ',IFNULL(first_name,''), ' ',IFNULL(last_name,''),' ' ,IFNULL(name_suffix,'')), '  ', ' ')))
+, full_name VARCHAR(100)
 )
 ;
 
-INSERT INTO Attendees (name_prefix ,first_name, last_name, name_suffix)
-VALUES ( NULL,'Bess', 'Houdini',NULL)
-, ( 'Sir','Arthur Conan','Doyle',NULL)
-, (NULL,'Hilma','Klimt', NULL)
-, (NULL,'Alexander Graham','Bell',NULL)
-, (NULL,'Maggie','Fox',NULL)
-, (NULL,'William T.', 'Stead',NULL);
+INSERT INTO Attendees (full_name)
+VALUES ('Bess Houdini')
+, ( 'Sir Arthur Conan Doyle')
+, ('Hilma Klimt')
+, ('Alexander Graham Bell')
+, ('Maggie Fox')
+, ('William T. Stead');
 
 
 CREATE TABLE Mediums
 (
 medium_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY
-, name_prefix VARCHAR(60)
-, first_name VARCHAR(60)
-, last_name VARCHAR(60)
-, name_suffix VARCHAR(60)
-, full_name VARCHAR(243) GENERATED ALWAYS AS (TRIM(REPLACE(CONCAT(ifnull(name_prefix,''), ' ',IFNULL(first_name,''), ' ',IFNULL(last_name,''),' ' ,IFNULL(name_suffix,'')), '  ', ' ')))
+, full_name VARCHAR(100)
 )
 ;
 
-INSERT INTO Mediums (name_prefix ,first_name, last_name, name_suffix)
-VALUES ( NULL,'Arthur', 'Ford',NULL)
-, ( NULL,'Andrew Jackson','Davis',NULL)
-, (NULL,'Leah','Fox',NULL)
-, (NULL,'Kate','Fox',NULL)
-, (NULL,'Maggie','Fox',NULL)
-, (NULL,'Edgar', 'Cayce',NULL);
+INSERT INTO Mediums (full_name)
+VALUES ('Arthur Ford')
+, ('Andrew Jackson Davis')
+, ('Leah Fox')
+, ('Kate Fox')
+, ('Maggie Fox')
+, ('Edgar Cayce');
 
 
 CREATE TABLE Spirits
 (
 spirit_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY
-, name_prefix VARCHAR(60)
-, first_name VARCHAR(60)
-, last_name VARCHAR(60)
-, name_suffix VARCHAR(60)
-, full_name VARCHAR(243) GENERATED ALWAYS AS (TRIM(REPLACE(CONCAT(IFNULL(name_prefix,''), ' ',IFNULL(first_name,''), ' ',IFNULL(last_name,''),' ' ,IFNULL(name_suffix,'')), '  ', ' ')))
+, full_name VARCHAR(100)
 )
 ;
 
-INSERT INTO Spirits (name_prefix ,first_name, last_name, name_suffix)
-VALUES ( NULL,'Black', 'Hawk',NULL)
-, ( NULL,'Harry','Houdini',NULL)
-, (NULL,'Batholomew',NULL,'Governor of the House of Strangers')
-, (NULL,'Benjamin','Franklin',NULL)
-, (NULL,'Estelle','Livermore',NULL);
+INSERT INTO Spirits (full_name)
+VALUES ('Black Hawk')
+, ('Harry Houdini')
+, ('Batholomew Governor of the House of Strangers')
+, ('Benjamin Franklin')
+, ('Estelle Livermore');
 
 
 CREATE TABLE Methods
