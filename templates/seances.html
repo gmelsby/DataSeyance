@@ -3,7 +3,7 @@
 [ <a href="index">Home</a>
 | <a href="seances">Seances</a> | <a href="locations">Locations</a>  | <a href="channelings">Channelings</a>
 | <a href="spirits">Spirits</a> | <a href="attendees">Attendees</a> | <a href="mediums">Mediums</a>
-| <a href="methods">Methods</a> | <a href="seanceattendees">Seance Attendee Lists</a>
+| <a href="methods">Methods</a> | <a href="seanceattendees">Seance Guest Lists</a>
 ]
 
 <div>
@@ -11,7 +11,6 @@
 </div>
 
 <table border="5" cellpadding="10">
-  <caption>Seances</caption>
   <tr>
     <th>seance_id</th>
     <th>Location Name</th>
@@ -50,12 +49,7 @@
       <legend><strong>Insert Seance</strong></legend>
           <fieldset class="fields">
             <label> Date: </label> <input type="date"  name="date">
-            <label for="loc"> Location: </label>
-            <select name="loc">
-              <option value="NULL">None</option>
-              <option value="Barnum"> Barnum's Hotel | id: 1</option>
-              <option value="Beach"> Beachland Ballroom & Tavern | id: 2</option>
-            </select>
+            <label> Location: </label> <input type="text"  >
     </fieldset>
     <input class="btn" type="submit" id="InsertSeance" value="Insert Seance">
   </form>
@@ -66,21 +60,15 @@
 <div id="update" style="display: block">
   <form id="updateSeance">
       <legend><strong>Update Seance</strong></legend>
-      <label for="toupdate">Seance to Update: </label>
-      <select name="toupdate" id="toupdate">
-        <option value="s1">1920-08-26 at Edgar Cayce's Houston A.R.E. Center | id: 1</option>
-        <option value="s2">1857-11-21 at Beachland Ballroom & Tavern| id: 2</option>
-      </select>
+      <legend>Current Information (To be updated)</legend>
       <fieldset class="fields">
+         <label> Date: </label> <input type="date"  name="date">
+         <label> Location: </label> <input type="text"  >
+      </fieldset>
      <legend>New Information</legend>
       <fieldset class="fields">
-            <label for="loc"> Location: </label>
-              <select name="loc">
-                <option value="NULL">None</option>
-                <option value="Barnum"> Barnum's Hotel | id: 1</option>
-                <option value="Beach"> Beachland Ballroom & Tavern | id: 2</option>
-              </select>
             <label> Date: </label> <input type="date"  name="date">
+            <label> Location: </label> <input type="text"  >
     </fieldset>
     <input class="btn" type="submit" id="UpdateSeance" value="Update Seance">
   </form>
