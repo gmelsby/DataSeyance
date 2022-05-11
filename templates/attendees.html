@@ -3,7 +3,7 @@
 [ <a href="index">Home</a>
 | <a href="seances">Seances</a> | <a href="locations">Locations</a>  | <a href="channelings">Channelings</a>
 | <a href="spirits">Spirits</a> | <a href="attendees">Attendees</a> | <a href="mediums">Mediums</a>
-| <a href="methods">Methods</a> | <a href="seanceattendees">Seance Guest Lists</a>
+| <a href="methods">Methods</a> | <a href="seanceattendees">Seance Attendee Lists</a>
 ]
 <div>
 &nbsp;
@@ -42,10 +42,11 @@
       <legend><strong>Insert Attendee</strong></legend>
           <fieldset class="fields">
         <label> Full Name: </label> <input  type="text"  name="name">
-           <label for="attended">Which seance was attended? </label>
+           <label for="attended">Has this attendee already attended a seance? If so, which one?</label>
   <select name="attended" id="attended">
        <option value="None">None</option>
-    <option value="Beachland">Beachland Ballroom & Tavern</option>
+    <option value="Beachland">1857-11-21 at Beachland Ballroom & Tavern</option>
+    <option value="Edgar">1920-08-26 at Edgar Cayce's Houston A.R.E. Center</option>
   </select>
     </fieldset>
     <input class="btn" type="submit" id="InsertAttendee" value="Insert Attendee">
@@ -59,16 +60,14 @@
 <div id="update" style="display: block">
   <form id="UpdateAttendee">
       <legend><strong>Update Attendee</strong></legend>
-      <fieldset>
-                     <label for="attended">Current Full Name (To Be Changed) </label>
+       <label for="attended">Attendee to Update: </label>
   <select name="attended" id="attended">
-       <option value="None"></option>
-    <option value="Bess">Bess Houdini id: 1</option>
+    <option value="Bess">Bess Houdini | id: 1</option>
+    <option value="Arthur">Sir Arthur Conan Doyle | id:2</option>
+    <option value="Hilma">Hilma Klimt | id:3</option>
   </select>
-      </fieldset>
-      <br>
+      <fieldset class="fields">
       <legend>New Information</legend>
-          <fieldset class="fields">
         <label> Full Name: </label> <input  type="text"  name="name">
   </select>
     </fieldset>

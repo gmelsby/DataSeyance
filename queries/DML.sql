@@ -214,21 +214,6 @@ INNER JOIN Methods ON Channelings.method_id = Methods.method_id
 INNER JOIN Seances ON Channelings.seance_id = Seances.seance_id
 INNER JOIN Locations ON Seances.location_id = Locations.location_id;
 
--- Query for updating a Channeling based on id
--- :medium_id to be determined using a dropdown populated by SELECT query
--- :seance_id to be determined using a dropdown populated by SELECT query
--- :spirit_id to be determined using a dropdown populated by SELECT query
--- :method_id to be determined using a dropdown populated by SELECT query
--- Colon denotes variable that will be obtained through form submission or specific table row
-UPDATE Channelings
-SET medium_id = :medium_id_input,
-    seance_id = :seance_id_input,
-    spirit_id = :spirit_id_input,
-    method_id = :method_id_input,
-    is_successful = :is_successful_input,
-    length_in_minutes = :length_in_minutes_input
-WHERE channeling_id = :id_input;
-
 -- Query for deleting a Channeling based on id
 -- Colon denotes variable that will be obtained through form submission or specific table row
 DELETE FROM Channelings
@@ -237,43 +222,32 @@ WHERE channeling_id = id_input;
 
 -- Query for inserting a record of an Attendee attending a Seance
 -- attendee_id obtained through dropdown menu populated with Attendees ids and names
--- location_id obtained through dropdown menu populated with Seances dates, location names, and ids
+-- seance_id obtaine by SeanceAttendee page, which displays the attendees for a specific attendee
 -- Colon denotes variable that will be obtained through form submission or specific table row
 INSERT INTO SeanceAttendees (attendee_id, seance_id)
-VALUES 
-(
-    (SELECT Attendees.attendee_id
-     FROM Attendees
-     WHERE Attendees.full_name = :attendee_full_name_input),
-    (SELECT Seances.seance_id
-     FROM Seances
-     INNER JOIN Locations on Seances.location_id = Locations.location_id
-     WHERE Seances.date = :date_input
-     AND Locations.name = :location_name_input)
-);
+VALUES (:attendee_id_input, :seance_id_input);
 
 -- Query for getting a list of names and ids of all Attendees of a Seance
+-- seance_id_input is determined by the dropdown menu on the SeanceAttendee page
 -- Colon denotes variable that will be obtained through form submission or specific table row
 SELECT Attendees.attendee_id, Attendees.full_name
-FROM Seances
-INNER JOIN SeanceAttendees ON Seances.seance_id = SeanceAttendees.seance_id
+FROM SeanceAttendees
 INNER JOIN Attendees ON SeanceAttendees.attendee_id = Attendees.attendee_id
-INNER JOIN Locations ON Seances.location_id = Locations.location_id
-WHERE Seances.date = :date_input
-AND Locations.name = :location_name_input;
+WHERE SeanceAttendees.seance_id = :seance_id_input;
 
--- Query for getting a list of Seance ids, dates, and locations for all Seances attended by one Attendee
--- Attendee determined by id determined by dropdown of Attendees populated by SELECt query
+-- Query for getting a list of names and ids of all Attendees who did NOT attend a certain Seance
+-- seance_id_input is determined by the dropdown menu on the SeanceAttendee page
+-- To be used in the dropdown for adding an Attendee to a Seance
 -- Colon denotes variable that will be obtained through form submission or specific table row
-SELECT Seances.seance_id, Seances.date, Locations.location_id, Locations.name
+SELECT Attendees.attendee_id, Attendees.full_name
 FROM Attendees
-INNER JOIN SeanceAttendees ON Attendees.attendee_id = SeanceAttendees.attendee_id
-INNER JOIN Seances ON SeanceAttendees.seance_id = Seances.seance_id
-INNER JOIN Locations ON Seances.location_id = Locations.location_id
-WHERE Attendees.attendee_id = :attendee_id_input;
-
+WHERE attendee_id NOT IN (
+                         SELECT Attendees.attendee_id
+                         FROM SeanceAttendees
+                         WHERE SeanceAttendees.seance_id = seance_id_input;
+                         );
 
 -- Query for deleting a record of a Seance being attended by an Attendee
--- Colon denotes variable that will be obtained through form submission or specific table row
+-- Colon denotes variable that will be obtained through clicking a button on a specific table row
 DELETE FROM SeanceAttendees
 WHERE seanceattendees_id = :seanceattendee_id_input;

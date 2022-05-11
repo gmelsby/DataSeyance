@@ -3,7 +3,7 @@
 [ <a href="index">Home</a>
 | <a href="seances">Seances</a> | <a href="locations">Locations</a>  | <a href="channelings">Channelings</a>
 | <a href="spirits">Spirits</a> | <a href="attendees">Attendees</a> | <a href="mediums">Mediums</a>
-| <a href="methods">Methods</a> | <a href="seanceattendees">Seance Guest Lists</a>
+| <a href="methods">Methods</a> | <a href="seanceattendees">Seance Attendee Lists</a>
 ]
 <div>
 &nbsp;
@@ -59,11 +59,15 @@
 <div id="update" style="display: block">
   <form id="UpdateMethod">
       <legend><strong>Update Method</strong></legend>
+            <label for="toupdate">Method to Update: </label>
+            <select name="toupdate" id="toupdate">
+              <option value="board">Spirit Board | id: 1</option>
+              <option value="cabinet">Cabinets | id: 2</option>
+              <option value="trance">Trance | id: 3</option>
+            </select>
         <fieldset class="fields">
-            <label> Current Name (To be updated): </label> <input type="text" name="current name">
-        </fieldset>
-        <fieldset class="fields">
-         <label> Name: </label> <input  type="text"  name="name">
+          <legend>New information</legend>
+         <label> Name: </label> <input type="text"  name="name">
          <label> Description: </label> <textarea rows="3" cols="100" name="description" form="UpdateMethod"></textarea>
     </fieldset>
     <input class="btn" type="submit" id="UpdateMethod" value="Update Method">

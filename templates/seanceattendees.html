@@ -3,7 +3,7 @@
 [ <a href="index">Home</a>
 | <a href="seances">Seances</a> | <a href="locations">Locations</a>  | <a href="channelings">Channelings</a>
 | <a href="spirits">Spirits</a> | <a href="attendees">Attendees</a> | <a href="mediums">Mediums</a>
-| <a href="methods">Methods</a> | <a href="seanceattendees">Seance Guest Lists</a>
+| <a href="methods">Methods</a> | <a href="seanceattendees">Seance Attendee Lists</a>
 ]
 <div>
 &nbsp;
@@ -11,9 +11,8 @@
 
 <label for="seance-select">Choose a seance to view attendees for:</label>
 <select name="seances" id="seance-select">
-    <option value="">Select an option</option>
-    <option value="seance1_id">2020-12-25 at Costco</option>
-    <option value="seance2_id">1865-01-01 at Buckingham Palace</option>
+    <option value="seance1_id">1920-08-26 at Edgar Cayce's Houston A.R.E. Center</option>
+    <option value="seance2_id">1857-11-21 at Beachland Ballroom & Tavern</option>
 </select>
 
 <div>
@@ -44,10 +43,13 @@
 
 <div id="insert" style="display: block">
   <form id="InsertSeanceAttendee">
-      <legend><strong>Insert Attendee</strong></legend>
-          <fieldset class="fields">
-        <label> Full Name: </label> <input  type="text"  name="full_name">
-    </fieldset>
+      <legend><strong>Insert Attendee for Seance at 1920-08-26 at Edgar Cayce's houston A.R.E. Center</strong></legend>
+      <label for="attended">Attendee to be inserted</label>
+          <select name="attended" id="attended">
+              <option value="Hilma">Hilma Klimt | id: 3</option>
+          </select>
+      <br>
+
     <input class="btn" type="submit" id="InsertAttendee" value="Insert Attendee">
   </form>
 </div>
@@ -58,13 +60,15 @@
 
 <div id="update" style="display: block">
   <form id="UpdateSeanceAttendee">
-      <legend><strong>Update Attendee</strong></legend>
-      <fieldset>
-       <label> Current Full Name (To Be Changed): </label> <input  type="text"  name="date">
-      </fieldset>
-      <br>
+      <legend><strong>Update Attendee for Seance at 1920-08-26 at Edgar Cayce's Houston A.R.E. Center</strong></legend>
+      <label for="updateattended">Seance Attendee to update</label>
+       <select name="updateattended" id="updateattended">
+           <option value="Bess">Bess Houdini | id: 1</option>
+           <option value="Arthur">Sir Arthur Conan Doyle | id: 2</option>
+       </select>
+
+        <fieldset class="fields">
       <legend>New Information</legend>
-          <fieldset class="fields">
         <label> Name Prefix: </label> <input  type="text"  name="date">
         <label> First Name: </label> <input  type="text"  name="date">
         <label> Last Name: </label> <input  type="text"  name="date">

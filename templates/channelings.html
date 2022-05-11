@@ -3,7 +3,7 @@
 [ <a href="index">Home</a>
 | <a href="seances">Seances</a> | <a href="locations">Locations</a>  | <a href="channelings">Channelings</a>
 | <a href="spirits">Spirits</a> | <a href="attendees">Attendees</a> | <a href="mediums">Mediums</a>
-| <a href="methods">Methods</a> | <a href="seanceattendees">Seance Guest Lists</a>
+| <a href="methods">Methods</a> | <a href="seanceattendees">Seance Attendee Lists</a>
 ]
 
 <div>
@@ -22,7 +22,6 @@
     <th>is_successful</th>
     <th>length_in_minutes</th>
     <th>Delete</th>
-    <th>Edit</th>
   </tr>
   <tr>
     <td>1</td>
@@ -34,7 +33,6 @@
     <td>1</td>
     <td>30</td>
     <td><a href="_">Delete</a></td>
-    <td><a href="_">Edit</a></td>
   </tr>
   <tr>
     <td>2</td>
@@ -46,7 +44,6 @@
     <td>0</td>
     <td>150</td>
     <td><a href="_">Delete</a></td>
-    <td><a href="_">Edit</a></td>
   </tr>
 </table>
 
@@ -55,52 +52,38 @@
 <div id="insert" style="display: block">
   <form id="InsertChanneling">
       <legend><strong>Insert Channeling</strong></legend>
-          <fieldset class="fields">
-        <label> Seance Location: </label> <input  type="text"  name="Location">
-        <label> Seance Date: </label> <input  type="text"  name="date">
-        <label> Medium Full Name: </label> <input  type="text"  name="medium">
-        <label> Spirit Full Name: </label> <input  type="text"  name="spirit">
+      <fieldset class="fields">
+        <label for="seance">Seance</label>
+        <select name="seance">
+          <option value="s1">1920-08-26 at Edgar Cayce's Houston A.R.E. Center | id: 1</option>
+          <option value="s2">1857-11-21 at Beachland Ballroom & Tavern| id: 2</option>
+        </select>
+        <br>
+        <label for="medium"> Medium Full Name: </label>
+        <select name="medium">
+          <option value="m1">Arthur Ford | id: 1</option>
+          <option value="m1">Andrew Jackson Davis | id: 2</option>
+          <option value="m1">Leah Fox | id: 3</option>
+        </select>
+        <br>
+        <label for="spirit"> Spirit Full Name: </label>
+        <select name="spirit">
+          <option value="s1">Black Hawk | id: 1</option>
+          <option value="s2">Harry Houdini | id: 2</option>
+          <option value="s3">Bartholomew Governor of the House of Strangers| id: 3</option>
+        </select>
+        <br>
+        <label for="method">Method Used: </label>
+        <select name="method">
+          <option value="method1">Spirit Board | id: 1</option>
+          <option value="method2">Cabinets | id: 2</option>
+          <option value="method1">Trance | id: 3</option>
+        </select>
         <br>
         <label> Channeling Was Successful: </label><input  type="checkbox"  name="success">
+        <br>
       <label> Channeling Length (in minutes): </label> <input  type="number"  name="length">
-          </fieldset>
+      </fieldset>
     <input class="btn" type="submit" id="InsertChanneling" value="Insert Channeling">
   </form>
-</div>
-
-
-<div>
-&nbsp;
-</div>
-<div id="update" style="display: block">
-  <form id="UpdateChanneling">
-      <legend><strong>Update Channeling</strong></legend>
-      <legend>Current Information (To be updated)</legend>
-        <fieldset class="fields">
-         <label> Seance Location: </label> <input  type="text"  name="Location">
-          <label> Seance Date: </label> <input  type="text"  name="date">
-          <label> Medium Full Name: </label> <input  type="text"  name="medium">
-          <label> Spirit Full Name: </label> <input  type="text"  name="spirit">
-        <br>
-          <label> Channeling Was Successful: </label><input  type="checkbox"  name="success">
-        <label> Channeling Length (in minutes): </label> <input  type="number"  name="length">
-        </fieldset>
-        <br>
-      <legend>New Information</legend>
-        <fieldset class="fields">
-        <label> Seance Location: </label> <input  type="text"  name="Location">
-        <label> Seance Date: </label> <input  type="text"  name="date">
-        <label> Medium Full Name: </label> <input  type="text"  name="medium">
-        <label> Spirit Full Name: </label> <input  type="text"  name="spirit">
-        <br>
-        <label> Channeling Was Successful: </label><input  type="checkbox"  name="success">
-      <label> Channeling Length (in minutes): </label> <input  type="number"  name="length">
-        </fieldset>
-    <input class="btn" type="submit" id="UpdateChanneling" value="Update Channeling">
-  </form>
-</div>
-
-
-<div>
-&nbsp;
 </div>

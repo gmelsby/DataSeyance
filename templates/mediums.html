@@ -3,7 +3,7 @@
 [ <a href="index">Home</a>
 | <a href="seances">Seances</a> | <a href="locations">Locations</a>  | <a href="channelings">Channelings</a>
 | <a href="spirits">Spirits</a> | <a href="attendees">Attendees</a> | <a href="mediums">Mediums</a>
-| <a href="methods">Methods</a> | <a href="seanceattendees">Seance Guest Lists</a>
+| <a href="methods">Methods</a> | <a href="seanceattendees">Seance Attendee Lists</a>
 ]
 <div>
 &nbsp;&nbsp;
@@ -54,18 +54,16 @@
 
 <div id="update" style="display: block">
   <form id="UpdateMedium">
-      <legend><strong>Update Medium</strong></legend>
-      <fieldset class="fields">
-                        <label for="attended">Current Full Name (To Be Changed) </label>
-  <select name="attended" id="attended">
-       <option value="None"></option>
-    <option value="Bess"> Arthur Ford id: 1</option>
-  </select>
-      </fieldset>
-      <br>
-    <legend>New Information</legend>
-   <fieldset class="fields">
-  <label> Full Name: </label> <input  type="text"  name="name">
+    <legend><strong>Update Medium</strong></legend>
+    <label for="attended">Medium to Update: </label>
+    <select name="attended" id="attended">
+      <option value="Arthur">Arthur Ford | id: 1</option>
+      <option value="Andrew">Andrew Jackson Davis | id: 2</option>
+      <option value="Leah">Leah Fox | id: 3</option>
+    </select>
+     <fieldset class="fields">
+      <legend>New Information</legend>
+    <label> Full Name: </label> <input  type="text"  name="name">
     </fieldset>
     <input class="btn" type="submit" id="UpdateMedium" value="Update Medium">
   </form>
