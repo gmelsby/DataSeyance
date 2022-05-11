@@ -42,10 +42,7 @@
   <form id="InsertSpirit">
       <legend><strong>Insert Spirit</strong></legend>
           <fieldset class="fields">
-        <label> Name Prefix: </label> <input  type="text"  name="date">
-        <label> First Name: </label> <input  type="text"  name="date">
-        <label> Last Prefix: </label> <input  type="text"  name="date">
-        <label> Name Suffix: </label> <input  type="text"  name="date">
+  <label> Full Name: </label> <input  type="text"  name="name">
     </fieldset>
     <input class="btn" type="submit" id="InsertSpirit" value="Insert Spirit">
   </form>
@@ -59,16 +56,17 @@
   <form id="UpdateSpirit">
       <legend><strong>Update Spirit</strong></legend>
         <fieldset class="fields">
-        <label> Current Full Name (To Be Changed): </label> <input  type="text"  name="date">
+                        <label for="attended">Current Full Name (To Be Changed) </label>
+  <select name="attended" id="attended">
+       <option value="None"></option>
+    <option value="Bess"> Black Hawk id: 1</option>
+  </select>
         </fieldset>
 
       <br>
       <legend>New Information</legend>
         <fieldset class="fields">
-        <label> Name Prefix: </label> <input  type="text"  name="date">
-        <label> First Name: </label> <input  type="text"  name="date">
-        <label> Last Prefix: </label> <input  type="text"  name="date">
-        <label> Name Suffix: </label> <input  type="text"  name="date">
+  <label> Full Name: </label> <input  type="text"  name="name">
     </fieldset>
     <input class="btn" type="submit" id="UpdateSpirit" value="Update Spirit">
   </form>
@@ -78,15 +76,3 @@
 &nbsp;
 </div>
 
-<div id="delete" style="display: block">
-  <form id="DeleteSpirit">
-      <legend><strong>Delete Spirit</strong></legend>
-          <fieldset class="fields">
-        <label> Name Prefix: </label> <input  type="text"  name="date">
-        <label> First Name: </label> <input  type="text"  name="date">
-        <label> Last Prefix: </label> <input  type="text"  name="date">
-        <label> Name Suffix: </label> <input  type="text"  name="date">
-    </fieldset>
-    <input class="btn" type="submit" id="DeleteSpirit" value="Delete Spirit">
-  </form>
-</div>

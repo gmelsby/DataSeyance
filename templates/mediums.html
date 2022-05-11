@@ -41,10 +41,7 @@
   <form id="InsertMedium">
       <legend><strong>Insert Medium</strong></legend>
           <fieldset class="fields">
-        <label> Name Prefix: </label> <input  type="text"  name="date">
-        <label> First Name: </label> <input  type="text"  name="date">
-        <label> Last Name: </label> <input  type="text"  name="date">
-        <label> Name Suffix: </label> <input  type="text"  name="date">
+  <label> Full Name: </label> <input  type="text"  name="name">
     </fieldset>
     <input class="btn" type="submit" id="InsertMedium" value="Insert Medium">
   </form>
@@ -58,15 +55,16 @@
   <form id="UpdateMedium">
       <legend><strong>Update Medium</strong></legend>
       <fieldset class="fields">
-        <label> Current Full Name (To Be Changed): </label> <input  type="text"  name="date">
+                        <label for="attended">Current Full Name (To Be Changed) </label>
+  <select name="attended" id="attended">
+       <option value="None"></option>
+    <option value="Bess"> Arthur Ford id: 1</option>
+  </select>
       </fieldset>
       <br>
     <legend>New Information</legend>
    <fieldset class="fields">
-        <label> Name Prefix: </label> <input  type="text"  name="date">
-        <label> First Name: </label> <input  type="text"  name="date">
-        <label> Last Name: </label> <input  type="text"  name="date">
-        <label> Name Suffix: </label> <input  type="text"  name="date">
+  <label> Full Name: </label> <input  type="text"  name="name">
     </fieldset>
     <input class="btn" type="submit" id="UpdateMedium" value="Update Medium">
   </form>
@@ -77,15 +75,3 @@
 &nbsp;&nbsp;
 </div>
 
-<div id="insert" style="display: block">
-  <form id="DeleteMedium">
-      <legend><strong>Delete Medium</strong></legend>
-          <fieldset class="fields">
-        <label> Name Prefix: </label> <input  type="text"  name="date">
-        <label> First Name: </label> <input  type="text"  name="date">
-        <label> Last Name: </label> <input  type="text"  name="date">
-        <label> Name Suffix: </label> <input  type="text"  name="date">
-    </fieldset>
-    <input class="btn" type="submit" id="DeleteMedium" value="Delete Medium">
-  </form>
-</div>
