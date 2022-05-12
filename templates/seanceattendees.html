@@ -43,7 +43,7 @@
 
 <div id="insert" style="display: block">
   <form id="InsertSeanceAttendee">
-      <legend><strong>Insert Attendee for Seance at 1920-08-26 at Edgar Cayce's houston A.R.E. Center</strong></legend>
+      <legend><strong>Insert Attendee for Seance at 1920-08-26 at Edgar Cayce's Houston A.R.E. Center</strong></legend>
       <label for="attended">Attendee to be inserted</label>
           <select name="attended" id="attended">
               <option value="Hilma">Hilma Klimt | id: 3</option>
@@ -60,22 +60,24 @@
 
 <div id="update" style="display: block">
   <form id="UpdateSeanceAttendee">
-      <legend><strong>Update Attendee for Seance at 1920-08-26 at Edgar Cayce's Houston A.R.E. Center</strong></legend>
-      <label for="updateattended">Seance Attendee to update</label>
+      <legend><strong>Update which Seance Attendee Attended</strong></legend>
+      <p>To be used if Attendee actually attended a different Seance than 1920-08-26 at Edgar Cayce's Houston A.R.E. Center</p>
+      <fieldset class="fields">
+      <label for="updateattended">Seance Attendee to update: </label>
        <select name="updateattended" id="updateattended">
                    <option value="None"> </option>
            <option value="Bess">Bess Houdini | id: 1</option>
            <option value="Arthur">Sir Arthur Conan Doyle | id: 2</option>
        </select>
 
-        <fieldset class="fields">
-      <legend>New Information</legend>
-        <label> Name Prefix: </label> <input  type="text"  name="date">
-        <label> First Name: </label> <input  type="text"  name="date">
-        <label> Last Name: </label> <input  type="text"  name="date">
-        <label> Name Suffix: </label> <input  type="text"  name="date">
+      <legend>Seance they Actually Attended</legend>
+      <label for="actaullyattended">What Seance did they actually attend?</label>
+       <select name="actuallyattended" id="actuallyattended">
+           <option value="None"></option>
+           <option value="Beachland">1857-11-21 at Beachland Ballroom & Tavern | id: 1</option>
+       </select>
+      <input class="btn" type="submit" id="actuallyattended" value="Update Seance Attendee">
     </fieldset>
-    <input class="btn" type="submit" id="UpdateAttendee" value="Update Attendee">
   </form>
 </div>
 

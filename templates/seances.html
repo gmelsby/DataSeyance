@@ -60,10 +60,12 @@
 <div id="update" style="display: block">
   <form id="updateSeance">
       <legend><strong>Update Seance</strong></legend>
-      <legend>Current Information (To be updated)</legend>
+      <label for="tobeupdated">Seance to be Updated</label>
       <fieldset class="fields">
-         <label> Date: </label> <input type="date"  name="date">
-         <label> Location: </label> <input type="text"  >
+       <select name="actuallyattended" id="actuallyattended">
+           <option value="None"></option>
+           <option value="Beachland">1857-11-21 at Beachland Ballroom & Tavern | id: 1</option>
+       </select>
       </fieldset>
      <legend>New Information</legend>
       <fieldset class="fields">

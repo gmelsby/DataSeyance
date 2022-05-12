@@ -229,6 +229,8 @@ VALUES (:attendee_id_input, :seance_id_input);
 
 -- Query for getting a list of names and ids of all Attendees of a Seance
 -- seance_id_input is determined by the dropdown menu on the SeanceAttendee page
+-- To be used in displaying table on SeanceAttendee page
+-- To be used in dropdown for updating SeanceAttendee entry
 -- Colon denotes variable that will be obtained through form submission or specific table row
 SELECT Attendees.attendee_id, Attendees.full_name
 FROM SeanceAttendees
@@ -246,6 +248,21 @@ WHERE attendee_id NOT IN (
                          FROM SeanceAttendees
                          WHERE SeanceAttendees.seance_id = seance_id_input;
                          );
+
+-- Query for getting the date, location name, and id of all Seances NOT the one currently displayed on the SeanceAttendee page
+-- To be used for generating dropdown for Seance Attendee Actually Attended (UPDATE on SeanceAttendees)
+-- Colon denotes variable that will be obtained through being on a specific SeanceAttendee page
+SELECT Seances.date, Locations.name, Seances.seance_id
+FROM Seances
+INNER JOIN Locations ON Locations.location_id
+WHERE seance_id != :seance_id_from_input;
+
+-- Query for updating an entry in SeanceAttendees to have Attendee attend a different seance than the one listed as attended
+-- Colon denotes variable that will be obtained through dropdown or being on a specific SeanceAttendee page
+UPDATE SeanceAttendees
+SET seance_id = :new_seance_id_input
+WHERE attendee_id = :attendee_id_input
+AND seance_id = :old_seance_id_input_from_page
 
 -- Query for deleting a record of a Seance being attended by an Attendee
 -- Colon denotes variable that will be obtained through clicking a button on a specific table row
