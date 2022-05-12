@@ -106,7 +106,7 @@ VALUES ( '1943-10-31', (SELECT location_id FROM Locations WHERE name= 'Hollywood
 , ( '1927-04-12', (SELECT location_id FROM Locations WHERE name= 'Alister Hardy Religious Experience Research Centre'))
 , ( '1854-03-31', (SELECT location_id FROM Locations WHERE name= "Barnum's Hotel"))
 , ( '1920-08-26', (SELECT location_id FROM Locations WHERE name= "Edgar Cayce's - Houston A.R.E. Center"))
-, ( '1857-11-21', (SELECT location_id FROM Locations WHERE name= 'Beachland Ballroom & Tavern'))
+, ( '1857-11-21', NULL)
 , ( '1857-11-21', (SELECT location_id FROM Locations WHERE name= "Edgar Cayce's - Houston A.R.E. Center"))
 ;
 
@@ -199,7 +199,7 @@ VALUES
 		AND location_id =(select location_id FROM Locations WHERE name= "Edgar Cayce's - Houston A.R.E. Center"))
 ),
 (
-    (SELECT attendee_id FROM Attendees WHERE full_name = 'Bess Houdini'),
+    NULL,
     (SELECT seance_id FROM Seances WHERE date=  '1943-10-31'
 		AND location_id =(select location_id FROM Locations WHERE name= "Hollywood Knickerbocker Hotel"))
 );
