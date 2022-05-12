@@ -47,9 +47,14 @@
 <div id="insert" style="display: block">
   <form id="InsertSeance">
       <legend><strong>Insert Seance</strong></legend>
-          <fieldset class="fields">
+     <fieldset class="fields">
             <label> Date: </label> <input type="date"  name="date">
-            <label> Location: </label> <input type="text"  >
+       <label for="newloc">Location: </label>
+      <select name="newloc" id="newloc">
+          <option value="None"></option>
+        <option value="Barnum"> Barnum's Hotel | id: 1</option>
+        <option value="Beach"> Beachland Ballroom & Tavern | id: 2</option>
+      </select>
     </fieldset>
     <input class="btn" type="submit" id="InsertSeance" value="Insert Seance">
   </form>
@@ -64,13 +69,19 @@
       <fieldset class="fields">
        <select name="actuallyattended" id="actuallyattended">
            <option value="None"></option>
-           <option value="Beachland">1857-11-21 at Beachland Ballroom & Tavern | id: 1</option>
+           <option value="Beachland">1920-08-26 at Edgar Cayce's Houston A.R.E. Center | id: 1</option>
+           <option value="Beachland">1857-11-21 at Beachland Ballroom & Tavern | id: 2</option>
        </select>
       </fieldset>
      <legend>New Information</legend>
       <fieldset class="fields">
             <label> Date: </label> <input type="date"  name="date">
-            <label> Location: </label> <input type="text"  >
+       <label for="newloc">Location: </label>
+      <select name="newloc" id="newloc">
+          <option value="None"></option>
+        <option value="Barnum"> Barnum's Hotel | id: 1</option>
+        <option value="Beach"> Beachland Ballroom & Tavern | id: 2</option>
+      </select>
     </fieldset>
     <input class="btn" type="submit" id="UpdateSeance" value="Update Seance">
   </form>
