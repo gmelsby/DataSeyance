@@ -15,7 +15,6 @@ INSERT INTO SeanceAttendees (attendee_id, seance_id)
 VALUES (new_attendee_id, :seance_id_input);
 
 -- Query for getting the full name of all Attendees
--- Colon denotes variable that will be obtained through form submission or specific table row
 -- Also to be used in dropdown to designate Attendee to be updated and attendee_id to be added to SeanceAttendee
 SELECT attendee_id, full_name
 FROM Attendees;
@@ -40,8 +39,7 @@ VALUES (:full_name_input);
 
 -- Query for getting the full name of all Spirits
 -- Also to be used in dropdown to designate Spirit to be updated
--- Also used in dropdown menu for add Channeling
--- Colon denotes variable that will be obtained through form submission or specific table row
+-- Also used in dropdown menu for insert Channeling
 SELECT spirit_id, full_name
 FROM Spirits;
 
@@ -63,9 +61,8 @@ INSERT INTO Mediums (full_name)
 VALUES (:full_name_input);
 
 -- Query for getting the id and full name of all Mediums
--- Also used in dropdown menu for add Channeling
--- Colon denotes variable that will be obtained through form submission or specific table row
-SELECT medium_id, full_name
+-- Used for populating dropdown menu for Update Medium
+-- Also used in dropdown menu for insert Channeling
 FROM Mediums;
 
 -- Query for updating the entry in Mediums with the matching medium_id
@@ -87,13 +84,11 @@ INSERT INTO Locations (name, street_address, city, zip, state, country)
 VALUES (:name_input, :street_address_input, :city_input, :zip_input, :state_input, :country_input);
 
 -- Query for getting the full list of Locations
--- Colon denotes variable that will be obtained through form submission or specific table row
 SELECT location_id, name, street_address, city, zip, state, country
 FROM Locations;
 
 -- Query for getting a list of Location names with ids
 -- Used in drop-down menu for editing Locations and inserting and editing Seances
--- Colon denotes variable that will be obtained through form submission or specific table row
 SELECT location_id, name
 FROM Locations;
 
@@ -125,9 +120,7 @@ VALUES (
 
 -- Query for getting the full list of Seances with location name
 -- To be displayed on the Seances page
--- Used to populate dropdown and text boxes for Update Seances and filter Channelings as well
--- Also used in dropdown menu for add Channeling
--- And dropdown menu for adding and editing SeanceAttendees
+-- Used to populate dropdown and text boxes for Update Seances, Insert Attendee, add and filter Channeings
 -- Colon denotes variable that will be obtained through form submission or specific table row
 SELECT Seances.seance_id, Locations.name, Seances.date
 FROM Seances
@@ -162,10 +155,11 @@ INSERT INTO Methods (name, description)
 VALUES (:name_input, :name_description);
 
 -- Query for getting the full list of methods
--- To be used for populating dropdown menu and autofilled textbox for Update Methods functionality
--- Also used in dropdown menu for add Channeling
--- Colon denotes variable that will be obtained through form submission or specific table row
 SELECT method_id, name, description
+FROM Methods;
+
+-- To be used for populating dropdown menu and autofilled textbox for Update Methods and Insert Channeling functionality
+SELECT method_id, name
 FROM Methods;
 
 -- Query for updating a method based on id
@@ -195,7 +189,7 @@ VALUES
 
 -- Query for filtering Channelings based on Seance
 -- Colon denotes variable that will be obtained through form submission or specific table row
-SELECT Mediums.full_name, Spirits.full_name, Methods.name, Seances.date, Locations.name, Channelings.is_successful, Channelings.length_in_minutes
+SELECT Channelings.channeling_id, Mediums.full_name, Spirits.full_name, Methods.name, Seances.date, Locations.name, Channelings.is_successful, Channelings.length_in_minutes
 FROM Channelings
 INNER JOIN Mediums ON Channelings.medium_id = Mediums.medium_id
 INNER JOIN Spirits ON Channelings.spirit_id = Spirits.spirit_id
@@ -206,7 +200,7 @@ WHERE seance_id = :seance_id_from_dropdown_with_seance_locations_and_dates;
 
 -- Query for displaying all Channelings with Medium name, Spirit name, Method name, date, and stats
 -- Colon denotes variable that will be obtained through form submission or specific table row
-SELECT Mediums.full_name, Spirits.full_name, Methods.name, Seances.date, Locations.name, Channelings.is_successful, Channelings.length_in_minutes
+SELECT Channelings.channeling_id, Mediums.full_name, Spirits.full_name, Methods.name, Seances.date, Locations.name, Channelings.is_successful, Channelings.length_in_minutes
 FROM Channelings
 INNER JOIN Mediums ON Channelings.medium_id = Mediums.medium_id
 INNER JOIN Spirits ON Channelings.spirit_id = Spirits.spirit_id
