@@ -141,7 +141,7 @@ VALUES
 , (
 	(SELECT medium_id FROM Mediums WHERE full_name= 'Kate Fox')
 	, (SELECT seance_id FROM Seances WHERE date= '1857-11-21'
-		and location_id =(select location_id FROM Locations WHERE Name= 'Beachland Ballroom & Tavern')) 
+		and location_id IS NULL) 
 	, (SELECT spirit_id from Spirits where full_name = ('Black Hawk'))
 	, (SELECT method_id from Methods WHERE name = 'Cabinets')
 	, 1
@@ -159,10 +159,10 @@ VALUES
 (
 	(SELECT medium_id FROM Mediums WHERE full_name= 'Edgar Cayce')
 	, (SELECT seance_id FROM Seances WHERE date= '1857-11-21'
-		and location_id =(select location_id FROM Locations WHERE Name= 'Beachland Ballroom & Tavern')) 
+		and location_id IS NULL) 
 	, (SELECT spirit_id from Spirits WHERE full_name = ('Harry Houdini'))
 	, (SELECT method_id from Methods WHERE name = 'Trance')
-	, 1
+	, 0
 	, 81
 
 );
@@ -191,7 +191,7 @@ VALUES
 (
     (SELECT attendee_id FROM Attendees WHERE full_name = 'Maggie Fox'),
     (SELECT seance_id FROM Seances WHERE date = '1857-11-21' 
-        AND location_id = (SELECT location_id FROM Locations WHERE name = 'Beachland Ballroom & Tavern'))
+        AND location_id IS NULL)
 ),
 (
     (SELECT attendee_id FROM Attendees WHERE full_name = 'Maggie Fox'),
