@@ -262,7 +262,7 @@ WHERE seance_id != :seance_id_from_input;
 UPDATE SeanceAttendees
 SET seance_id = :new_seance_id_input
 WHERE attendee_id = :attendee_id_input
-AND seance_id = :old_seance_id_input_from_page
+AND seance_id = :old_seance_id_input_from_page;
 
 -- Query for deleting a record of a Seance being attended by an Attendee
 -- Colon denotes variable that will be obtained through clicking a button on a specific table row
