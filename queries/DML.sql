@@ -249,7 +249,7 @@ WHERE attendee_id NOT IN (
 SELECT Seances.date, Locations.name, Seances.seance_id
 FROM Seances
 INNER JOIN Locations ON Locations.location_id
-WHERE seance_id != :seance_id_from_input;
+WHERE seance_id <> :seance_id_from_input;
 
 -- Query for updating an entry in SeanceAttendees to have Attendee attend a different seance than the one listed as attended
 -- Colon denotes variable that will be obtained through dropdown or being on a specific SeanceAttendee page
