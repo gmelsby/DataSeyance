@@ -27,6 +27,51 @@ def channelings():
 
 @app.route('/locations', methods=['GET', 'POST'])
 def locations():
+    if request.method == 'POST':
+        if request.form.get('id_input'):
+            # Process each input to be NULL if empty string
+            id_input = request.form['id_input']
+            name_input = f'"{request.form["new_name"]}"' if request.form.get('new_name') else 'NULL'
+            street_input = f'"{request.form["new_street_address"]}"' if request.form.get('new_street_address') else 'NULL'
+            city_input = f'"{request.form["new_city"]}"' if request.form.get('new_city') else 'NULL'
+            zip_input = f'"{request.form["new_zip"]}"' if request.form.get('new_zip') else 'NULL'
+            state_input = f'"{request.form["new_state"]}"' if request.form.get('new_state') else 'NULL'
+            country_input = f'"{request.form["new_country"]}"' if request.form.get('new_country') else 'NULL'
+            
+            query = ('UPDATE Locations '
+                    f'SET name = {name_input}, '
+                    f'street_address = {street_input}, '
+                    f'city = {city_input}, '
+                    f'zip = {zip_input}, '
+                    f'state = {state_input}, '
+                    f'country = {country_input} '
+                    f'WHERE location_id = {id_input}')
+            
+            cursor = db.execute_query(db_connection=db_connection, query=query)
+            mysql.connection.commit()
+            
+            return redirect('/locations')
+
+        if request.form.get('name') is not None:
+            # Process each input to be NULL if empty string
+            name_input = f'"{request.form["name"]}"' if request.form.get('name') else 'NULL'
+            street_input = f'"{request.form["street_address"]}"' if request.form.get('street_address') else 'NULL'
+            city_input = f'"{request.form["city"]}"' if request.form.get('city') else 'NULL'
+            zip_input = f'"{request.form["zip"]}"' if request.form.get('zip') else 'NULL'
+            state_input = f'"{request.form["state"]}"' if request.form.get('state') else 'NULL'
+            country_input = f'"{request.form["country"]}"' if request.form.get('country') else 'NULL'
+            
+            query = ('INSERT INTO Locations (name, street_address, city, zip, state, country) '
+                    f'VALUES ({name_input}, {street_input}, {city_input}, {zip_input}, {state_input}, {city_input});')
+
+            cursor = db.execute_query(db_connection=db_connection, query=query)
+            mysql.connection.commit()
+
+            return redirect('/locations')
+
+        return redirect('/locations')
+
+
     if request.method == 'GET':
         args = request.args
         location_to_edit = None
@@ -50,9 +95,14 @@ def locations():
 
         return render_template('locations.j2', location_data=location_data, location_to_edit=location_to_edit)
 
+@app.route('/delete_location/<int:id>')
+def delete_location(id):
+    query = f'DELETE FROM Locations WHERE location_id = {id};'
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    mysql.connection.commit()
+    
+    return redirect('/locations')
 
-
-    return render_template('locations.j2')
 
 @app.route('/mediums', methods=['GET', 'POST'])
 def mediums():
@@ -66,7 +116,7 @@ def mediums():
                      f'WHERE medium_id = {id_input};')
 
             cursor = db.execute_query(db_connection=db_connection, query=query)
-            mysql.connection.commit();
+            mysql.connection.commit()
             
             return redirect('/mediums')
 
@@ -74,7 +124,7 @@ def mediums():
             full_name_input = request.form['name']
             query = f'INSERT INTO Mediums (full_name) VALUES ("{full_name_input}");'
             cursor = db.execute_query(db_connection=db_connection, query=query)
-            mysql.connection.commit();
+            mysql.connection.commit()
             
         return redirect('/mediums')
 
@@ -120,7 +170,7 @@ def methods():
                      f'WHERE method_id = {id_input};')
 
             cursor = db.execute_query(db_connection=db_connection, query=query)
-            mysql.connection.commit();
+            mysql.connection.commit()
             
             return redirect('/methods')
 
@@ -131,7 +181,7 @@ def methods():
                 description_input = f'"{request.form["description"]}"'
             query = f'INSERT INTO Methods (name, description) VALUES ("{name_input}", {description_input});'
             cursor = db.execute_query(db_connection=db_connection, query=query)
-            mysql.connection.commit();
+            mysql.connection.commit()
             
         return redirect('/methods')
 
@@ -184,7 +234,7 @@ def spirits():
                      f'WHERE spirit_id = {id_input};')
 
             cursor = db.execute_query(db_connection=db_connection, query=query)
-            mysql.connection.commit();
+            mysql.connection.commit()
             
             return redirect('/spirits')
 

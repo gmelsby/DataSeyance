@@ -109,6 +109,12 @@ FROM Locations;
 SELECT location_id, name
 FROM Locations;
 
+-- Query for getting info about one Location for prefill in Update Location
+-- Colon denotes variable obtained through get request parameters
+SELECT location_id, name, street_address, city, zip, state, country
+FROM Locations
+WHERE location_id = :id_input;
+
 -- Query for updating the Location with the passed-in id
 -- Colon denotes variable that will be obtained through form submission or specific table row
 UPDATE Locations
