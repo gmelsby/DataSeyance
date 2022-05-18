@@ -43,6 +43,13 @@ VALUES (:full_name_input);
 SELECT spirit_id, full_name
 FROM Spirits;
 
+-- Query for getting spirit_id and full name for a Spirit based on spirit_id
+-- To be used in dropdown menu preselect for updating a Spirit
+-- Colon denotes variable obtained through get request query parameters
+SELECT spirit_id, full_name
+FROM Spirits
+WHERE spirit_id = :id_input;
+
 -- Query for updating the entry in Spirits with the matching spirit_id
 -- Colon denotes variable that will be obtained through form submission or specific table row
 UPDATE Spirits
