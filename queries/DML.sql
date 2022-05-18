@@ -70,7 +70,17 @@ VALUES (:full_name_input);
 -- Query for getting the id and full name of all Mediums
 -- Used for populating dropdown menu for Update Medium
 -- Also used in dropdown menu for insert Channeling
+SELECT medium_id, full_name
 FROM Mediums;
+
+-- Query for getting medium_id and full name for a Medium based on medium_id
+-- To be used in dropdown menu preselect for updating a Medium
+-- Colon denotes variable obtained through get request query parameters
+SELECT medium_id, full_name
+FROM Mediums
+WHERE  medium_id = :id_input;
+
+
 
 -- Query for updating the entry in Mediums with the matching medium_id
 -- Also to be used in dropdown to designate Medium to be updated

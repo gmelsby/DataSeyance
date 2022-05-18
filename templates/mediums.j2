@@ -11,35 +11,27 @@
 
 <table border="5" cellpadding="10">
   <caption>Mediums</caption>
+  <thead>
   <tr>
     <th>medium_id</th>
     <th>full_name</th>
     <th>Delete</th>
     <th>Edit</th>
   </tr>
+  <tbody>
+  {% for medium in medium_data %}
   <tr>
-    <td>1</td>
-    <td>Arthur Ford</td>
-    <td><a href="_">Delete</a></td>
-    <td><a href="_">Edit</a></td>
+    <td>{{medium['medium_id']}}</td>
+    <td>{{medium['full_name']}}</td>
+    <td><a href="delete_medium/{{medium['medium_id']}}">Delete</a></td>
+    <td><a href="mediums?id={{medium['medium_id']}}">Edit</a></td>
   </tr>
-  <tr>
-    <td>2</td>
-    <td>Andrew Jackson Davis</td>
-    <td><a href="_">Delete</a></td>
-    <td><a href="_">Edit</a></td>
-  </tr>
-  <tr>
-    <td>3</td>
-    <td>Leah Fox</td>
-    <td><a href="_">Delete</a></td>
-    <td><a href="_">Edit</a></td>
-  </tr>
+  {% endfor %}
 </table>
 
 
 <div id="insert" style="display: block">
-  <form id="InsertMedium">
+  <form id="InsertMedium" method="POST">
       <legend><strong>Insert Medium</strong></legend>
           <fieldset class="fields">
   <label> Full Name: </label> <input  type="text"  name="name">
@@ -53,18 +45,21 @@
 </div>
 
 <div id="update" style="display: block">
-  <form id="UpdateMedium">
+  <form id="UpdateMedium" method="POST">
     <legend><strong>Update Medium</strong></legend>
     <label for="attended">Medium to Update: </label>
-    <select name="attended" id="attended">
-                <option value="None"> </option>
-      <option value="Arthur">Arthur Ford | id: 1</option>
-      <option value="Andrew">Andrew Jackson Davis | id: 2</option>
-      <option value="Leah">Leah Fox | id: 3</option>
+    <select name="id_input">
+      <option value=""> </option>
+      {% for medium in medium_data%}
+      <option value={{medium['medium_id']}}
+      {% if medium_to_edit['medium_id']==medium['medium_id'] %} selected {% endif %}>
+        {{medium['full_name']}} | id: {{medium['medium_id']}}
+      </option>
+      {% endfor %}
     </select>
      <fieldset class="fields">
       <legend>New Information</legend>
-    <label> Full Name: </label> <input  type="text"  name="name">
+    <label> Full Name: </label> <input  type="text"  name="name" value="{{medium_to_edit['full_name']}}">
     </fieldset>
     <input class="btn" type="submit" id="UpdateMedium" value="Update Medium">
   </form>

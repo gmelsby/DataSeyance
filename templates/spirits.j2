@@ -32,7 +32,7 @@
 
 
 <div id="insert" style="display: block">
-  <form id="insert_spirit" method="POST">
+  <form id="InsertSpirit" method="POST">
       <legend><strong>Insert Spirit</strong></legend>
           <fieldset class="fields">
   <label> Full Name: </label> <input  type="text"  name="name">
@@ -50,7 +50,7 @@
       <legend><strong>Update Spirit</strong></legend>
   <label for="id_input">Spirit to Update: </label>
   <select name="id_input">
-    <option value="None"> </option>
+    <option value=""> </option>
     {% for spirit in spirit_data %}
     <option 
       value={{spirit['spirit_id']}}

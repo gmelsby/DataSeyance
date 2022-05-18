@@ -29,9 +29,54 @@ def channelings():
 def locations():
     return render_template('locations.j2')
 
-@app.route('/mediums')
+@app.route('/mediums', methods=['GET', 'POST'])
 def mediums():
-    return render_template('mediums.j2')
+    if request.method == 'POST':
+        if request.form.get('id_input') and request.form.get('name'):
+            full_name_input = request.form['name']
+            id_input = request.form['id_input']
+
+            query = ('UPDATE Mediums ' 
+                     f'SET full_name = "{full_name_input}" '
+                     f'WHERE medium_id = {id_input};')
+
+            cursor = db.execute_query(db_connection=db_connection, query=query)
+            mysql.connection.commit();
+            
+            return redirect('/mediums')
+
+        if request.form.get('name'):
+            full_name_input = request.form['name']
+            query = f'INSERT INTO Mediums (full_name) VALUES ("{full_name_input}");'
+            cursor = db.execute_query(db_connection=db_connection, query=query)
+            mysql.connection.commit();
+            
+        return redirect('/mediums')
+
+    if request.method == 'GET':
+        args = request.args
+        medium_to_edit = None
+        if args.get('id'):
+            preselect_query = f"SELECT medium_id, full_name FROM Mediums WHERE medium_id = {args.get('id')};"
+            cursor = db.execute_query(db_connection=db_connection, query=preselect_query)
+            medium_to_edit = cursor.fetchall()[0]
+            
+        query = 'SELECT medium_id, full_name FROM Mediums;'
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        medium_data = cursor.fetchall()
+
+        return render_template('mediums.j2', medium_data=medium_data, medium_to_edit=medium_to_edit)
+    
+@app.route('/delete_medium/<int:id>')
+def delete_medium(id):
+    query = f'DELETE FROM Mediums WHERE medium_id = {id};'
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    mysql.connection.commit()
+    
+    return redirect('/mediums')
+
+
+
 
 @app.route('/methods')
 def methods():
@@ -48,7 +93,7 @@ def seances():
 @app.route('/spirits', methods=['GET', 'POST'])
 def spirits():
     if request.method == 'POST':
-        if request.form.get('id_input'):
+        if request.form.get('id_input') and request.form.get('name'):
             full_name_input = request.form['name']
             id_input = request.form['id_input']
 
