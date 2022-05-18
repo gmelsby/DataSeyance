@@ -11,42 +11,38 @@
 
 <table border="5" cellpadding="10">
   <caption>Attendees</caption>
+  <thead>
   <tr>
     <th>attendee_id</th>
     <th>full_name</th>
     <th>Delete</th>
     <th>Edit</th>
   </tr>
+  </thead>
+  <tbody>
+  {% for attendee in attendee_data %}
   <tr>
-    <td>1</td>
-    <td>Bess Houdini</td>
-    <td><a href="_">Delete</a></td>
-    <td><a href="_">Edit</a></td>
+    <td>{{attendee['attendee_id']}}</td>
+    <td>{{attendee['full_name']}}</td>
+    <td><a href="delete_attendee/{{attendee['attendee_id']}}">Delete</a></td>
+    <td><a href="attendees?id={{attendee['attendee_id']}}">Edit</a></td>
   </tr>
-  <tr>
-    <td>2</td>
-    <td>Sir Arthur Conan Doyle</td>
-    <td><a href="_">Delete</a></td>
-    <td><a href="_">Edit</a></td>
-  </tr>
-  <tr>
-    <td>3</td>
-    <td>Hilma Klimt</td>
-    <td><a href="_">Delete</a></td>
-    <td><a href="_">Edit</a></td>
-  </tr>
+  {% endfor %}
+  </tbody>
 </table>
 
 <div id="insert" style="display: block">
-  <form id="InsertAttendee">
-      <legend><strong>Insert Attendee</strong></legend>
-          <fieldset class="fields">
-        <label> Full Name: </label> <input  type="text"  name="name">
-           <label for="attended">Has this attendee already attended a seance? If so, which one?</label>
-  <select name="attended" id="attended">
-       <option value="None">None</option>
-    <option value="Beachland">1857-11-21 at Beachland Ballroom & Tavern</option>
-    <option value="Edgar">1920-08-26 at Edgar Cayce's Houston A.R.E. Center</option>
+  <form id="InsertAttendee" method="POST">
+     <legend><strong>Insert Attendee</strong></legend>
+     <fieldset class="fields">
+     <label> Full Name: </label> <input  type="text"  name="name">
+     <label for="seance_id">Has this attendee already attended a seance? If so, which one?</label>
+     <select name="seance_id" id="seance_id_select">
+    <option value="">None</option>
+    {% for seance in seance_data %}
+    <option value={{seance['seance_id']}}>
+    {{seance['date']}} at {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
+    {% endfor %}
   </select>
     </fieldset>
     <input class="btn" type="submit" id="InsertAttendee" value="Insert Attendee">
@@ -58,19 +54,21 @@
 </div>
 
 <div id="update" style="display: block">
-  <form id="UpdateAttendee">
-      <legend><strong>Update Attendee</strong></legend>
-       <label for="attended">Attendee to Update: </label>
-  <select name="attended" id="attended">
-              <option value="None"> </option>
-    <option value="Bess">Bess Houdini | id: 1</option>
-    <option value="Arthur">Sir Arthur Conan Doyle | id:2</option>
-    <option value="Hilma">Hilma Klimt | id:3</option>
-  </select>
-      <fieldset class="fields">
-      <legend>New Information</legend>
-        <label> Full Name: </label> <input  type="text"  name="name">
-  </select>
+  <form id="UpdateAttendee" method="POST">
+    <legend><strong>Update Attendee</strong></legend>
+    <label for="id_input">Attendee to Update: </label>
+    <select name="id_input" id="id_input">
+      <option value=""> </option>
+      {% for attendee in attendee_data %}
+      <option value={{attendee['attendee_id']}}
+      {% if attendee_to_edit['attendee_id']==attendee['attendee_id'] %} selected {% endif %}>
+        {{attendee['full_name']}} | id: {{attendee['attendee_id']}}
+      </option>
+      {% endfor %}
+    </select>
+    <fieldset class="fields">
+    <legend>New Information</legend>
+    <label> Full Name: </label> <input  type="text"  name="new_name" value="{{attendee_to_edit['full_name']}}">
     </fieldset>
     <input class="btn" type="submit" id="UpdateAttendee" value="Update Attendee">
   </form>

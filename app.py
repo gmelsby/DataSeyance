@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, json, request
 from flask_mysqldb import MySQL
 import os
+import MySQLdb
 import database.db_connector as db
 
 db_connection = db.connect_to_database()
@@ -17,9 +18,78 @@ def root():
 def index():
     return render_template('index.j2')
 
-@app.route('/attendees')
+@app.route('/attendees', methods=['GET', 'POST'])
 def attendees():
+    if request.method == 'POST':
+        # if the POST request has id_input the update form has been submitted
+        # We only want to update if the name is nonempty
+        if request.form.get('id_input') and request.form.get('new_name'):
+            full_name_input = request.form['new_name']
+            id_input = request.form['id_input']
+            
+            query = ('UPDATE Attendees '
+                     f'SET full_name = "{full_name_input}" '
+                     f'WHERE attendee_id = {id_input};')
+            
+            cursor = db.execute_query(db_connection=db_connection, query=query)
+            mysql.connection.commit()
+
+            return redirect('/attendees')
+
+        # otherwise we are inserting a new Attendee
+        # We do not want Attendees with empty names
+        if request.form.get('name'):
+            full_name_input = request.form['name']
+            queries = [f'INSERT INTO Attendees (full_name) VALUES ("{full_name_input}");']
+            # if a seance_id has been selected we also add the Attendee to the SeanceAttendees table
+            if request.form['seance_id']:
+                queries.append(f'SET @new_attendee_id = LAST_INSERT_ID();')
+                seance_id_input = request.form['seance_id']
+                queries.append('INSERT INTO SeanceAttendees (attendee_id, seance_id) '
+                         f'VALUES (@new_attendee_id, {seance_id_input});')
+                
+            # These queries must be executed al at once in a unit
+            # We only commit when all are executed
+            cursor = db_connection.cursor(MySQLdb.cursors.DictCursor)
+            for query in queries:
+                cursor.execute(query)
+            mysql.connection.commit()
+            
+        return redirect('/attendees')
+            
+            
+    if request.method == 'GET':
+        args = request.args
+        attendee_to_edit = None
+        if args.get('id'):
+            preselect_query = f"SELECT attendee_id, full_name FROM Attendees WHERE attendee_id = {args.get('id')};"
+            cursor = db.execute_query(db_connection=db_connection, query=preselect_query)
+            attendee_to_edit = cursor.fetchone()
+            
+        attendee_query = 'SELECT attendee_id, full_name FROM Attendees;'
+        cursor = db.execute_query(db_connection=db_connection, query=attendee_query)
+        attendee_data = cursor.fetchall()
+        
+        seance_query = ('SELECT seance_id, Locations.name, Seances.date '
+                        'FROM Seances ' 
+                        'LEFT JOIN Locations ON Seances.location_id = Locations.location_id;')
+                        
+        cursor = db.execute_query(db_connection=db_connection, query=seance_query)
+        seance_data = cursor.fetchall()
+
+        return render_template('attendees.j2', attendee_data=attendee_data, seance_data=seance_data, attendee_to_edit=attendee_to_edit)
+    
+
     return render_template('attendees.j2')
+
+@app.route('/delete_attendee/<int:id>')
+def delete_attendee(id):
+    query = f'DELETE FROM Attendees WHERE attendee_id = {id};'
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    mysql.connection.commit()
+    
+    return redirect('/attendees')
+
 
 @app.route('/channelings')
 def channelings():
@@ -107,6 +177,8 @@ def delete_location(id):
 @app.route('/mediums', methods=['GET', 'POST'])
 def mediums():
     if request.method == 'POST':
+        # if the POST form has id_input the update form has been submitted
+        # We only want to update if the name is nonempty
         if request.form.get('id_input') and request.form.get('new_name'):
             full_name_input = request.form['new_name']
             id_input = request.form['id_input']

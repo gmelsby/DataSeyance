@@ -15,9 +15,15 @@ INSERT INTO SeanceAttendees (attendee_id, seance_id)
 VALUES (new_attendee_id, :seance_id_input);
 
 -- Query for getting the full name of all Attendees
--- Also to be used in dropdown to designate Attendee to be updated and attendee_id to be added to SeanceAttendee
+-- Also to be used in dropdown to find attendee_id to be added to SeanceAttendee
 SELECT attendee_id, full_name
 FROM Attendees;
+
+-- Query for prepopulating text box for Update Attendee
+-- Colon denotes variable that will be obtained through get query parameters
+SELECT attendee_id, full_name
+FROM Attendees
+WHERE attendee_id = :id_input;
 
 -- Query for updating the entry in Attendees with the matching attendee_id
 -- Colon denotes variable that will be obtained through form submission or specific table row
