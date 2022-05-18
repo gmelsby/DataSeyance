@@ -11,6 +11,7 @@
 
 <table border="5" cellpadding="10">
   <caption>Methods</caption>
+  <thead>
   <tr>
     <th>method_id</th>
     <th>name</th>
@@ -18,31 +19,22 @@
     <th>Delete</th>
     <th>Edit</th>
   </tr>
+  </thead>
+  <tbody>
+  {% for method in method_data %}
   <tr>
-    <td>1</td>
-    <td>Spirit Board</td>
-    <td>Medium asks questions of the spirit and the spirit guides their hand over a board of letters and symbols</td>
-    <td><a href="_">Delete</a></td>
-    <td><a href="_">Edit</a></td>
+    <td>{{method['method_id']}}</td>
+    <td>{{method['name']}}</td>
+    <td>{{method['description']}}</td>
+    <td><a href="delete_method/{{method['method_id']}}">Delete</a></td>
+    <td><a href="methods?id={{method['method_id']}}">Edit</a></td>
   </tr>
-  <tr>
-    <td>2</td>
-    <td>Cabinets</td>
-    <td>Medium is placed into a cabinet and the spirit manipulates objects in the room</td>
-    <td><a href="_">Delete</a></td>
-    <td><a href="_">Edit</a></td>
-  </tr>
-  <tr>
-    <td>3</td>
-    <td>Trance</td>
-    <td>Medium goes into a trance and delivers messages from the summoned spirit. Medium may or may not remember the messages once they wake.</td>
-    <td><a href="_">Delete</a></td>
-    <td><a href="_">Edit</a></td>
-  </tr>
+  {% endfor %}
+  </tbody>
 </table>
 
 <div id="insert" style="display: block">
-  <form id="InsertMethod">
+  <form id="InsertMethod" method="POST">
       <legend><strong>Insert Method</strong></legend>
           <fieldset class="fields">
         <label> Name: </label> <input  type="text"  name="name">
@@ -57,19 +49,23 @@
 </div>
 
 <div id="update" style="display: block">
-  <form id="UpdateMethod">
+  <form id="UpdateMethod" method="POST">
       <legend><strong>Update Method</strong></legend>
-            <label for="toupdate">Method to Update: </label>
-            <select name="toupdate" id="toupdate">
-                        <option value="None"> </option>
-              <option value="board">Spirit Board | id: 1</option>
-              <option value="cabinet">Cabinets | id: 2</option>
-              <option value="trance">Trance | id: 3</option>
+            <label for="id_input">Method to Update: </label>
+            <select name="id_input" id="toupdate">
+              <option value=""> </option>
+              {% for method in method_data %}
+              <option value="{{method['method_id']}}"
+              {% if method_to_edit['method_id']==method['method_id'] %} selected {% endif %}>
+                {{method['name']}} | id: {{method['method_id']}}
+              </option>
+              {% endfor %}
             </select>
         <fieldset class="fields">
           <legend>New information</legend>
-         <label> Name: </label> <input type="text"  name="name">
-         <label> Description: </label> <textarea rows="3" cols="100" name="description" form="UpdateMethod"></textarea>
+         <label> Name: </label> <input type="text" name="name" value="{{method_to_edit['name']}}">
+         <label> Description: </label> 
+         <textarea rows="3" cols="100" name="description" form="UpdateMethod">{{method_to_edit['description']}}</textarea> 
     </fieldset>
     <input class="btn" type="submit" id="UpdateMethod" value="Update Method">
   </form>

@@ -179,6 +179,12 @@ FROM Methods;
 SELECT method_id, name
 FROM Methods;
 
+-- To be used for edit Methods prefill
+-- Colon denotes variable obtained though GET request query parameters
+SELECT method_id, name, description
+FROM Methods
+WHERE method_id = :id_input;
+
 -- Query for updating a method based on id
 -- Colon denotes variable that will be obtained through form submission or specific table row
 UPDATE Methods

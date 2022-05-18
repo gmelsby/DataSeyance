@@ -18,6 +18,7 @@
     <th>Delete</th>
     <th>Edit</th>
   </tr>
+  </thead>
   <tbody>
   {% for medium in medium_data %}
   <tr>
@@ -27,6 +28,7 @@
     <td><a href="mediums?id={{medium['medium_id']}}">Edit</a></td>
   </tr>
   {% endfor %}
+  </tbody>
 </table>
 
 

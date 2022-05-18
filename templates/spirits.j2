@@ -19,6 +19,7 @@
     <th>Delete</th>
     <th>Edit</th>
   </tr>
+  </thead>
   <tbody>
   {% for spirit in spirit_data %}
   <tr>
@@ -28,6 +29,7 @@
     <td><a href="spirits?id={{spirit['spirit_id']}}">Edit</a></td>
   </tr>
   {% endfor %}
+  </tbody>
 </table>
 
 

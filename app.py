@@ -45,7 +45,7 @@ def mediums():
             
             return redirect('/mediums')
 
-        if request.form.get('name'):
+        if request.form.get('name') and request.form.get('id_input') != '':
             full_name_input = request.form['name']
             query = f'INSERT INTO Mediums (full_name) VALUES ("{full_name_input}");'
             cursor = db.execute_query(db_connection=db_connection, query=query)
@@ -78,9 +78,61 @@ def delete_medium(id):
 
 
 
-@app.route('/methods')
+@app.route('/methods', methods=['GET', 'POST'])
 def methods():
-    return render_template('methods.j2')
+    if request.method == 'POST':
+        if request.form.get('id_input') and request.form.get('name'):
+            name_input = request.form['name']
+            id_input = request.form['id_input']
+            description_input = 'NULL'
+            if request.form.get('description'):
+                description_input = f'"{request.form["description"]}"'
+
+
+            query = ('UPDATE Methods ' 
+                     f'SET name = "{name_input}", '
+                     f'description = {description_input} '
+                     f'WHERE method_id = {id_input};')
+
+            cursor = db.execute_query(db_connection=db_connection, query=query)
+            mysql.connection.commit();
+            
+            return redirect('/methods')
+
+        if request.form.get('name') and request.form.get('id_input') != '':
+            name_input = request.form['name']
+            description_input = 'NULL'
+            if request.form.get('description'):
+                description_input = f'"{request.form["description"]}"'
+            query = f'INSERT INTO Methods (name, description) VALUES ("{name_input}", {description_input});'
+            cursor = db.execute_query(db_connection=db_connection, query=query)
+            mysql.connection.commit();
+            
+        return redirect('/methods')
+
+    if request.method == 'GET':
+        args = request.args
+        method_to_edit = None
+        if args.get('id'):
+            preselect_query = f"SELECT method_id, name, description FROM Methods WHERE method_id = {args.get('id')};"
+            cursor = db.execute_query(db_connection=db_connection, query=preselect_query)
+            method_to_edit = cursor.fetchall()[0]
+            
+        query = 'SELECT method_id, name, description FROM Methods;'
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        method_data = cursor.fetchall()
+
+        return render_template('methods.j2', method_data=method_data, method_to_edit=method_to_edit)
+    
+
+@app.route('/delete_method/<int:id>')
+def delete_method(id):
+    query = f'DELETE FROM Methods WHERE method_id = {id};'
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    mysql.connection.commit()
+    
+    return redirect('/methods')
+
 
 @app.route('/seanceattendees')
 def seanceattendees():
@@ -106,7 +158,7 @@ def spirits():
             
             return redirect('/spirits')
 
-        if request.form.get('name'):
+        if request.form.get('name') and request.form.get('id_input') != '':
             full_name_input = request.form['name']
             query = f'INSERT INTO Spirits (full_name) VALUES ("{full_name_input}");'
             cursor = db.execute_query(db_connection=db_connection, query=query)
@@ -139,5 +191,5 @@ def delete_spirit(id):
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 5005))
     app.run(port=port, debug=True)
