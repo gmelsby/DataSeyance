@@ -11,6 +11,8 @@
 </div>
 
 <table border="5" cellpadding="10">
+  <caption>Seances</caption>
+  <thead>
   <tr>
     <th>seance_id</th>
     <th>Location Name</th>
@@ -19,22 +21,19 @@
     <th>Edit</th>
     <th>View, Edit, and Remove Attendees</th>
   </tr>
+  </thead>
+  <tbody>
+  {% for seance in seance_data %}
   <tr>
-    <td>1</td>
-    <td>Edgar Cayce's Houston A.R.E. Center</td>
-    <td>1920-08-26</td>
+    <td>{{seance['seance_id']}}</td>
+    <td>{{seance['name']}}</td>
+    <td>{{seance['date']}}</td>
     <td><a href="_">Delete</a></td>
     <td><a href="_">Edit</a></td>
     <td><a href="seanceattendees">View, Edit, and Remove Attendees</a></td>
   </tr>
-  <tr>
-    <td>2</td>
-    <td>Beachland Ballroom & Tavern</td>
-    <td>1857-11-21</td>
-    <td><a href="_">Delete</a></td>
-    <td><a href="_">Edit</a></td>
-    <td><a href="seanceattendees">View, Edit, and Remove Attendees</a></td>
-</tr>
+  {% endfor %}
+  </tbody>
 </table>
 
 

@@ -144,10 +144,18 @@ VALUES (
 -- Query for getting the full list of Seances with location name
 -- To be displayed on the Seances page
 -- Used to populate dropdown and text boxes for Update Seances, Insert Attendee, add and filter Channeings
--- Colon denotes variable that will be obtained through form submission or specific table row
 SELECT Seances.seance_id, Locations.name, Seances.date
 FROM Seances
-INNER JOIN Locations ON Seances.location_id = Locations.location_id;
+LEFT JOIN Locations ON Seances.location_id = Locations.location_id;
+
+-- Query for prefill inputs for Update Seance
+-- Colon denotes variable obtained through get request parameters
+SELECT Seances.seance_id, Locations.name, Seances.date
+FROM Seances
+LEFT JOIN Locations ON Seances.location_id = Locations.location_id
+WHERE Seances.seance_id = :id_input;
+
+
 
 -- Query for updating a Seance based on its id
 -- Colon denotes variable that will be obtained through form submission or specific table row

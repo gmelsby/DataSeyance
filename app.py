@@ -220,7 +220,27 @@ def seanceattendees():
 
 @app.route('/seances')
 def seances():
-    return render_template('seances.j2')
+    if request.method == 'GET':
+        args = request.args
+        seance_to_edit = None
+        if args.get('id'):
+            preselect_query = ("SELECT Seances.seance_id, Locations.name, Seances.date "
+                               "FROM Seances "
+                               "LEFT JOIN Locations ON Seances.location_id = Locations.location_id "
+                               f"WHERE Seances.seance_id = {args.get('id')};")
+            cursor = db.execute_query(db_connection, query=preselect_query)
+            seance_to_edit = cursor.fetchone()
+
+        query = ("SELECT Seances.seance_id, Locations.name, Seances.date "
+                 "FROM Seances "
+                 "LEFT JOIN Locations ON Seances.location_id = Locations.location_id;")
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        seance_data = cursor.fetchall()
+        return render_template('seances.j2', seance_data=seance_data, seance_to_edit=seance_to_edit)
+
+
+
+
 
 @app.route('/spirits', methods=['GET', 'POST'])
 def spirits():
