@@ -105,7 +105,7 @@ SELECT location_id, name, street_address, city, zip, state, country
 FROM Locations;
 
 -- Query for getting a list of Location names with ids
--- Used in drop-down menu for editing Locations and inserting and editing Seances
+-- Used in drop-down menu for editing Seances
 SELECT location_id, name
 FROM Locations;
 

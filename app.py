@@ -25,15 +25,35 @@ def attendees():
 def channelings():
     return render_template('channelings.j2')
 
-@app.route('/locations')
+@app.route('/locations', methods=['GET', 'POST'])
 def locations():
+    if request.method == 'GET':
+        args = request.args
+        location_to_edit = None
+        if args.get('id'):
+            preselect_query = ('SELECT location_id, name, street_address, city, zip, state, country '
+                               'FROM Locations '
+                               f'WHERE location_id = {args.get("id")};')
+            cursor = db.execute_query(db_connection=db_connection, query=preselect_query)
+            location_to_edit = cursor.fetchone()
+
+
+        query = ('SELECT location_id, name, street_address, city, zip, state, country '
+                 'FROM Locations;')
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        location_data = cursor.fetchall()
+
+        return render_template('locations.j2', location_data=location_data, location_to_edit=location_to_edit)
+
+
+
     return render_template('locations.j2')
 
 @app.route('/mediums', methods=['GET', 'POST'])
 def mediums():
     if request.method == 'POST':
-        if request.form.get('id_input') and request.form.get('name'):
-            full_name_input = request.form['name']
+        if request.form.get('id_input') and request.form.get('new_name'):
+            full_name_input = request.form['new_name']
             id_input = request.form['id_input']
 
             query = ('UPDATE Mediums ' 
@@ -45,7 +65,7 @@ def mediums():
             
             return redirect('/mediums')
 
-        if request.form.get('name') and request.form.get('id_input') != '':
+        if request.form.get('name'):
             full_name_input = request.form['name']
             query = f'INSERT INTO Mediums (full_name) VALUES ("{full_name_input}");'
             cursor = db.execute_query(db_connection=db_connection, query=query)
@@ -59,7 +79,7 @@ def mediums():
         if args.get('id'):
             preselect_query = f"SELECT medium_id, full_name FROM Mediums WHERE medium_id = {args.get('id')};"
             cursor = db.execute_query(db_connection=db_connection, query=preselect_query)
-            medium_to_edit = cursor.fetchall()[0]
+            medium_to_edit = cursor.fetchone()
             
         query = 'SELECT medium_id, full_name FROM Mediums;'
         cursor = db.execute_query(db_connection=db_connection, query=query)
@@ -81,15 +101,15 @@ def delete_medium(id):
 @app.route('/methods', methods=['GET', 'POST'])
 def methods():
     if request.method == 'POST':
-        if request.form.get('id_input') and request.form.get('name'):
-            name_input = request.form['name']
+        if request.form.get('id_input') and request.form.get('new_name'):
+            name_input = request.form['new_name']
             id_input = request.form['id_input']
             description_input = 'NULL'
-            if request.form.get('description'):
-                description_input = f'"{request.form["description"]}"'
+            if request.form.get('new_description'):
+                description_input = f'"{request.form["new_description"]}"'
 
 
-            query = ('UPDATE Methods ' 
+            query= ('UPDATE Methods ' 
                      f'SET name = "{name_input}", '
                      f'description = {description_input} '
                      f'WHERE method_id = {id_input};')
@@ -99,7 +119,7 @@ def methods():
             
             return redirect('/methods')
 
-        if request.form.get('name') and request.form.get('id_input') != '':
+        if request.form.get('name'):
             name_input = request.form['name']
             description_input = 'NULL'
             if request.form.get('description'):
@@ -116,7 +136,7 @@ def methods():
         if args.get('id'):
             preselect_query = f"SELECT method_id, name, description FROM Methods WHERE method_id = {args.get('id')};"
             cursor = db.execute_query(db_connection=db_connection, query=preselect_query)
-            method_to_edit = cursor.fetchall()[0]
+            method_to_edit = cursor.fetchone()
             
         query = 'SELECT method_id, name, description FROM Methods;'
         cursor = db.execute_query(db_connection=db_connection, query=query)
@@ -145,8 +165,8 @@ def seances():
 @app.route('/spirits', methods=['GET', 'POST'])
 def spirits():
     if request.method == 'POST':
-        if request.form.get('id_input') and request.form.get('name'):
-            full_name_input = request.form['name']
+        if request.form.get('id_input') and request.form.get('new_name'):
+            full_name_input = request.form['new_name']
             id_input = request.form['id_input']
 
             query = ('UPDATE Spirits ' 
@@ -158,7 +178,7 @@ def spirits():
             
             return redirect('/spirits')
 
-        if request.form.get('name') and request.form.get('id_input') != '':
+        if request.form.get('name'):
             full_name_input = request.form['name']
             query = f'INSERT INTO Spirits (full_name) VALUES ("{full_name_input}");'
             cursor = db.execute_query(db_connection=db_connection, query=query)
@@ -172,7 +192,7 @@ def spirits():
         if args.get('id'):
             preselect_query = f"SELECT spirit_id, full_name FROM Spirits WHERE spirit_id = {args.get('id')};"
             cursor = db.execute_query(db_connection=db_connection, query=preselect_query)
-            spirit_to_edit = cursor.fetchall()[0]
+            spirit_to_edit = cursor.fetchone()
 
         query = 'SELECT spirit_id, full_name FROM Spirits;'
         cursor = db.execute_query(db_connection=db_connection, query=query)
