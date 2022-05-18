@@ -36,6 +36,11 @@ def locations():
                                f'WHERE location_id = {args.get("id")};')
             cursor = db.execute_query(db_connection=db_connection, query=preselect_query)
             location_to_edit = cursor.fetchone()
+            
+            # Removes 'None' from prefill--if a value is NULL, we get empty string instead
+            for key, value in location_to_edit.items():
+                if value is None:
+                    location_to_edit[key] = ''
 
 
         query = ('SELECT location_id, name, street_address, city, zip, state, country '
@@ -137,6 +142,11 @@ def methods():
             preselect_query = f"SELECT method_id, name, description FROM Methods WHERE method_id = {args.get('id')};"
             cursor = db.execute_query(db_connection=db_connection, query=preselect_query)
             method_to_edit = cursor.fetchone()
+            
+            # Remvoes 'None' from prefilled text input--if a value is NULL we just want an empty string
+            for key, value in method_to_edit.items():
+                if value is None:
+                    method_to_edit[key] = ''
             
         query = 'SELECT method_id, name, description FROM Methods;'
         cursor = db.execute_query(db_connection=db_connection, query=query)
