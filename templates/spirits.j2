@@ -12,40 +12,32 @@
 
 <table border="5" cellpadding="10">
   <caption>Spirits</caption>
+  <thead>
   <tr>
     <th>spirit_id</th>
     <th>full_name</th>
     <th>Delete</th>
     <th>Edit</th>
   </tr>
+  <tbody>
+  {% for spirit in spirit_data %}
   <tr>
-    <td>1</td>
-    <td>Black Hawk</td>
-    <td><a href="_">Delete</a></td>
+    <td>{{spirit['spirit_id']}}</td>
+    <td>{{spirit['full_name']}}</td>
+    <td><a href="delete_spirit/{{spirit['spirit_id']}}">Delete</a></td>
     <td><a href="_">Edit</a></td>
   </tr>
-  <tr>
-    <td>2</td>
-    <td>Harry Houdini</td>
-    <td><a href="_">Delete</a></td>
-    <td><a href="_">Edit</a></td>
-  </tr>
-  <tr>
-    <td>3</td>
-    <td>Bartholomew Governor of the House of Strangers</td>
-    <td><a href="_">Delete</a></td>
-    <td><a href="_">Edit</a></td>
-  </tr>
+  {% endfor %}
 </table>
 
 
 <div id="insert" style="display: block">
-  <form id="InsertSpirit">
+  <form id="insert_spirit" method="POST">
       <legend><strong>Insert Spirit</strong></legend>
           <fieldset class="fields">
   <label> Full Name: </label> <input  type="text"  name="name">
     </fieldset>
-    <input class="btn" type="submit" id="InsertSpirit" value="Insert Spirit">
+    <input class="btn" type="submit" value="Insert Spirit">
   </form>
 </div>
 
@@ -54,18 +46,18 @@
 </div>
 
 <div id="update" style="display: block">
-  <form id="UpdateSpirit">
+  <form id="UpdateSpirit" method="POST">
       <legend><strong>Update Spirit</strong></legend>
-        <label for="attended">Spirit to Update: </label>
-  <select name="attended" id="attended">
-              <option value="None"> </option>
-    <option value="Hawk"> Black Hawk | id: 1</option>
-    <option value="Houdini"> Harry Houdini | id: 2</option>
-    <option value="Bart"> Bartholomew Governor of the House of Strangers | id: 3</option>
+  <label for="id_input">Spirit to Update: </label>
+  <select name="id_input">
+    <option value="None"> </option>
+    {% for spirit in spirit_data %}
+    <option value={{spirit['spirit_id']}}> {{spirit['full_name']}} | id: {{spirit['spirit_id']}}</option>
+    {% endfor %}
   </select>
 
       <fieldset class="fields">
-      <legend>New Information</legend>
+  <legend>New Information</legend>
   <label> Full Name: </label> <input  type="text"  name="name">
     </fieldset>
     <input class="btn" type="submit" id="UpdateSpirit" value="Update Spirit">
