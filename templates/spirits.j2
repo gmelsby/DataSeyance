@@ -25,7 +25,7 @@
     <td>{{spirit['spirit_id']}}</td>
     <td>{{spirit['full_name']}}</td>
     <td><a href="delete_spirit/{{spirit['spirit_id']}}">Delete</a></td>
-    <td><a href="_">Edit</a></td>
+    <td><a href="spirits?id={{spirit['spirit_id']}}">Edit</a></td>
   </tr>
   {% endfor %}
 </table>
@@ -52,13 +52,17 @@
   <select name="id_input">
     <option value="None"> </option>
     {% for spirit in spirit_data %}
-    <option value={{spirit['spirit_id']}}> {{spirit['full_name']}} | id: {{spirit['spirit_id']}}</option>
+    <option 
+      value={{spirit['spirit_id']}}
+      {% if spirit_to_edit['spirit_id']==spirit['spirit_id'] %} selected {% endif %}>
+        {{spirit['full_name']}} | id: {{spirit['spirit_id']}}
+    </option>
     {% endfor %}
   </select>
 
-      <fieldset class="fields">
+    <fieldset class="fields">
   <legend>New Information</legend>
-  <label> Full Name: </label> <input  type="text"  name="name">
+  <label> Full Name: </label> <input  type="text"  name="name" value="{{spirit_to_edit['full_name']}}">
     </fieldset>
     <input class="btn" type="submit" id="UpdateSpirit" value="Update Spirit">
   </form>

@@ -70,11 +70,18 @@ def spirits():
         return redirect('/spirits')
 
     if request.method == 'GET':
+        args = request.args
+        spirit_to_edit = None
+        if args.get('id'):
+            preselect_query = f"SELECT spirit_id, full_name FROM Spirits WHERE spirit_id = {args.get('id')};"
+            cursor = db.execute_query(db_connection=db_connection, query=preselect_query)
+            spirit_to_edit = cursor.fetchall()[0]
+
         query = 'SELECT spirit_id, full_name FROM Spirits;'
         cursor = db.execute_query(db_connection=db_connection, query=query)
-        real_spirits = cursor.fetchall()
+        spirit_data = cursor.fetchall()
 
-        return render_template('spirits.j2', spirit_data=real_spirits)
+        return render_template('spirits.j2', spirit_data=spirit_data, spirit_to_edit=spirit_to_edit)
     
 @app.route('/delete_spirit/<int:id>')
 def delete_spirit(id):
