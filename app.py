@@ -58,7 +58,7 @@ def locations():
             street_input = f'"{request.form["street_address"]}"' if request.form.get('street_address') else 'NULL'
             city_input = f'"{request.form["city"]}"' if request.form.get('city') else 'NULL'
             zip_input = f'"{request.form["zip"]}"' if request.form.get('zip') else 'NULL'
-            state_input = f'"{request.form["state"]}"' if request.form.get('state') else 'NULL'
+            state_input =f'"{request.form["state"]}"' if request.form.get('state') else 'NULL'
             country_input = f'"{request.form["country"]}"' if request.form.get('country') else 'NULL'
             
             query = ('INSERT INTO Locations (name, street_address, city, zip, state, country) '
@@ -218,26 +218,70 @@ def delete_method(id):
 def seanceattendees():
     return render_template('seanceattendees.j2')
 
-@app.route('/seances')
+@app.route('/seances', methods=['GET', 'POST'])
 def seances():
+    if request.method == 'POST':
+        # if form has id_input we are updating
+        if request.form.get('id_input'):
+            id_input = request.form['id_input']
+            date_input = f'"{request.form["new_date"]}"' if request.form.get('new_date') else 'NULL'
+            location_id_input = f'{request.form["new_location_id"]}' if request.form.get('new_location_id') else 'NULL'
+
+            query = ('UPDATE Seances '
+                    f'SET date = {date_input}, '
+                    f'location_id = {location_id_input} '
+                    f'WHERE seance_id = {id_input};')
+            
+            cursor = db.execute_query(db_connection=db_connection, query=query)
+            mysql.connection.commit()
+
+            return redirect('/seances')
+
+        # otherwise we are creating a new seance
+        else:
+            date_input = f'"{request.form["date"]}"' if request.form.get('date') else 'NULL'
+            location_id_input = f'{request.form["location_id"]}' if request.form.get('location_id') else 'NULL'
+
+            query = ('INSERT INTO Seances (date, location_id) '
+                    f'VALUES ({date_input}, {location_id_input});')
+
+            cursor = db.execute_query(db_connection=db_connection, query=query)
+            mysql.connection.commit()
+
+            return redirect('/seances')
+
+        return redirect('/seances')
+            
+
     if request.method == 'GET':
         args = request.args
         seance_to_edit = None
         if args.get('id'):
-            preselect_query = ("SELECT Seances.seance_id, Locations.name, Seances.date "
+            preselect_query = ("SELECT Seances.seance_id, Locations.name, Seances.date, Locations.location_id "
                                "FROM Seances "
                                "LEFT JOIN Locations ON Seances.location_id = Locations.location_id "
                                f"WHERE Seances.seance_id = {args.get('id')};")
             cursor = db.execute_query(db_connection, query=preselect_query)
             seance_to_edit = cursor.fetchone()
 
-        query = ("SELECT Seances.seance_id, Locations.name, Seances.date "
-                 "FROM Seances "
-                 "LEFT JOIN Locations ON Seances.location_id = Locations.location_id;")
-        cursor = db.execute_query(db_connection=db_connection, query=query)
+        seance_query = ("SELECT Seances.seance_id, Locations.name, Seances.date "
+                        "FROM Seances "
+                        "LEFT JOIN Locations ON Seances.location_id = Locations.location_id;")
+        cursor = db.execute_query(db_connection=db_connection, query=seance_query)
         seance_data = cursor.fetchall()
-        return render_template('seances.j2', seance_data=seance_data, seance_to_edit=seance_to_edit)
 
+        location_query = ("SELECT location_id, name FROM Locations;")
+        cursor = db.execute_query(db_connection=db_connection, query=location_query)
+        location_data = cursor.fetchall()
+        return render_template('seances.j2', seance_data=seance_data, seance_to_edit=seance_to_edit, location_data=location_data)
+
+@app.route('/delete_seance/<int:id>')
+def delete_seance(id):
+    query = f'DELETE FROM Seances WHERE seance_id = {id};'
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    mysql.connection.commit()
+    
+    return redirect('/seances')
 
 
 

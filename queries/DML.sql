@@ -105,7 +105,7 @@ SELECT location_id, name, street_address, city, zip, state, country
 FROM Locations;
 
 -- Query for getting a list of Location names with ids
--- Used in drop-down menu for editing Seances
+-- Used in drop-down menu for editing and adding Seances
 SELECT location_id, name
 FROM Locations;
 
@@ -136,10 +136,8 @@ WHERE location_id = :id_input;
 INSERT INTO Seances (date, location_id)
 VALUES (
     :date_input, 
-    (SELECT location_id 
-     FROM Locations
-     WHERE name = :location_name_input
-    ));
+    :location_id_input
+    );
 
 -- Query for getting the full list of Seances with location name
 -- To be displayed on the Seances page
@@ -150,30 +148,19 @@ LEFT JOIN Locations ON Seances.location_id = Locations.location_id;
 
 -- Query for prefill inputs for Update Seance
 -- Colon denotes variable obtained through get request parameters
-SELECT Seances.seance_id, Locations.name, Seances.date
+SELECT Seances.seance_id, Locations.name, Seances.date, Locations.location_id
 FROM Seances
 LEFT JOIN Locations ON Seances.location_id = Locations.location_id
 WHERE Seances.seance_id = :id_input;
-
 
 
 -- Query for updating a Seance based on its id
 -- Colon denotes variable that will be obtained through form submission or specific table row
 UPDATE Seances
 SET date = :date_input,
-location_id = (SELECT location_id 
-               FROM Locations
-               WHERE name = :location_name_input)
+location_id = :location_id_input
 WHERE seance_id = :id_input;
 
--- Query for deleting a Seance
--- Colon denotes variable that will be obtained through form submission or specific table row
-DELETE FROM Seances
-WHERE date = :date_input
-AND location_id = (SELECT location_id
-                   FROM Locations
-                   WHERE name = :location_name_input);
-            
 -- Query for deleting the Seance with the passed-in id
 -- Colon denotes variable that will be obtained through form submission or specific table row
 DELETE FROM Seances
