@@ -34,7 +34,6 @@ def attendees():
                      f'WHERE attendee_id = {id_input};')
             
             cursor = db.execute_query(db_connection=db_connection, query=query)
-            mysql.connection.commit()
 
             return redirect('/attendees')
 
@@ -93,7 +92,6 @@ def attendees():
 def delete_attendee(id):
     query = f'DELETE FROM Attendees WHERE attendee_id = {id};'
     cursor = db.execute_query(db_connection=db_connection, query=query)
-    mysql.connection.commit()
     
     return redirect('/attendees')
 
@@ -116,7 +114,6 @@ def channelings():
                 f'{medium_input}, {seance_input}, {spirit_input}, {method_input}, {success_input}, {length_input});')
                  
         cursor = db.execute_query(db_connection=db_connection, query=query)
-        mysql.connection.commit()
         
         # redirect to the inputted seance_id if passed in
         if seance_input != 'NULL':
@@ -188,7 +185,6 @@ def delete_channeling(id):
      # deletes a channeling based on id
     query = f'DELETE FROM Channelings WHERE channeling_id = {id};'
     cursor = db.execute_query(db_connection=db_connection, query=query)
-    mysql.connection.commit()
 
     args = request.args
     if args.get('id') is not None:
@@ -224,7 +220,6 @@ def locations():
                     f'WHERE location_id = {id_input}')
             
             cursor = db.execute_query(db_connection=db_connection, query=query)
-            mysql.connection.commit()
             
             return redirect('/locations')
 
@@ -243,7 +238,6 @@ def locations():
                     f'VALUES ({name_input}, {street_input}, {city_input}, {zip_input}, {state_input}, {country_input});')
 
             cursor = db.execute_query(db_connection=db_connection, query=query)
-            mysql.connection.commit()
 
             return redirect('/locations')
 
@@ -281,7 +275,6 @@ def delete_location(id):
     # removes the location with indicated id
     query = f'DELETE FROM Locations WHERE location_id = {id};'
     cursor = db.execute_query(db_connection=db_connection, query=query)
-    mysql.connection.commit()
     
     return redirect('/locations')
 
@@ -300,7 +293,6 @@ def mediums():
                      f'WHERE medium_id = {id_input};')
 
             cursor = db.execute_query(db_connection=db_connection, query=query)
-            mysql.connection.commit()
             
             return redirect('/mediums')
 
@@ -310,7 +302,6 @@ def mediums():
             full_name_input = request.form['name'].strip()
             query = f'INSERT INTO Mediums (full_name) VALUES ("{full_name_input}");'
             cursor = db.execute_query(db_connection=db_connection, query=query)
-            mysql.connection.commit()
             
         return redirect('/mediums')
 
@@ -337,7 +328,6 @@ def delete_medium(id):
     # deletes a medium based on id
     query = f'DELETE FROM Mediums WHERE medium_id = {id};'
     cursor = db.execute_query(db_connection=db_connection, query=query)
-    mysql.connection.commit()
     
     return redirect('/mediums')
 
@@ -364,7 +354,6 @@ def methods():
                      f'WHERE method_id = {id_input};')
 
             cursor = db.execute_query(db_connection=db_connection, query=query)
-            mysql.connection.commit()
             
             return redirect('/methods')
 
@@ -378,7 +367,6 @@ def methods():
             # creates new method
             query = f'INSERT INTO Methods (name, description) VALUES ("{name_input}", {description_input});'
             cursor = db.execute_query(db_connection=db_connection, query=query)
-            mysql.connection.commit()
             
         return redirect('/methods')
 
@@ -409,7 +397,6 @@ def delete_method(id):
     # removes method with associated method_id
     query = f'DELETE FROM Methods WHERE method_id = {id};'
     cursor = db.execute_query(db_connection=db_connection, query=query)
-    mysql.connection.commit()
     
     return redirect('/methods')
 
@@ -430,7 +417,6 @@ def seanceattendees():
                     f'AND seance_id = {old_seance_id};')
 
             cursor = db.execute_query(db_connection=db_connection, query=query)
-            mysql.connection.commit()
 
             return redirect(f'/seanceattendees?seance_id_input={old_seance_id}')
 
@@ -444,7 +430,6 @@ def seanceattendees():
             query = ('INSERT INTO SeanceAttendees (attendee_id, seance_id) '
                     f'VALUES ({attendee_id}, {seance_id});')
             cursor = db.execute_query(db_connection=db_connection, query=query)
-            mysql.connection.commit()
 
             return redirect(f'/seanceattendees?seance_id_input={seance_id}')
 
@@ -529,7 +514,6 @@ def delete_seanceattendee(id):
      # deletes a seance attendence record based on id
     query = f'DELETE FROM SeanceAttendees WHERE seanceattendees_id = {id};'
     cursor = db.execute_query(db_connection=db_connection, query=query)
-    mysql.connection.commit()
 
     args = request.args
     if args.get('seance_id_input') is not None:
@@ -559,7 +543,6 @@ def seances():
                     f'WHERE seance_id = {id_input};')
             
             cursor = db.execute_query(db_connection=db_connection, query=query)
-            mysql.connection.commit()
 
             return redirect('/seances')
 
@@ -574,7 +557,6 @@ def seances():
                     f'VALUES ({date_input}, {location_id_input});')
 
             cursor = db.execute_query(db_connection=db_connection, query=query)
-            mysql.connection.commit()
 
             return redirect('/seances')
 
@@ -609,7 +591,6 @@ def delete_seance(id):
     # removes a seance by id
     query = f'DELETE FROM Seances WHERE seance_id = {id};'
     cursor = db.execute_query(db_connection=db_connection, query=query)
-    mysql.connection.commit()
     
     return redirect('/seances')
 
@@ -628,7 +609,6 @@ def spirits():
                      f'WHERE spirit_id = {id_input};')
 
             cursor = db.execute_query(db_connection=db_connection, query=query)
-            mysql.connection.commit()
             
             return redirect('/spirits')
 
@@ -637,7 +617,6 @@ def spirits():
             full_name_input = request.form['name'].strip()
             query = f'INSERT INTO Spirits (full_name) VALUES ("{full_name_input}");'
             cursor = db.execute_query(db_connection=db_connection, query=query)
-            mysql.connection.commit();
             
         return redirect('/spirits')
 
@@ -663,7 +642,6 @@ def delete_spirit(id):
     # deletes spirit based on id
     query = f'DELETE FROM Spirits WHERE spirit_id = {id};'
     cursor = db.execute_query(db_connection=db_connection, query=query)
-    mysql.connection.commit()
     
     return redirect('/spirits')
 
