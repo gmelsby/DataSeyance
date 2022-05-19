@@ -10,17 +10,28 @@
 &nbsp;
 </div>
 
+<form>
 <label for="seance-select">Choose a seance to view channelings for:</label>
-<select name="seances" id="seance-select">
-    <option value="all">Show me channelings from all seances</option>
-    <option value="seance1_id">1920-08-26 at Edgar Cayce's Houston A.R.E. Center</option>
-    <option value="seance2_id">1857-11-21 at Beachland Ballroom & Tavern</option>
+<select name="id" id="seance-select">
+    <option value="">Show me channelings from all seances</option>
+    {% for seance in seance_data %}
+    <option value={{seance['seance_id']}}
+    {% if chosen_seance['seance_id']==seance['seance_id'] %} selected {% endif %}>
+    {{seance['date']}} at {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
+    {% endfor %}
 </select>
 <input class="btn" type="submit" id="filter" value="Filter">
+</form>
+
 <div>&nbsp;</div>
 
 <table border="5" cellpadding="10">
-  <caption>Channelings from All Seances</caption>
+  <caption>
+  Channelings from 
+  {% if chosen_seance==None %}All Seances
+  {% else %}{{chosen_seance['date']}} at {{chosen_seance['name']}} | seance_id: {{chosen_seance['seance_id']}}{% endif %}
+  </caption>
+  <thead>
   <tr>
     <th>channeling_id</th>
     <th>Medium Name</th>
@@ -32,28 +43,22 @@
     <th>length_in_minutes</th>
     <th>Delete</th>
   </tr>
+  </thead>
+  <tbody>
+  {% for channeling in channeling_data %}
   <tr>
-    <td>1</td>
-    <td>Arthur Ford</td>
-    <td>Harry Houdini</td>
-    <td>Trance</td>
-    <td>1920-08-26</td>
-    <td>Edgar Cayce's Houston A.R.E. Center</td>
-    <td>1</td>
-    <td>30</td>
-    <td><a href="_">Delete</a></td>
+    <td>{{channeling['channeling_id']}}</td>
+    <td>{{channeling['medium_name']}}</td>
+    <td>{{channeling['spirit_name']}}</td>
+    <td>{{channeling['method_name']}}</td>
+    <td>{{channeling['date']}}</td>
+    <td>{{channeling['location_name']}}</td>
+    <td>{{channeling['is_successful']}}</td>
+    <td>{{channeling['length_in_minutes']}}</td>
+    <td><a href="/delete_channeling/{{channeling['channeling_id']}}">Delete</a></td>
   </tr>
-  <tr>
-    <td>2</td>
-    <td>Kate Fox</td>
-    <td>Black Hawk</td>
-    <td>Cabinets</td>
-    <td>1857-11-21</td>
-    <td>Beachland Ballroom & Tavern</td>
-    <td>0</td>
-    <td>150</td>
-    <td><a href="_">Delete</a></td>
-  </tr>
+  {% endfor %}
+  </tbody>
 </table>
 
 
@@ -62,35 +67,41 @@
   <form id="InsertChanneling">
       <legend><strong>Insert Channeling</strong></legend>
       <fieldset class="fields">
-        <label for="seance">Seance</label>
-        <select name="seance">
-                    <option value="None"> </option>
-          <option value="s1">1920-08-26 at Edgar Cayce's Houston A.R.E. Center | id: 1</option>
-          <option value="s2">1857-11-21 at Beachland Ballroom & Tavern | id: 2</option>
+        <label for="seance_id">Seance</label>
+        <select name="seance_id">
+          <option value=""> </option>
+          {% for seance in seance_data %}
+          <option value={{seance['seance_id']}}
+          {% if seance['seance_id']==chosen_seance['seance_id'] %} selected {% endif %}>
+          {{seance['date']}} at {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
+          {% endfor %}
         </select>
         <br>
-        <label for="medium"> Medium Full Name: </label>
-        <select name="medium">
-                    <option value="None"> </option>
-          <option value="m1">Arthur Ford | id: 1</option>
-          <option value="m1">Andrew Jackson Davis | id: 2</option>
-          <option value="m1">Leah Fox | id: 3</option>
+        <label for="medium_id"> Medium Full Name: </label>
+        <select name="medium_id">
+          <option value=""> </option>
+          {% for medium in medium_data %}
+          <option value={{medium['medium_id']}}>
+          {{medium['full_name']}} | medium_id: {{medium['medium_id']}}</option>
+          {% endfor %}
         </select>
         <br>
-        <label for="spirit"> Spirit Full Name: </label>
-        <select name="spirit">
-                    <option value="None"> </option>
-          <option value="s1">Black Hawk | id: 1</option>
-          <option value="s2">Harry Houdini | id: 2</option>
-          <option value="s3">Bartholomew Governor of the House of Strangers| id: 3</option>
+        <label for="spirit_id"> Spirit Full Name: </label>
+        <select name="spirit_id">
+          <option value=""> </option>
+          {% for spirit in spirit_data %}
+          <option value={{spirit[spirit_id]}}>
+          {{spirit['full_name']}} | spirit_id: {{spirit['spirit_id']}}</option>
+          {% endfor %}
         </select>
         <br>
-        <label for="method">Method Used: </label>
-        <select name="method">
-                    <option value="None"> </option>
-          <option value="method1">Spirit Board | id: 1</option>
-          <option value="method2">Cabinets | id: 2</option>
-          <option value="method1">Trance | id: 3</option>
+        <label for="method_id">Method Used: </label>
+        <select name="method_id">
+          <option value=""></option>
+          {% for method in method_data %}
+          <option value={{method['method_id']}}>
+          {{method['name']}} | method_id: {{method['method_id']}}</option>
+          {% endfor %}
         </select>
         <br>
         <label> Channeling Was Successful: </label><input  type="checkbox"  name="success">

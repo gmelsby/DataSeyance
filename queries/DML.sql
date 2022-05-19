@@ -152,7 +152,8 @@ SELECT Seances.seance_id, Locations.name, Seances.date
 FROM Seances
 LEFT JOIN Locations ON Seances.location_id = Locations.location_id;
 
--- Query for prefill inputs for Update Seance
+
+-- Query for prefill inputs for Update Seance and View Channelings
 -- Colon denotes variable obtained through get request parameters
 SELECT Seances.seance_id, Locations.name, Seances.date, Locations.location_id
 FROM Seances
@@ -221,22 +222,22 @@ VALUES
 -- Colon denotes variable that will be obtained through form submission or specific table row
 SELECT Channelings.channeling_id, Mediums.full_name, Spirits.full_name, Methods.name, Seances.date, Locations.name, Channelings.is_successful, Channelings.length_in_minutes
 FROM Channelings
-INNER JOIN Mediums ON Channelings.medium_id = Mediums.medium_id
-INNER JOIN Spirits ON Channelings.spirit_id = Spirits.spirit_id
-INNER JOIN Methods ON Channelings.method_id = Methods.method_id
-INNER JOIN Seances ON Channelings.seance_id = Seances.seance_id
-INNER JOIN Locations ON Seances.location_id = Locations.location_id
-WHERE seance_id = :seance_id_from_dropdown_with_seance_locations_and_dates;
+LEFT JOIN Mediums ON Channelings.medium_id = Mediums.medium_id
+LEFT JOIN Spirits ON Channelings.spirit_id = Spirits.spirit_id
+LEFT JOIN Methods ON Channelings.method_id = Methods.method_id
+LEFT JOIN Seances ON Channelings.seance_id = Seances.seance_id
+LEFT JOIN Locations ON Seances.location_id = Locations.location_id
+WHERE Seances.seance_id = :seance_id_from_dropdown_with_seance_locations_and_dates;
 
 -- Query for displaying all Channelings with Medium name, Spirit name, Method name, date, and stats
 -- Colon denotes variable that will be obtained through form submission or specific table row
 SELECT Channelings.channeling_id, Mediums.full_name, Spirits.full_name, Methods.name, Seances.date, Locations.name, Channelings.is_successful, Channelings.length_in_minutes
 FROM Channelings
-INNER JOIN Mediums ON Channelings.medium_id = Mediums.medium_id
-INNER JOIN Spirits ON Channelings.spirit_id = Spirits.spirit_id
-INNER JOIN Methods ON Channelings.method_id = Methods.method_id
-INNER JOIN Seances ON Channelings.seance_id = Seances.seance_id
-INNER JOIN Locations ON Seances.location_id = Locations.location_id;
+LEFT JOIN Mediums ON Channelings.medium_id = Mediums.medium_id
+LEFT JOIN Spirits ON Channelings.spirit_id = Spirits.spirit_id
+LEFT JOIN Methods ON Channelings.method_id = Methods.method_id
+LEFT JOIN Seances ON Channelings.seance_id = Seances.seance_id
+LEFT JOIN Locations ON Seances.location_id = Locations.location_id;
 
 -- Query for deleting a Channeling based on id
 -- Colon denotes variable that will be obtained through form submission or specific table row

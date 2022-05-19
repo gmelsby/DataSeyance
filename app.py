@@ -99,7 +99,63 @@ def delete_attendee(id):
 
 @app.route('/channelings')
 def channelings():
-    return render_template('channelings.j2')
+    if request.method == 'GET':
+        args = request.args
+        # chosen_seance defaults to None unless we have id passed in in GET param
+        chosen_seance_id = args.get('id')
+        chosen_seance = None
+        if chosen_seance_id:
+            chosen_seance_query = ('SELECT seance_id, Locations.name, Seances.date '
+                                   'FROM Seances '
+                                   'LEFT JOIN Locations ON Seances.location_id = Locations.location_id '
+                                  f'WHERE Seances.seance_id = {chosen_seance_id}')
+            cursor = db.execute_query(db_connection=db_connection, query=chosen_seance_query)
+            chosen_seance = cursor.fetchone()
+        
+        # query for getting all relevant channeling data
+        channeling_query = ('SELECT Channelings.channeling_id, Mediums.full_name AS medium_name, Spirits.full_name AS spirit_name, '
+                           'Methods.name AS method_name, Seances.date, Locations.name AS location_name, '
+                           'Channelings.is_successful, Channelings.length_in_minutes '
+                           'FROM Channelings '
+                           'LEFT JOIN Mediums ON Channelings.medium_id = Mediums.medium_id '
+                           'LEFT JOIN Spirits ON Channelings.spirit_id = Spirits.spirit_id '
+                           'LEFT JOIN Methods ON Channelings.method_id = Methods.method_id '
+                           'LEFT JOIN Seances ON Channelings.seance_id = Seances.seance_id '
+                           'LEFT JOIN Locations ON Seances.location_id = Locations.location_id')
+        # add a filter if a seance_id has been chosen
+        if chosen_seance_id:
+            channeling_query += f' WHERE Seances.seance_id = {chosen_seance_id}'
+        # add a semicolon whether we have a filter or not
+        channeling_query += ';'
+        
+        cursor = db.execute_query(db_connection=db_connection, query=channeling_query)
+        channeling_data = cursor.fetchall()
+        
+        # query for getting seance data to populate dropdown
+        seance_query = ('SELECT seance_id, Locations.name, Seances.date '
+                        'FROM Seances ' 
+                        'LEFT JOIN Locations ON Seances.location_id = Locations.location_id;')
+        cursor = db.execute_query(db_connection=db_connection, query=seance_query)
+        seance_data = cursor.fetchall()
+        
+        # query for getting medium data to populate dropdown
+        medium_query = ('SELECT medium_id, full_name FROM Mediums;')
+        cursor = db.execute_query(db_connection=db_connection, query=medium_query)
+        medium_data = cursor.fetchall()
+        
+        # query for getting spirit data to populate dropdown
+        spirit_query = ('SELECT spirit_id, full_name FROM Spirits;')
+        cursor = db.execute_query(db_connection=db_connection, query=spirit_query)
+        spirit_data = cursor.fetchall()
+        
+        # query for getting method data to populate dropdown
+        method_query = ('SELECT method_id, name FROM Methods;')
+        cursor = db.execute_query(db_connection=db_connection, query=method_query)
+        method_data = cursor.fetchall()
+
+        return render_template('channelings.j2', chosen_seance=chosen_seance, channeling_data=channeling_data, 
+                                seance_data=seance_data, medium_data=medium_data, spirit_data=spirit_data,
+                                method_data=method_data)
 
 @app.route('/locations', methods=['GET', 'POST'])
 def locations():
