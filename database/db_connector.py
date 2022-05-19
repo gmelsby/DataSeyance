@@ -1,3 +1,9 @@
+# Citation for the following file
+# Date: 5/19/2022
+# Mostly Copied from CS340 Flask Starter App
+# source URL: https://github.com/osu-cs340-ecampus/flask-starter-app/blob/master/database/db_connector.py
+# Added db_connection.ping(True) and execute_queries function ourselves
+
 import MySQLdb
 import os
 from dotenv import load_dotenv, find_dotenv
@@ -16,6 +22,8 @@ def connect_to_database(host = host, user = user, passwd = passwd, db = db):
     connects to a database and returns a database objects
     '''
     db_connection = MySQLdb.connect(host,user,passwd,db)
+            
+            
     db_connection.ping(True)
     return db_connection
 
