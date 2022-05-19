@@ -53,11 +53,7 @@ def attendees():
                 
             # These queries must be executed all at once in a unit
             # We only commit when all are executed
-            cursor = db_connection.cursor(MySQLdb.cursors.DictCursor)
-            for query in queries:
-                cursor.execute(query)
-            mysql.connection.commit()
-            
+            cursor = db.execute_queries(db_connection=db_connection, queries=queries)
         return redirect('/attendees')
             
             

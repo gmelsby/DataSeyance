@@ -55,6 +55,25 @@ def execute_query(db_connection = None, query = None, query_params = ()):
     db_connection.commit();
     return cursor
 
+def execute_queries(db_connection = None, queries = None, query_params = ()):
+    '''
+    Same as execute_query but takes a list of queries
+    '''
+    if db_connection is None:
+        print("No connection to the database found! Have you called connect_to_database() first?")
+        return None
+    if queries is None or len(queries) == 0:
+        print("You need to pass in a list of SQL queries")
+        return None
+
+    cursor = db_connection.cursor(MySQLdb.cursors.DictCursor)
+    for query in queries:
+        print(f"Executing {query} with {query_params}")
+        cursor.execute(query, query_params)
+        
+    db_connection.commit();
+    return cursor
+
 if __name__ == '__main__':
     print("Executing a sample query on the database using the credentials from db_credentials.py")
     db = connect_to_database()
