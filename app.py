@@ -3,11 +3,14 @@ from flask_mysqldb import MySQL
 import os
 import MySQLdb
 import database.db_connector as db
+import toml
 
-db_connection = db.connect_to_database()
+
 
 app = Flask(__name__)
 mysql = MySQL(app)
+
+queries = toml.load("models/queries.toml")
 
 @app.route('/')
 def root():
@@ -450,53 +453,40 @@ def delete_seance(id):
 
 @app.route('/spirits', methods=['GET', 'POST'])
 def spirits():
-    # if method is POST we are either Creating or Updating
+    # method will be post or get, get will pass to line 468
     if request.method == 'POST':
-        # if POST request has id_input we are updating
-        if request.form.get('id_input') and request.form.get('new_name'):
-            full_name_input = request.form['new_name'].strip()
-            id_input = request.form['id_input']
+        # we had a post so we are going to look at a parameter passed from a hidden form value
+        # get form values as dict
+        content = request.form.to_dict()
+        # this hidden form value will tell us what to do
+        action = content['action']
+        #hidden value says upddate
+        if action == 'update':
+            #get update query from toml and send it with parameters (see /home/ed/DataSeyance/models/queries.toml)
+            db.execute_query(query=queries['TEST'][action]
+                             , query_params=(content['new_name'], int(content['id_input'])))
+        # get inser query from toml and send it with parameter (see /home/ed/DataSeyance/models/queries.toml)
+        if action == 'insert':
+            db.execute_query(query=queries['TEST'][action], query_params=(content['insert_full_name'],))
 
-            query = ('UPDATE Spirits ' 
-                     f'SET full_name = "{full_name_input}" '
-                     f'WHERE spirit_id = {id_input};')
+    args = request.args
+    spirit_to_edit = None
+    if args.get('id'):
+        preselect_query = f"SELECT spirit_id, full_name FROM Spirits WHERE spirit_id = {args.get('id')};"
+        cursor = db.execute_query(query=preselect_query)
+        spirit_to_edit = cursor.fetchone()
 
-            cursor = db.execute_query(db_connection=db_connection, query=query)
-            mysql.connection.commit()
-            
-            return redirect('/spirits')
+    query = 'SELECT spirit_id, full_name FROM Spirits;'
+    cursor = db.execute_query(query=query)
+    spirit_data = cursor.fetchall()
 
-        # if POST request has name we are creating
-        if request.form.get('name').strip() != '':
-            full_name_input = request.form['name'].strip()
-            query = f'INSERT INTO Spirits (full_name) VALUES ("{full_name_input}");'
-            cursor = db.execute_query(db_connection=db_connection, query=query)
-            mysql.connection.commit();
-            
-        return redirect('/spirits')
-
-    # Read functionality
-    if request.method == 'GET':
-        args = request.args
-        # sprit_to_edit defaults to None unless id is passed in Get params
-        spirit_to_edit = None
-        if args.get('id'):
-            preselect_query = f"SELECT spirit_id, full_name FROM Spirits WHERE spirit_id = {args.get('id')};"
-            cursor = db.execute_query(db_connection=db_connection, query=preselect_query)
-            spirit_to_edit = cursor.fetchone()
-
-        # gets info about all spirits in our db to display in table
-        query = 'SELECT spirit_id, full_name FROM Spirits;'
-        cursor = db.execute_query(db_connection=db_connection, query=query)
-        spirit_data = cursor.fetchall()
-
-        return render_template('spirits.j2', spirit_data=spirit_data, spirit_to_edit=spirit_to_edit)
+    return render_template('spirits.j2', spirit_data=spirit_data, spirit_to_edit=spirit_to_edit)
     
 @app.route('/delete_spirit/<int:id>')
 def delete_spirit(id):
     # deletes spirit based on id
-    query = f'DELETE FROM Spirits WHERE spirit_id = {id};'
-    cursor = db.execute_query(db_connection=db_connection, query=query)
+    query = f'DELETE FROM spirits WHERE spirit_id = {id};'
+    cursor = db.execute_query(query=query)
     mysql.connection.commit()
     
     return redirect('/spirits')

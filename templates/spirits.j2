@@ -37,9 +37,10 @@
   <form id="InsertSpirit" method="POST">
       <legend><strong>Insert Spirit</strong></legend>
           <fieldset class="fields">
-  <label> Full Name: </label> <input  type="text"  name="name">
+  <label> Full Name: </label> <input  type="text"  name="insert_full_name">
     </fieldset>
     <input class="btn" type="submit" value="Insert Spirit">
+<input type="hidden" name="action" value="insert">
   </form>
 </div>
 
@@ -67,6 +68,7 @@
   <label> Full Name: </label> <input  type="text"  name="new_name" value="{{spirit_to_edit['full_name']}}">
     </fieldset>
     <input class="btn" type="submit" id="UpdateSpirit" value="Update Spirit">
+    <input type="hidden" name="action" value="update">
   </form>
 </div>
 

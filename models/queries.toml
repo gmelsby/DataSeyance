@@ -1,0 +1,4 @@
+[TEST]
+insert = "INSERT INTO Spirits (full_name) VALUES (%s)"
+update = "UPDATE Spirits SET full_name = (%s) WHERE spirit_id = (%s)"
+#      <input type="hidden" name="action" value="insert">
