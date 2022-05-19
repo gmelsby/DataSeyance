@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, redirect, json, request
 from flask_mysqldb import MySQL
 import os
