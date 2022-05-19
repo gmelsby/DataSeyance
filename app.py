@@ -648,5 +648,5 @@ def delete_spirit(id):
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5005))
-    app.run(port=port, debug=True)
+    port = int(os.environ.get('PORT', 3023))
+    app.run(port=port)
