@@ -60,7 +60,7 @@
 {% if chosen_seance!=None %}
 
 <div id="insert" style="display: block">
-  <form id="InsertSeanceAttendee">
+  <form id="InsertSeanceAttendee" method="POST">
       <legend><strong>Insert Attendee for Seance at {{chosen_seance['date']}} at {{chosen_seance['name']}}</strong></legend>
       <label for="also_attended_id">Attendee to be inserted</label>
           <select name="also_attended_id" id="attended">
@@ -69,6 +69,7 @@
               {{attendee['full_name']}} | attendee_id: {{attendee['attendee_id']}}</option>
           {% endfor %}
           </select>
+          <input type=hidden name=selected_seance_id value={{chosen_seance['seance_id']}}>
       <br>
 
     <input class="btn" type="submit" id="InsertAttendee" value="Insert Attendee">
@@ -80,9 +81,9 @@
 </div>
 
 <div id="update" style="display: block">
-  <form id="UpdateSeanceAttendee">
+  <form id="UpdateSeanceAttendee" method="POST">
       <legend><strong>Update which Seance Attendee Attended</strong></legend>
-      <p>To be used if Attendee actually attended a different Seance than 1920-08-26 at Edgar Cayce's Houston A.R.E. Center</p>
+      <p>To be used if Attendee actually attended a different Seance than {{chosen_seance['date']}} at {{chosen_seance['name']}}</p>
       <fieldset class="fields">
       <label for="update_attendee_id">Seance Attendee to update: </label>
        <select name="update_attendee_id" id="updateattended">
@@ -103,6 +104,7 @@
            {{seance['date']}} at {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
            {% endfor %}
        </select>
+       <input type=hidden name=current_seance_id value={{chosen_seance['seance_id']}}>
       <input class="btn" type="submit" id="actuallyattended_button" value="Update Seance Attendee">
     </fieldset>
   </form>

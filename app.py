@@ -413,8 +413,42 @@ def delete_method(id):
     return redirect('/methods')
 
 
-@app.route('/seanceattendees')
+@app.route('/seanceattendees', methods=['GET', 'POST'])
 def seanceattendees():
+    if request.method == 'POST':
+        # if form contains update_seance_id we are updating a row in SeanceaAttendees
+        if request.form.get('update_attendee_id'):
+            attendee_id = request.form.get('update_attendee_id')
+            seance_id = request.form.get('update_seance_id')
+            old_seance_id = request.form.get('current_seance_id')
+            
+            # updates matching entries in SeanceAttendees
+            query = ('UPDATE SeanceAttendees '
+                    f'SET seance_id = {seance_id} '
+                    f'WHERE attendee_id = {attendee_id} '
+                    f'AND seance_id = {old_seance_id};')
+
+            cursor = db.execute_query(db_connection=db_connection, query=query)
+            mysql.connection.commit()
+
+            return redirect(f'/seanceattendees?seance_id_input={old_seance_id}')
+
+            
+        # if form contains also_attended_id we are creating a new entry in SeanceAttendees
+        if request.form.get('also_attended_id'):
+            attendee_id = request.form.get('also_attended_id')
+            seance_id = request.form.get('selected_seance_id')
+            
+            # inserts a new row into SeanceAttendees intersection table
+            query = ('INSERT INTO SeanceAttendees (attendee_id, seance_id) '
+                    f'VALUES ({attendee_id}, {seance_id});')
+            cursor = db.execute_query(db_connection=db_connection, query=query)
+            mysql.connection.commit()
+
+            return redirect(f'/seanceattendees?seance_id_input={seance_id}')
+
+
+    # read functionality
     if request.method == 'GET':
         args = request.args
         # chosen attendee defaults to None unless we have id passed in in GET args
