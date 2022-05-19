@@ -97,8 +97,33 @@ def delete_attendee(id):
     return redirect('/attendees')
 
 
-@app.route('/channelings')
+@app.route('/channelings', methods=['GET', 'POST'])
 def channelings():
+    # our channelings table does not support update, so POST is only creation
+    if request.method == 'POST':
+        # process our inputs to put in NULL if any are empty
+        seance_input = request.form['seance_id'] if request.form.get('seance_id') else 'NULL'
+        medium_input = request.form['medium_id'] if request.form.get('medium_id') else 'NULL'
+        spirit_input = request.form['spirit_id'] if request.form.get('spirit_id') else 'NULL'
+        method_input = request.form['method_id'] if request.form.get('method_id') else 'NULL'
+        success_input = 1 if request.form.get('is_successful') is not None else 0
+        length_input = request.form['length'] if request.form.get('length') != '' else 'NULL'
+        
+        # query for adding a new channeling
+        query = ('INSERT INTO Channelings (medium_id, seance_id, spirit_id, method_id, is_successful, length_in_minutes) '
+                 'VALUES ('
+                f'{medium_input}, {seance_input}, {spirit_input}, {method_input}, {success_input}, {length_input});')
+                 
+        cursor = db.execute_query(db_connection=db_connection, query=query)
+        mysql.connection.commit()
+        
+        # redirect to the inputted seance_id if passed in
+        if seance_input != 'NULL':
+            return redirect(f'/channelings?id={seance_input}')
+        # otherwise just redirect to channelings
+        return redirect('/channelings')
+
+    # read functionality
     if request.method == 'GET':
         args = request.args
         # chosen_seance defaults to None unless we have id passed in in GET param
@@ -155,7 +180,23 @@ def channelings():
 
         return render_template('channelings.j2', chosen_seance=chosen_seance, channeling_data=channeling_data, 
                                 seance_data=seance_data, medium_data=medium_data, spirit_data=spirit_data,
-                                method_data=method_data)
+                         method_data=method_data)
+
+@app.route('/delete_channeling/<int:id>')
+def delete_channeling(id):
+     # deletes a channeling based on id
+    query = f'DELETE FROM Channelings WHERE channeling_id = {id};'
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    mysql.connection.commit()
+
+    args = request.args
+    if args.get('id') is not None:
+        return redirect(f'/channelings?id={args.get("id")}')
+
+    # otherwise redirect to all channelings page
+    return redirect('/channelings')
+
+ 
 
 @app.route('/locations', methods=['GET', 'POST'])
 def locations():

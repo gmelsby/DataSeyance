@@ -55,7 +55,8 @@
     <td>{{channeling['location_name']}}</td>
     <td>{{channeling['is_successful']}}</td>
     <td>{{channeling['length_in_minutes']}}</td>
-    <td><a href="/delete_channeling/{{channeling['channeling_id']}}">Delete</a></td>
+    <td><a href="/delete_channeling/{{channeling['channeling_id']}}{% if chosen_seance!=None %}?id={{chosen_seance['seance_id']}}{% endif %}">
+    Delete</a></td>
   </tr>
   {% endfor %}
   </tbody>
@@ -64,7 +65,7 @@
 
 
 <div id="insert" style="display: block">
-  <form id="InsertChanneling">
+  <form id="InsertChanneling" method="POST">
       <legend><strong>Insert Channeling</strong></legend>
       <fieldset class="fields">
         <label for="seance_id">Seance</label>
@@ -104,7 +105,7 @@
           {% endfor %}
         </select>
         <br>
-        <label> Channeling Was Successful: </label><input  type="checkbox"  name="success">
+        <label> Channeling Was Successful: </label><input  type="checkbox"  name="is_successful" value=1>
         <br>
       <label> Channeling Length (in minutes): </label> <input  type="number" min="0" name="length">
       </fieldset>
