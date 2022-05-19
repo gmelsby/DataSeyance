@@ -415,7 +415,97 @@ def delete_method(id):
 
 @app.route('/seanceattendees')
 def seanceattendees():
-    return render_template('seanceattendees.j2')
+    if request.method == 'GET':
+        args = request.args
+        # chosen attendee defaults to None unless we have id passed in in GET args
+        chosen_attendee_id = args.get('attendee_id_input')
+        chosen_attendee = None
+        # we are not supporting autofilling when attendee_id is NULL
+        # there are potentially many entries where attendee_id is NULL, and it is hard to tell them apart
+        if chosen_attendee_id is not None and chosen_attendee_id != 'None':
+            chosen_attendee_query = f'SELECT attendee_id, full_name FROM Attendees WHERE attendee_id = {chosen_attendee_id}'
+            cursor = db.execute_query(db_connection=db_connection, query=chosen_attendee_query)
+            chosen_attendee = cursor.fetchone()
+
+        # chosen seance defaults to None unless we have id passed in in GET args
+        chosen_seance_id = args.get('seance_id_input')
+        chosen_seance = None
+        # if a seance_id has been passed in, get info about it
+        if chosen_seance_id:
+            chosen_seance_query = ('SELECT seance_id, Locations.name, Seances.date '
+                                   'FROM Seances '
+                                   'LEFT JOIN Locations ON Seances.location_id = Locations.location_id '
+                                  f'WHERE Seances.seance_id = {chosen_seance_id}')
+            cursor = db.execute_query(db_connection=db_connection, query=chosen_seance_query)
+            chosen_seance = cursor.fetchone()
+            
+        # query for populating dropdown menu to choose a seance        
+        seance_query = ('SELECT Seances.seance_id, Locations.name, Seances.date '
+                       'FROM Seances '
+                       'LEFT JOIN Locations ON Seances.location_id = Locations.location_id; ')
+        cursor = db.execute_query(db_connection=db_connection, query=seance_query)
+        seance_data = cursor.fetchall()
+        
+        # query for getting all seances that are not the selected seance
+        other_seances = []
+        if chosen_seance_id:
+            other_seances_query = ('SELECT Seances.date, Locations.name, Seances.seance_id '
+                                   'FROM Seances '
+                                   'INNER JOIN Locations ON Seances.location_id = Locations.location_id '
+                                  f'WHERE seance_id <> {chosen_seance_id};')
+            cursor = db.execute_query(db_connection=db_connection, query=other_seances_query)
+            other_seances = cursor.fetchall()
+
+
+    
+        # query for getting info about all attendees in the SeanceAttendees table for all seances or a particular one
+        attendee_query = ('SELECT SeanceAttendees.seance_id, Attendees.attendee_id, Attendees.full_name, SeanceAttendees.seanceattendees_id '
+                          'FROM SeanceAttendees '
+                          'LEFT JOIN Attendees ON SeanceAttendees.attendee_id = Attendees.attendee_id')
+        # add filter if we have chosen a seance
+        if chosen_seance_id:
+             attendee_query += f' WHERE SeanceAttendees.seance_id = {chosen_seance_id}'
+        # needs a semicolon no matter what
+        attendee_query += ';'
+        
+        cursor = db.execute_query(db_connection=db_connection, query=attendee_query)
+        attendee_data = cursor.fetchall()
+        
+        # query for getting all attendees that did not attend the seance
+        not_attended_list = []
+        if chosen_seance_id:
+            not_attended_query = ('SELECT Attendees.attendee_id, Attendees.full_name '
+                              'FROM Attendees '
+                              'WHERE attendee_id NOT IN ('
+                              'SELECT Attendees.attendee_id '
+                              'FROM Attendees '
+                              'INNER JOIN SeanceAttendees ON Attendees.attendee_id = SeanceAttendees.attendee_id '
+                             f'WHERE SeanceAttendees.seance_id = {chosen_seance_id});')
+            cursor = db.execute_query(db_connection=db_connection, query=not_attended_query)
+            not_attended_list = cursor.fetchall()
+
+        # renders the page with prefilled dropdowns
+        return render_template('seanceattendees.j2', chosen_seance=chosen_seance, seance_data=seance_data,
+                               other_seances=other_seances, chosen_attendee=chosen_attendee,
+                               attendee_data=attendee_data, not_attended_list=not_attended_list)
+
+@app.route('/delete_seanceattendee/<int:id>')
+def delete_seanceattendee(id):
+     # deletes a seance attendence record based on id
+    query = f'DELETE FROM SeanceAttendees WHERE seanceattendees_id = {id};'
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    mysql.connection.commit()
+
+    args = request.args
+    if args.get('seance_id_input') is not None:
+        return redirect(f'/seanceattendees?seance_id_input={args.get("seance_id_input")}')
+
+    # otherwise redirect to all seanceattendees page
+    return redirect('/seanceattendees')
+
+
+        
+
 
 @app.route('/seances', methods=['GET', 'POST'])
 def seances():
