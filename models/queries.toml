@@ -9,6 +9,7 @@ delete = "DELETE FROM Attendees WHERE attendee_id = (%s);"
 
 select = "SELECT attendee_id, full_name FROM Attendees;"
 
+
 [channelings]
 insert = """
 INSERT INTO Channelings (medium_id, spirit_id, method_id, seance_id, is_successful, length_in_minutes)
