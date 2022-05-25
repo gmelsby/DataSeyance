@@ -1,4 +1,11 @@
-[TEST]
+[spirits]
 insert = "INSERT INTO Spirits (full_name) VALUES (%s)"
 update = "UPDATE Spirits SET full_name = (%s) WHERE spirit_id = (%s)"
-#      <input type="hidden" name="action" value="insert">
+delete = "Delete from Spirits  WHERE spirit_id = (%s)"
+select = 'SELECT spirit_id, full_name FROM Spirits;'
+
+[channelings]
+insert = "INSERT INTO Spirits (full_name) VALUES (%s)"
+update = "UPDATE Spirits SET full_name = (%s) WHERE spirit_id = (%s)"
+delete = "Delete from Spirits  WHERE spirit_id = (%s)"
+select = 'SELECT spirit_id, full_name FROM Spirits;'
