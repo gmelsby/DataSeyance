@@ -97,6 +97,11 @@ def channelings():
             )
                              )
 
+        if action == 'delete':
+            db.execute_query(queries['channelings'][action], (
+            int( content['channeling_id'])
+              , )
+            )
 
 
     # query for getting seance data to populate dropdown
