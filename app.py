@@ -207,25 +207,14 @@ def mediums():
             full_name_input = request.form['new_name'].strip()
             id_input = request.form['id_input']
 
-            query = ('UPDATE Mediums ' 
-                     f'SET full_name = "{full_name_input}" '
-                     f'WHERE medium_id = {id_input};')
-
-            cursor = db.execute_query(query=query)
-
-
-            
+            cursor = db.execute_query(queries['mediums']['update'], (full_name_input, int(id_input)))
             return redirect('/mediums')
 
         # otherwise if the POST form has name the insert form has been submitted
         # if name is empty we just skip the insert and redirect back to /mediums
         if request.form.get('name'):
             full_name_input = request.form['name'].strip()
-            query = f'INSERT INTO Mediums (full_name) VALUES ("{full_name_input}");'
-
-            cursor = db.execute_query(query=query)
-            mysql.connection.commit()
-
+            cursor = db.execute_query(queries['mediums']['insert'], (full_name_input,))
             
         return redirect('/mediums')
 
@@ -236,13 +225,11 @@ def mediums():
         medium_to_edit = None
         # uses a select query to get info to preselect dropdown menu and prepopulate input
         if args.get('id'):
-            preselect_query = f"SELECT medium_id, full_name FROM Mediums WHERE medium_id = {args.get('id')};"
-            cursor = db.execute_query(query=preselect_query)
+            cursor = db.execute_query(queries['mediums']['select_specific'], (int(id),))
             medium_to_edit = cursor.fetchone()
             
         # main query for getting info for medium table
-        query = 'SELECT medium_id, full_name FROM Mediums;'
-        cursor = db.execute_query(query=query)
+        cursor = db.execute_query(queries['mediums']['select'])
         medium_data = cursor.fetchall()
 
         return render_template('mediums.j2', medium_data=medium_data, medium_to_edit=medium_to_edit)
@@ -250,11 +237,7 @@ def mediums():
 @app.route('/delete_medium/<int:id>')
 def delete_medium(id):
     # deletes a medium based on id
-    query = f'DELETE FROM Mediums WHERE medium_id = {id};'
-
-    cursor = db.execute_query(query=query)
-
-    
+    cursor = db.execute_query(queries['mediums']['delete'], (int(id),))
     return redirect('/mediums')
 
 

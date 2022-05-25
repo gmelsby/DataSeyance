@@ -68,7 +68,19 @@ WHERE location_id = %s;
 
 
 [mediums]
+insert = "INSERT INTO Mediums (full_name) VALUES (%s);"
+
+update = """
+UPDATE Mediums
+SET full_name = %s
+WHERE medium_id = %s;
+"""
+
+delete = "DELETE FROM Mediums WHERE medium_id = %s;"
+
 select = "SELECT medium_id, full_name FROM Mediums;"
+
+select_specific = "SELECT medium_id, full_name FROM Mediums WHERE medium_id = %s;"
 
 [methods]
 select = "SELECT method_id, name FROM Methods;"
