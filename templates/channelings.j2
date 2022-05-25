@@ -152,13 +152,15 @@ body {font-family: Arial, Helvetica, sans-serif;}
           {{medium['full_name']}} | medium_id: {{medium['medium_id']}}</option>
           {% endfor %}
         </select>  </td>
+
     <td>      <select name="spirit_id">
           <option value=""> </option>
           {% for spirit in spirit_data %}
-          <option value={{spirit[spirit_id]}}>
+          <option value={{spirit['spirit_id']}}>
           {{spirit['full_name']}} | spirit_id: {{spirit['spirit_id']}}</option>
           {% endfor %}
         </select> </td>
+
     <td>       <select name="method_id">
           <option value=""></option>
           {% for method in method_data %}
@@ -180,9 +182,12 @@ body {font-family: Arial, Helvetica, sans-serif;}
     </select>
 
 
-
-
-    <td><input  type="checkbox"  name="is_successful" value=1></td>
+    <td>
+      <select name="is_successful">
+          <option value=1>Yes</option>
+           <option value=0>No</option>
+        </select>
+    </td>
     <td><input  type="integer"  name="insert_full_name"></td>
     <td>
         <form id="InsertSpirit" method="POST">

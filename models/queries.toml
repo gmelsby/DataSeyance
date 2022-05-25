@@ -10,7 +10,17 @@ delete = "DELETE FROM Attendees WHERE attendee_id = (%s);"
 select = "SELECT attendee_id, full_name FROM Attendees;"
 
 [channelings]
-insert = "INSERT INTO Spirits (full_name) VALUES (%s);"
+insert = """
+INSERT INTO Channelings (medium_id, spirit_id, method_id, seance_id, is_successful, length_in_minutes)
+VALUES
+(
+ (%s),
+ (%s),
+ (%s),
+ (%s),
+ (%s),
+ (%s)
+);"""
 update = "UPDATE Spirits SET full_name = (%s) WHERE spirit_id = (%s);"
 delete = "DELETE FROM Spirits  WHERE spirit_id = (%s);"
 

@@ -89,29 +89,21 @@ def channelings():
     if request.method == 'POST':
         content = request.form.to_dict()
         print(content)
+        action = content['action']
+
+        if action == 'insert':
+
+            db.execute_query(queries['channelings'][action], (
+            int( content['medium_id'])
+              , int(content['spirit_id'])
+              , int(content['method_id'])
+              ,int(content['seance_date'])
+              , int(content['is_successful'])
+              ,int(content['insert_full_name'])
+            )
+                             )
 
 
-
-    # if request.method == 'GET':
-    args = request.args
-#     # chosen_seance defaults to None unless we have id passed in in GET param
-    chosen_seance_id = args.get('id')
-    chosen_seance = None
-    if chosen_seance_id:
-        cursor = db.execute_query(queries['seances']['select_specific'], (int(chosen_seance_id),))
-        chosen_seance = cursor.fetchone()
-
-
-        # query for getting all relevant channeling data
-    channeling_query = queries['channelings']['select']
-    channeling_params = ()
-            # add a filter if a seance_id has been chosen
-    if chosen_seance_id:
-        channeling_query = queries['channelings']['select_specific']
-        channeling_params = (int(chosen_seance_id),)
-
-    cursor = db.execute_query(channeling_query, channeling_params)
-    channeling_data = cursor.fetchall()
 
     # query for getting seance data to populate dropdown
     cursor = db.execute_query(queries['seances']['select'])
@@ -128,6 +120,24 @@ def channelings():
     # query for getting method data to populate dropdown
     cursor = db.execute_query(queries['methods']['select'])
     method_data = cursor.fetchall()
+
+    args = request.args
+    #     # chosen_seance defaults to None unless we have id passed in in GET param
+    chosen_seance_id = args.get('id')
+    chosen_seance = None
+    if chosen_seance_id:
+        cursor = db.execute_query(queries['seances']['select_specific'], (int(chosen_seance_id),))
+        chosen_seance = cursor.fetchone()
+
+    channeling_query = queries['channelings']['select']
+    channeling_params = ()
+
+    cursor = db.execute_query(channeling_query, channeling_params)
+    channeling_data = cursor.fetchall()
+            # add a filter if a seance_id has been chosen
+    if chosen_seance_id:
+        channeling_query = queries['channelings']['select_specific']
+        channeling_params = (int(chosen_seance_id),)
 
     return render_template('channelings.j2', chosen_seance=chosen_seance, channeling_data=channeling_data,
                             seance_data=seance_data, medium_data=medium_data, spirit_data=spirit_data,
