@@ -134,7 +134,12 @@ body {font-family: Arial, Helvetica, sans-serif;}
     <td>{{channeling['length_in_minutes']}}</td>
 
     <td>    </td>
-    <td><a href="/delete_channeling/{{channeling['channeling_id']}}">Delete</a></td>
+    <td>       <form id="DeleteChanneling" method="POST">
+        <input class="btn" type="submit" id="DeleteChanneling" value="Delete Channeling">
+        <input type="hidden" name="action" value="delete">
+        <input type="hidden" name="channeling_id" value={{channeling['channeling_id']}}
+                 </td>
+          </form></td>
 
 
   </tr>

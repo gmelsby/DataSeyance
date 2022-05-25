@@ -24,7 +24,7 @@ VALUES
  (%s)
 );"""
 update = "UPDATE Spirits SET full_name = (%s) WHERE spirit_id = (%s);"
-delete = "DELETE FROM Spirits  WHERE spirit_id = (%s);"
+delete = "DELETE FROM Channelings  WHERE channeling_id = (%s);"
 
 select = """ 
 SELECT Channelings.channeling_id, Mediums.full_name AS medium_name, Spirits.full_name AS spirit_name, 
