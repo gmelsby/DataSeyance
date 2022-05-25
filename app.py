@@ -529,16 +529,16 @@ def spirits():
         if action == 'update':
             #get update query from toml and send it with parameters (see /home/ed/DataSeyance/models/queries.toml)
             print(int(content['id_input']))
-            db.execute_query(query=queries['spirits'][action]
-                             , query_params=(content['new_name'], int(content['id_input'])))
+            db.execute_query(queries['spirits'][action]
+                             , (content['new_name'], int(content['id_input'])))
         # get insert query from toml and send it with parameter (see /home/ed/DataSeyance/models/queries.toml)
         if action == 'insert':
-            db.execute_query(query=queries['spirits'][action], query_params=(content['insert_full_name'],))
+            db.execute_query(queries['spirits'][action], (content['insert_full_name'],))
 
         if action == 'delete':
-            db.execute_query(query=queries['spirits'][action], query_params=(content['spirit_id'],))
+            db.execute_query(queries['spirits'][action], (content['spirit_id'],))
 
-    spirit_data = db.execute_query(query=queries['spirits']['select'])
+    spirit_data = db.execute_query(queries['spirits']['select'])
 
     return render_template('spirits.j2', spirit_data=spirit_data,  edit_form=edit_form)
 
