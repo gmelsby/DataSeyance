@@ -54,21 +54,15 @@ def attendees():
         attendee_to_edit = None
         # if we have get query parameter indicating attendee_id we get the info for the dropdown
         if args.get('id'):
-            preselect_query = f"SELECT attendee_id, full_name FROM Attendees WHERE attendee_id = {args.get('id')};"
-            cursor = db.execute_query(query=preselect_query)
+            cursor = db.execute_query(queries['attendees']['select_specific'], (int(args.get('id')),))
             attendee_to_edit = cursor.fetchone()
             
         # attendee data to be displayed in table and used for update dropdown
-        attendee_query = 'SELECT attendee_id, full_name FROM Attendees;'
-        cursor = db.execute_query(query=attendee_query)
+        cursor = db.execute_query(queries['attendees']['select'])
         attendee_data = cursor.fetchall()
         
         # seance data to be used in dropdown for adding an attendee
-        seance_query = ('SELECT seance_id, Locations.name, Seances.date '
-                        'FROM Seances ' 
-                        'LEFT JOIN Locations ON Seances.location_id = Locations.location_id;')
-                        
-        cursor = db.execute_query(query=seance_query)
+        cursor = db.execute_query(queries['seances']['select'])
         seance_data = cursor.fetchall()
 
         return render_template('attendees.j2', attendee_data=attendee_data, seance_data=seance_data, attendee_to_edit=attendee_to_edit)
