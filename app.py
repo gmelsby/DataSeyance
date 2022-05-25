@@ -84,23 +84,27 @@ def channelings():
         content = request.form.to_dict()
         print(content)
         action = content['action']
+        for key, value in content.items():
+            if key == 'action':
+                continue
+            if not value:
+                content[key] = None
+            else:
+                content[key] = int(value)
 
         if action == 'insert':
-
             db.execute_query(queries['channelings'][action], (
-            int( content['medium_id'])
-              , int(content['spirit_id'])
-              , int(content['method_id'])
-              ,int(content['seance_date'])
-              , int(content['is_successful'])
-              ,int(content['insert_full_name'])
-            )
-                             )
+             content['medium_id'],
+             content['spirit_id'],
+             content['method_id'],
+             content['seance_date'],
+             content['is_successful'],
+             content['insert_full_name']
+            ))
 
         if action == 'delete':
             db.execute_query(queries['channelings'][action], (
-            int( content['channeling_id'])
-              , )
+            int( content['channeling_id']),)
             )
 
 
@@ -268,7 +272,7 @@ def methods():
             # if description_input is empty string we skip processing it and instead send in None to be turned into NULL
             description_input = None
             if request.form.get('new_description'):
-                description_input = f'"{request.form["new_description"]}"'
+                description_input = f'{request.form["new_description"]}'
 
             cursor = db.execute_query(queries['methods']['update'], (name_input, description_input, id_input))
             return redirect('/methods')
@@ -279,7 +283,7 @@ def methods():
             # description is optional so initially set to None for NULL in case of empty string
             description_input = None
             if request.form.get('description'):
-                description_input = f'"{request.form["description"]}"'
+                description_input = f'{request.form["description"]}'
             # creates new method
             cursor = db.execute_query(queries['methods']['insert'], (name_input, description_input))
             
@@ -322,13 +326,7 @@ def seanceattendees():
             old_seance_id = request.form.get('current_seance_id')
             
             # updates matching entries in SeanceAttendees
-            query = ('UPDATE SeanceAttendees '
-                    f'SET seance_id = {seance_id} '
-                    f'WHERE attendee_id = {attendee_id} '
-                    f'AND seance_id = {old_seance_id};')
-
-            cursor = db.execute_query(query=query)
-
+            cursor = db.execute_query(queries['seanceattendees']['update'], (seance_id, attendee_id, old_seance_id))
             return redirect(f'/seanceattendees?seance_id_input={old_seance_id}')
 
             
@@ -338,10 +336,7 @@ def seanceattendees():
             seance_id = request.form.get('selected_seance_id')
             
             # inserts a new row into SeanceAttendees intersection table
-            query = ('INSERT INTO SeanceAttendees (attendee_id, seance_id) '
-                    f'VALUES ({attendee_id}, {seance_id});')
-            cursor = db.execute_query(query=query)
-
+            db.execute_query(queries['seanceattendees']['insert'], (attendee_id, seance_id))
             return redirect(f'/seanceattendees?seance_id_input={seance_id}')
 
 
@@ -354,8 +349,7 @@ def seanceattendees():
         # we are not supporting autofilling when attendee_id is NULL
         # there are potentially many entries where attendee_id is NULL, and it is hard to tell them apart
         if chosen_attendee_id is not None and chosen_attendee_id != 'None':
-            chosen_attendee_query = f'SELECT attendee_id, full_name FROM Attendees WHERE attendee_id = {chosen_attendee_id}'
-            cursor = db.execute_query(query=chosen_attendee_query)
+            cursor = db.execute_query(queries['attendees']['select_specific'], (int(chosen_attendee_id),))
             chosen_attendee = cursor.fetchone()
 
         # chosen seance defaults to None unless we have id passed in in GET args
@@ -363,56 +357,34 @@ def seanceattendees():
         chosen_seance = None
         # if a seance_id has been passed in, get info about it
         if chosen_seance_id:
-            chosen_seance_query = ('SELECT seance_id, Locations.name, Seances.date '
-                                   'FROM Seances '
-                                   'LEFT JOIN Locations ON Seances.location_id = Locations.location_id '
-                                  f'WHERE Seances.seance_id = {chosen_seance_id}')
-            cursor = db.execute_query(query=chosen_seance_query)
+            cursor = db.execute_query(queries['seances']['select_specific'], (int(chosen_seance_id),))
             chosen_seance = cursor.fetchone()
             
         # query for populating dropdown menu to choose a seance        
-        seance_query = ('SELECT Seances.seance_id, Locations.name, Seances.date '
-                       'FROM Seances '
-                       'LEFT JOIN Locations ON Seances.location_id = Locations.location_id; ')
-        cursor = db.execute_query(query=seance_query)
+        cursor = db.execute_query(queries['seances']['select'])
         seance_data = cursor.fetchall()
         
         # query for getting all seances that are not the selected seance
         other_seances = []
         if chosen_seance_id:
-            other_seances_query = ('SELECT Seances.date, Locations.name, Seances.seance_id '
-                                   'FROM Seances '
-                                   'INNER JOIN Locations ON Seances.location_id = Locations.location_id '
-                                  f'WHERE seance_id <> {chosen_seance_id};')
-            cursor = db.execute_query(query=other_seances_query)
+            cursor = db.execute_query(queries['seances']['select_other'], (int(chosen_seance_id),))
             other_seances = cursor.fetchall()
-
 
     
         # query for getting info about all attendees in the SeanceAttendees table for all seances or a particular one
-        attendee_query = ('SELECT SeanceAttendees.seance_id, Attendees.attendee_id, Attendees.full_name, SeanceAttendees.seanceattendees_id '
-                          'FROM SeanceAttendees '
-                          'LEFT JOIN Attendees ON SeanceAttendees.attendee_id = Attendees.attendee_id')
-        # add filter if we have chosen a seance
+        attendee_query = queries['seanceattendees']['select']
+        attendee_params = ()
         if chosen_seance_id:
-             attendee_query += f' WHERE SeanceAttendees.seance_id = {chosen_seance_id}'
-        # needs a semicolon no matter what
-        attendee_query += ';'
+             attendee_query = queries['seanceattendees']['select_specific']
+             attendee_params = (int(chosen_seance_id),)
         
-        cursor = db.execute_query(query=attendee_query)
+        cursor = db.execute_query(attendee_query, attendee_params)
         attendee_data = cursor.fetchall()
         
         # query for getting all attendees that did not attend the seance
         not_attended_list = []
         if chosen_seance_id:
-            not_attended_query = ('SELECT Attendees.attendee_id, Attendees.full_name '
-                              'FROM Attendees '
-                              'WHERE attendee_id NOT IN ('
-                              'SELECT Attendees.attendee_id '
-                              'FROM Attendees '
-                              'INNER JOIN SeanceAttendees ON Attendees.attendee_id = SeanceAttendees.attendee_id '
-                             f'WHERE SeanceAttendees.seance_id = {chosen_seance_id});')
-            cursor = db.execute_query(query=not_attended_query)
+            cursor = db.execute_query(queries['seanceattendees']['select_not_attended'], (int(chosen_seance_id),))
             not_attended_list = cursor.fetchall()
 
         # renders the page with prefilled dropdowns
@@ -423,16 +395,15 @@ def seanceattendees():
 @app.route('/delete_seanceattendee/<int:id>')
 def delete_seanceattendee(id):
      # deletes a seance attendence record based on id
-    query = f'DELETE FROM SeanceAttendees WHERE seanceattendees_id = {id};'
-    cursor = db.execute_query(query=query)
+    cursor = db.execute_query(queries['seanceattendees']['delete'], (int(id),))
 
+    # redirects to specific seance view
     args = request.args
     if args.get('seance_id_input') is not None:
         return redirect(f'/seanceattendees?seance_id_input={args.get("seance_id_input")}')
 
     # otherwise redirect to all seanceattendees page
     return redirect('/seanceattendees')
-
 
         
 
@@ -444,34 +415,21 @@ def seances():
         if request.form.get('id_input'):
             # if any input is empty string we want it to be NULL instead
             id_input = request.form['id_input']
-            date_input = f'"{request.form["new_date"]}"' if request.form.get('new_date') else 'NULL'
-            location_id_input = f'{request.form["new_location_id"]}' if request.form.get('new_location_id') else 'NULL'
+            date_input = f'{request.form["new_date"]}' if request.form.get('new_date') else None
+            location_id_input = f'{request.form["new_location_id"]}' if request.form.get('new_location_id') else None
 
             # query for updating seance with matching id
-            query = ('UPDATE Seances '
-                    f'SET date = {date_input}, '
-                    f'location_id = {location_id_input} '
-                    f'WHERE seance_id = {id_input};')
-            
-
-            cursor = db.execute_query(query=query)
-
-
+            cursor = db.execute_query(queries['seances']['update'], (date_input, location_id_input, id_input))
             return redirect('/seances')
 
         # otherwise we are creating a new seance
         else:
             # process out empty strings and turn them into NULLs
-            date_input = f'"{request.form["date"]}"' if request.form.get('date') else 'NULL'
-            location_id_input = f'{request.form["location_id"]}' if request.form.get('location_id') else 'NULL'
+            date_input = f'{request.form["date"]}' if request.form.get('date') else None
+            location_id_input = f'{request.form["location_id"]}' if request.form.get('location_id') else None
 
             # query for creating a new Seance
-            query = ('INSERT INTO Seances (date, location_id) '
-                    f'VALUES ({date_input}, {location_id_input});')
-
-            cursor = db.execute_query(query=query)
-
-
+            db.execute_query(queries['seances']['insert'], (date_input, location_id_input))
             return redirect('/seances')
 
     # Read functionality
@@ -480,34 +438,22 @@ def seances():
         # there may not be a passed-in seance id to edit--default to None and adjusts if needed
         seance_to_edit = None
         if args.get('id'):
-            preselect_query = ("SELECT Seances.seance_id, Locations.name, Seances.date, Locations.location_id "
-                               "FROM Seances "
-                               "LEFT JOIN Locations ON Seances.location_id = Locations.location_id "
-                               f"WHERE Seances.seance_id = {args.get('id')};")
-            cursor = db.execute_query(query=preselect_query)
+            cursor = db.execute_query(queries['seances']['select_specific'], (int(args.get('id')),))
             seance_to_edit = cursor.fetchone()
 
         # gets list of seances to display in table and populate dropdowns
-        seance_query = ("SELECT Seances.seance_id, Locations.name, Seances.date "
-                        "FROM Seances "
-                        "LEFT JOIN Locations ON Seances.location_id = Locations.location_id;")
-        cursor = db.execute_query(query=seance_query)
+        cursor = db.execute_query(queries['seances']['select'])
         seance_data = cursor.fetchall()
 
         # gets list of locations to populate dropdowns
-        location_query = ("SELECT location_id, name FROM Locations;")
-        cursor = db.execute_query(query=location_query)
+        cursor = db.execute_query(queries['locations']['select_minimal'])
         location_data = cursor.fetchall()
         return render_template('seances.j2', seance_data=seance_data, seance_to_edit=seance_to_edit, location_data=location_data)
 
 @app.route('/delete_seance/<int:id>')
 def delete_seance(id):
     # removes a seance by id
-    query = f'DELETE FROM Seances WHERE seance_id = {id};'
-
-    cursor = db.execute_query(query=query)
-
-    
+    cursor = db.execute_query(queries['seances']['delete'], (int(id),))
     return redirect('/seances')
 
 
@@ -541,8 +487,6 @@ def spirits():
     spirit_data = db.execute_query(queries['spirits']['select'])
 
     return render_template('spirits.j2', spirit_data=spirit_data,  edit_form=edit_form)
-
-
 
 
 

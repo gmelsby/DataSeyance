@@ -72,6 +72,7 @@ delete = "DELETE FROM Locations WHERE location_id = %s;"
 
 select = "SELECT location_id, name, street_address, city, zip, state, country FROM Locations;"
 
+select_minimal = "SELECT location_id, name FROM Locations;"
 
 select_specific = """
 SELECT location_id, name, street_address, city, zip, state, country
@@ -114,8 +115,54 @@ select_detailed = "SELECT method_id, name, description FROM Methods;"
 
 select_specific = "SELECT method_id, name, description FROM Methods WHERE method_id = %s;"
 
+[seanceattendees]
+update = """
+UPDATE SeanceAttendees
+SET seance_id = %s
+WHERE attendee_id = %s
+AND seance_id = %s;
+"""
+
+insert = "INSERT INTO SeanceAttendees (attendee_id, seance_id) VALUES (%s, %s)"
+
+delete = "DELETE FROM SeanceAttendees WHERE seanceattendees_id = %s;"
+
+select = """
+SELECT SeanceAttendees.seance_id, Attendees.attendee_id, Attendees.full_name, SeanceAttendees.seanceattendees_id
+FROM SeanceAttendees
+LEFT JOIN Attendees ON SeanceAttendees.attendee_id = Attendees.attendee_id;
+"""
+
+select_specific = """
+SELECT SeanceAttendees.seance_id, Attendees.attendee_id, Attendees.full_name, SeanceAttendees.seanceattendees_id
+FROM SeanceAttendees
+LEFT JOIN Attendees ON SeanceAttendees.attendee_id = Attendees.attendee_id
+WHERE SeanceAttendees.seance_id = %s;
+"""
+
+select_not_attended = """
+SELECT Attendees.attendee_id, Attendees.full_name
+FROM Attendees
+WHERE attendee_id NOT IN (
+SELECT Attendees.attendee_id
+FROM Attendees
+NNER JOIN SeanceAttendees ON Attendees.attendee_id = SeanceAttendees.attendee_id
+WHERE SeanceAttendees.seance_id = %s);
+"""
+
 
 [seances]
+insert = "INSERT INTO Seances (date, location_id) VALUES (%s, %s);"
+
+update = """
+UPDATE Seances
+SET date = %s,
+location_id = %s
+WHERE seance_id = %s;
+"""
+
+delete = "DELETE FROM Seances WHERE seance_id = %s;"
+
 select = """
 SELECT seance_id, Locations.name, Seances.date
 FROM Seances
@@ -126,12 +173,20 @@ select_specific = """
 SELECT seance_id, Locations.name, Seances.date
 FROM Seances 
 LEFT JOIN Locations ON Seances.location_id = Locations.location_id
-WHERE Seances.seance_id = (%s)
+WHERE Seances.seance_id = %s
 """
+
+select_other = """
+SELECT Seances.date, Locations.name, Seances.seance_id
+FROM Seances
+INNER JOIN Locations ON Seances.location_id = Locations.location_id
+WHERE seance_id <> %s;
+"""
+
 
 [spirits]
 insert = "INSERT INTO Spirits (full_name) VALUES (%s);"
 update = "UPDATE Spirits SET full_name = (%s) WHERE spirit_id = (%s);"
-delete = "DELETE FROM Spirits  WHERE spirit_id = (%s);"
+delete = "DELETE FROM Spirits  WHERE spirit_id = %s;"
 select = "SELECT spirit_id, full_name FROM Spirits;"
 
