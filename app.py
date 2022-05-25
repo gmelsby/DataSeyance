@@ -98,16 +98,12 @@ def channelings():
     chosen_seance_id = args.get('id')
     chosen_seance = None
     if chosen_seance_id:
-        chosen_seance_query = ('SELECT seance_id, Locations.name, Seances.date '
-                               'FROM Seances '
-                               'LEFT JOIN Locations ON Seances.location_id = Locations.location_id '
-                              f'WHERE Seances.seance_id = {chosen_seance_id}')
-        cursor = db.execute_query(query=chosen_seance_query)
+        cursor = db.execute_query(queries['seances']['select_specific'], (int(chosen_seance_id),))
         chosen_seance = cursor.fetchone()
 
 
         # query for getting all relevant channeling data
-    channeling_query = queries['channelings']['select_all']
+    channeling_query = queries['channelings']['select']
     channeling_params = ()
             # add a filter if a seance_id has been chosen
     if chosen_seance_id:
@@ -118,15 +114,11 @@ def channelings():
     channeling_data = cursor.fetchall()
 
     # query for getting seance data to populate dropdown
-    seance_query = ('SELECT seance_id, Locations.name, Seances.date '
-                    'FROM Seances ' 
-                    'LEFT JOIN Locations ON Seances.location_id = Locations.location_id;')
-    cursor = db.execute_query(query=seance_query)
+    cursor = db.execute_query(queries['seances']['select'])
     seance_data = cursor.fetchall()
 
     # query for getting medium data to populate dropdown
-    medium_query = ('SELECT medium_id, full_name FROM Mediums;')
-    cursor = db.execute_query(query=medium_query)
+    cursor = db.execute_query(queries['mediums']['select'])
     medium_data = cursor.fetchall()
 
     # query for getting spirit data to populate dropdown
@@ -134,11 +126,10 @@ def channelings():
     spirit_data = cursor.fetchall()
 
     # query for getting method data to populate dropdown
-    method_query = ('SELECT method_id, name FROM Methods;')
-    cursor = db.execute_query(query=method_query)
+    cursor = db.execute_query(queries['methods']['select'])
     method_data = cursor.fetchall()
 
-    return render_template('channelings.j2', chosen_seance='None', channeling_data=channeling_data,
+    return render_template('channelings.j2', chosen_seance=chosen_seance, channeling_data=channeling_data,
                             seance_data=seance_data, medium_data=medium_data, spirit_data=spirit_data,
                             method_data=method_data)
 

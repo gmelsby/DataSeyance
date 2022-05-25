@@ -11,12 +11,10 @@ select = "SELECT attendee_id, full_name FROM Attendees;"
 
 [channelings]
 insert = "INSERT INTO Spirits (full_name) VALUES (%s);"
-
 update = "UPDATE Spirits SET full_name = (%s) WHERE spirit_id = (%s);"
-
 delete = "DELETE FROM Spirits  WHERE spirit_id = (%s);"
 
-select_all = """ 
+select = """ 
 SELECT Channelings.channeling_id, Mediums.full_name AS medium_name, Spirits.full_name AS spirit_name, 
 Methods.name AS method_name, Seances.date, Locations.name AS location_name,
 Channelings.is_successful, Channelings.length_in_minutes
@@ -41,9 +39,29 @@ LEFT JOIN Locations ON Seances.location_id = Locations.location_id
 WHERE Seances.seance_id = (%s);
 """
 
+[mediums]
+select = "SELECT medium_id, full_name FROM Mediums;"
+
+[methods]
+select = "SELECT method_id, name FROM Methods;"
+
+[seances]
+select = """
+SELECT seance_id, Locations.name, Seances.date
+FROM Seances
+LEFT JOIN Locations ON Seances.location_id = Locations.location_id;
+"""
+
+select_specific = """
+SELECT seance_id, Locations.name, Seances.date
+FROM Seances 
+LEFT JOIN Locations ON Seances.location_id = Locations.location_id
+WHERE Seances.seance_id = (%s)
+"""
+
 [spirits]
 insert = "INSERT INTO Spirits (full_name) VALUES (%s);"
 update = "UPDATE Spirits SET full_name = (%s) WHERE spirit_id = (%s);"
 delete = "DELETE FROM Spirits  WHERE spirit_id = (%s);"
-select = 'SELECT spirit_id, full_name FROM Spirits;'
+select = "SELECT spirit_id, full_name FROM Spirits;"
 
