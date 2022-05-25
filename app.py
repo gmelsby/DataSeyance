@@ -136,26 +136,17 @@ def locations():
         # if POST form has id_input, update form has been submitted
         if request.form.get('id_input'):
             # Process each input to be NULL if empty string
+            # execute_query turns None into NULL through cursor.execute
             id_input = request.form['id_input']
-            name_input = f'"{request.form["new_name"].strip()}"' if request.form.get('new_name').strip() != '' else 'NULL'
-            street_input = f'"{request.form["new_street_address"].strip()}"' if request.form.get('new_street_address').strip() != '' else 'NULL'
-            city_input = f'"{request.form["new_city"].strip()}"' if request.form.get('new_city').strip() != '' else 'NULL'
-            zip_input = f'"{request.form["new_zip"]}"' if request.form.get('new_zip') else 'NULL'
-            state_input = f'"{request.form["new_state"]}"' if request.form.get('new_state') else 'NULL'
-            country_input = f'"{request.form["new_country"].strip()}"' if request.form.get('new_country').strip() != '' else 'NULL'
+            name_input = f'{request.form["new_name"].strip()}' if request.form.get('new_name').strip() != '' else None
+            street_input = f'{request.form["new_street_address"].strip()}' if request.form.get('new_street_address').strip() != '' else None
+            city_input = f'{request.form["new_city"].strip()}' if request.form.get('new_city').strip() != '' else None
+            zip_input = f'{request.form["new_zip"]}' if request.form.get('new_zip') else None
+            state_input = f'{request.form["new_state"]}' if request.form.get('new_state') else None
+            country_input = f'{request.form["new_country"].strip()}' if request.form.get('new_country').strip() != '' else None
             
             # query for updating location with location_id id_input
-            query = ('UPDATE Locations '
-                    f'SET name = {name_input}, '
-                    f'street_address = {street_input}, '
-                    f'city = {city_input}, '
-                    f'zip = {zip_input}, '
-                    f'state = {state_input}, '
-                    f'country = {country_input} '
-                    f'WHERE location_id = {id_input}')
-            
-
-            cursor = db.execute_query(query=query)
+            cursor = db.execute_query(queries['locations']['update'], (name_input, street_input, city_input, zip_input, state_input, country_input, id_input))
 
             
             return redirect('/locations')
@@ -163,19 +154,15 @@ def locations():
         # if POST form has name, create form has been submitted
         if request.form.get('name') is not None:
             # Process each input to be NULL if empty string
-            name_input = f'"{request.form["name"].strip()}"' if request.form.get('name').strip() != '' else 'NULL'
-            street_input = f'"{request.form["street_address"].strip()}"' if request.form.get('street_address').strip() != '' else 'NULL'
-            city_input = f'"{request.form["city"].strip()}"' if request.form.get('city').strip() != '' else 'NULL'
-            zip_input = f'"{request.form["zip"]}"' if request.form.get('zip') else 'NULL'
-            state_input =f'"{request.form["state"]}"' if request.form.get('state') else 'NULL'
-            country_input = f'"{request.form["country"].strip()}"' if request.form.get('country') != '' else 'NULL'
+            name_input = f'{request.form["name"].strip()}' if request.form.get('name').strip() != '' else None
+            street_input = f'{request.form["street_address"].strip()}' if request.form.get('street_address').strip() != '' else None
+            city_input = f'{request.form["city"].strip()}' if request.form.get('city').strip() != '' else None
+            zip_input = f'{request.form["zip"]}' if request.form.get('zip') else None
+            state_input =f'{request.form["state"]}' if request.form.get('state') else None
+            country_input = f'{request.form["country"].strip()}' if request.form.get('country') != '' else None
             
             # query for making new location
-            query = ('INSERT INTO Locations (name, street_address, city, zip, state, country) '
-                    f'VALUES ({name_input}, {street_input}, {city_input}, {zip_input}, {state_input}, {country_input});')
-
-
-            cursor = db.execute_query(query=query)
+            cursor = db.execute_query(queries['locations']['insert'], (name_input, street_input, city_input, zip_input, state_input, country_input))
 
 
             return redirect('/locations')
@@ -189,10 +176,7 @@ def locations():
         # only have a location to edit if id passed in in GET params, othewise it's None
         location_to_edit = None
         if args.get('id'):
-            preselect_query = ('SELECT location_id, name, street_address, city, zip, state, country '
-                               'FROM Locations '
-                               f'WHERE location_id = {args.get("id")};')
-            cursor = db.execute_query(query=preselect_query)
+            cursor = db.execute_query(queries['locations']['select_specific'], (int(args.get('id')),))
             location_to_edit = cursor.fetchone()
             
             # Removes 'None' from prefill--if a value is NULL, we get empty string instead
@@ -202,9 +186,7 @@ def locations():
 
 
         # query for displaying all info about Locations in table
-        query = ('SELECT location_id, name, street_address, city, zip, state, country '
-                 'FROM Locations;')
-        cursor = db.execute_query(query=query)
+        cursor = db.execute_query(queries['locations']['select'])
         location_data = cursor.fetchall()
 
         return render_template('locations.j2', location_data=location_data, location_to_edit=location_to_edit)
@@ -212,11 +194,7 @@ def locations():
 @app.route('/delete_location/<int:id>')
 def delete_location(id):
     # removes the location with indicated id
-    query = f'DELETE FROM Locations WHERE location_id = {id};'
-
-    cursor = db.execute_query(query=query)
-
-    
+    cursor = db.execute_query(queries['locations']['delete'], (int(id),))
     return redirect('/locations')
 
 
