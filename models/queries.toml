@@ -3,11 +3,12 @@ insert = ["INSERT INTO Attendees (full_name) VALUES (%s);",
 "SET @new_attendee_id = LAST_INSERT_ID();",
 "INSERT INTO SeanceAttendees (attendee_id, seance_id) VALUES (@new_attendee_id, %s);"]
 
-update = "UPDATE Attendees SET full_name = (%s) WHERE attendee_id = (%s);"
+update = "UPDATE Attendees SET full_name = %s WHERE attendee_id = %s;"
 
-delete = "DELETE FROM Attendees WHERE attendee_id = (%s);"
+delete = "DELETE FROM Attendees WHERE attendee_id = %s;"
 
 select = "SELECT attendee_id, full_name FROM Attendees;"
+select_specific = "SELECT attendee_id, full_name FROM Attendees WHERE attendee_id = %s;"
 
 
 [channelings]
@@ -47,11 +48,52 @@ LEFT JOIN Spirits ON Channelings.spirit_id = Spirits.spirit_id
 LEFT JOIN Methods ON Channelings.method_id = Methods.method_id
 LEFT JOIN Seances ON Channelings.seance_id = Seances.seance_id
 LEFT JOIN Locations ON Seances.location_id = Locations.location_id
-WHERE Seances.seance_id = (%s);
+WHERE Seances.seance_id = %s;
 """
 
+[locations]
+insert = """
+INSERT INTO Locations (name, street_address, city, zip, state, country)
+VALUES (%s, %s, %s, %s, %s, %s);
+"""
+
+update = """
+UPDATE Locations
+SET name = %s,
+street_address = %s, 
+city = %s,
+zip = %s,
+state = %s,
+country = %s
+WHERE location_id = %s;
+"""
+
+delete = "DELETE FROM Locations WHERE location_id = %s;"
+
+select = "SELECT location_id, name, street_address, city, zip, state, country FROM Locations;"
+
+
+select_specific = """
+SELECT location_id, name, street_address, city, zip, state, country
+FROM Locations
+WHERE location_id = %s;
+"""
+
+
 [mediums]
+insert = "INSERT INTO Mediums (full_name) VALUES (%s);"
+
+update = """
+UPDATE Mediums
+SET full_name = %s
+WHERE medium_id = %s;
+"""
+
+delete = "DELETE FROM Mediums WHERE medium_id = %s;"
+
 select = "SELECT medium_id, full_name FROM Mediums;"
+
+select_specific = "SELECT medium_id, full_name FROM Mediums WHERE medium_id = %s;"
 
 [methods]
 select = "SELECT method_id, name FROM Methods;"
