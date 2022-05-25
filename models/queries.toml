@@ -96,7 +96,24 @@ select = "SELECT medium_id, full_name FROM Mediums;"
 select_specific = "SELECT medium_id, full_name FROM Mediums WHERE medium_id = %s;"
 
 [methods]
+insert = "INSERT INTO Methods (name, description) VALUES (%s, %s);"
+
+
+update = """
+UPDATE Methods 
+SET name = %s,
+description = %s
+WHERE method_id = %s;
+"""
+
+delete = "DELETE FROM Methods WHERE method_id = %s;"
+
 select = "SELECT method_id, name FROM Methods;"
+
+select_detailed = "SELECT method_id, name, description FROM Methods;"
+
+select_specific = "SELECT method_id, name, description FROM Methods WHERE method_id = %s;"
+
 
 [seances]
 select = """

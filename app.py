@@ -259,39 +259,24 @@ def methods():
         # makes sure new_name is not empty string
         if request.form.get('id_input') and request.form.get('new_name'):
             name_input = request.form['new_name'].strip()
-            id_input = request.form['id_input']
-            # if description_input is empty string we skip processing it and instead send in null
-            description_input = 'NULL'
+            id_input = int(request.form['id_input'])
+            # if description_input is empty string we skip processing it and instead send in None to be turned into NULL
+            description_input = None
             if request.form.get('new_description'):
                 description_input = f'"{request.form["new_description"]}"'
 
-
-            # update query to change attributes of method with matching id_input
-            query= ('UPDATE Methods ' 
-                     f'SET name = "{name_input}", '
-                     f'description = {description_input} '
-                     f'WHERE method_id = {id_input};')
-
-
-            cursor = db.execute_query(query=query)
-
-
-            
+            cursor = db.execute_query(queries['methods']['update'], (name_input, description_input, id_input))
             return redirect('/methods')
 
         # Create functionality--to be skipped if submitted name is empty
         if request.form.get('name'):
             name_input = request.form['name'].strip()
-            # description is optional so initially set to NULL in case of empty string
-            description_input = 'NULL'
+            # description is optional so initially set to None for NULL in case of empty string
+            description_input = None
             if request.form.get('description'):
                 description_input = f'"{request.form["description"]}"'
             # creates new method
-            query = f'INSERT INTO Methods (name, description) VALUES ("{name_input}", {description_input});'
-
-            cursor = db.execute_query(query=query)
-
-
+            cursor = db.execute_query(queries['methods']['insert'], (name_input, description_input))
             
         return redirect('/methods')
 
@@ -301,8 +286,7 @@ def methods():
         # we might not have a preselected method in the query parameters, so default to None and adjust if necessary
         method_to_edit = None
         if args.get('id'):
-            preselect_query = f"SELECT method_id, name, description FROM Methods WHERE method_id = {args.get('id')};"
-            cursor = db.execute_query(query=preselect_query)
+            cursor = db.execute_query(queries['methods']['select_specific'], (int(args.get('id')),))
             method_to_edit = cursor.fetchone()
             
             # Remvoes 'None' from prefilled text input--if a value is NULL we just want an empty string
@@ -310,8 +294,7 @@ def methods():
                 if value is None:
                     method_to_edit[key] = ''
             
-        query = 'SELECT method_id, name, description FROM Methods;'
-        cursor = db.execute_query(query=query)
+        cursor = db.execute_query(queries['methods']['select_detailed'])
         method_data = cursor.fetchall()
 
         return render_template('methods.j2', method_data=method_data, method_to_edit=method_to_edit)
@@ -320,11 +303,7 @@ def methods():
 @app.route('/delete_method/<int:id>')
 def delete_method(id):
     # removes method with associated method_id
-    query = f'DELETE FROM Methods WHERE method_id = {id};'
-
-    cursor = db.execute_query(query=query)
-
-    
+    cursor = db.execute_query(queries['methods']['delete'], (int(id),))
     return redirect('/methods')
 
 
