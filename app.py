@@ -107,22 +107,14 @@ def channelings():
 
 
         # query for getting all relevant channeling data
-    channeling_query = ('SELECT Channelings.channeling_id, Mediums.full_name AS medium_name, Spirits.full_name AS spirit_name, '
-                       'Methods.name AS method_name, Seances.date, Locations.name AS location_name, '
-                       'Channelings.is_successful, Channelings.length_in_minutes '
-                       'FROM Channelings '
-                       'LEFT JOIN Mediums ON Channelings.medium_id = Mediums.medium_id '
-                       'LEFT JOIN Spirits ON Channelings.spirit_id = Spirits.spirit_id '
-                       'LEFT JOIN Methods ON Channelings.method_id = Methods.method_id '
-                       'LEFT JOIN Seances ON Channelings.seance_id = Seances.seance_id '
-                       'LEFT JOIN Locations ON Seances.location_id = Locations.location_id')
+    channeling_query = queries['channelings']['select_all']
+    channeling_params = ()
             # add a filter if a seance_id has been chosen
     if chosen_seance_id:
-        channeling_query += f' WHERE Seances.seance_id = {chosen_seance_id}'
-    # add a semicolon whether we have a filter or not
-        channeling_query += ';'
+        channeling_query = queries['channelings']['select_specific']
+        channeling_params = (int(chosen_seance_id),)
 
-    cursor = db.execute_query(query=channeling_query)
+    cursor = db.execute_query(channeling_query, channeling_params)
     channeling_data = cursor.fetchall()
 
     # query for getting seance data to populate dropdown

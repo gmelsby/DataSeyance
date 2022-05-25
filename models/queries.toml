@@ -1,19 +1,49 @@
+[attendees]
+insert = ["INSERT INTO Attendees (full_name) VALUES (%s);",
+"SET @new_attendee_id = LAST_INSERT_ID();",
+"INSERT INTO SeanceAttendees (attendee_id, seance_id) VALUES (@new_attendee_id, %s);"]
+
+update = "UPDATE Attendees SET full_name = (%s) WHERE attendee_id = (%s);"
+
+delete = "DELETE FROM Attendees WHERE attendee_id = (%s);"
+
+select = "SELECT attendee_id, full_name FROM Attendees;"
+
+[channelings]
+insert = "INSERT INTO Spirits (full_name) VALUES (%s);"
+
+update = "UPDATE Spirits SET full_name = (%s) WHERE spirit_id = (%s);"
+
+delete = "DELETE FROM Spirits  WHERE spirit_id = (%s);"
+
+select_all = """ 
+SELECT Channelings.channeling_id, Mediums.full_name AS medium_name, Spirits.full_name AS spirit_name, 
+Methods.name AS method_name, Seances.date, Locations.name AS location_name,
+Channelings.is_successful, Channelings.length_in_minutes
+FROM Channelings
+LEFT JOIN Mediums ON Channelings.medium_id = Mediums.medium_id
+LEFT JOIN Spirits ON Channelings.spirit_id = Spirits.spirit_id
+LEFT JOIN Methods ON Channelings.method_id = Methods.method_id
+LEFT JOIN Seances ON Channelings.seance_id = Seances.seance_id
+LEFT JOIN Locations ON Seances.location_id = Locations.location_id;
+"""
+
+select_specific = """
+SELECT Channelings.channeling_id, Mediums.full_name AS medium_name, Spirits.full_name AS spirit_name, 
+Methods.name AS method_name, Seances.date, Locations.name AS location_name,
+Channelings.is_successful, Channelings.length_in_minutes
+FROM Channelings
+LEFT JOIN Mediums ON Channelings.medium_id = Mediums.medium_id
+LEFT JOIN Spirits ON Channelings.spirit_id = Spirits.spirit_id
+LEFT JOIN Methods ON Channelings.method_id = Methods.method_id
+LEFT JOIN Seances ON Channelings.seance_id = Seances.seance_id
+LEFT JOIN Locations ON Seances.location_id = Locations.location_id
+WHERE Seances.seance_id = (%s);
+"""
+
 [spirits]
 insert = "INSERT INTO Spirits (full_name) VALUES (%s);"
 update = "UPDATE Spirits SET full_name = (%s) WHERE spirit_id = (%s);"
 delete = "DELETE FROM Spirits  WHERE spirit_id = (%s);"
 select = 'SELECT spirit_id, full_name FROM Spirits;'
 
-[channelings]
-insert = "INSERT INTO Spirits (full_name) VALUES (%s);"
-update = "UPDATE Spirits SET full_name = (%s) WHERE spirit_id = (%s);"
-delete = "DELETE FROM Spirits  WHERE spirit_id = (%s);"
-select = 'SELECT spirit_id, full_name FROM Spirits;'
-
-[attendees]
-insert = ["INSERT INTO Attendees (full_name) VALUES (%s);",
-"SET @new_attendee_id = LAST_INSERT_ID();",
-"INSERT INTO SeanceAttendees (attendee_id, seance_id) VALUES (@new_attendee_id, %s);"]
-update = "UPDATE Attendees SET full_name = (%s) WHERE attendee_id = (%s);"
-delete = "DELETE FROM Attendees WHERE attendee_id = (%s);"
-select = "SELECT attendee_id, full_name FROM Attendees;"
