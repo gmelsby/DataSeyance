@@ -16,7 +16,7 @@
   <tr>
     <th>spirit_id</th>
     <th>full_name</th>
-    <th>Action</th>
+    <th>Edit</th>
     <th>Delete</th>
   </tr>
   </thead>
@@ -28,11 +28,10 @@
   <tr>
   <form id="UpdateSpirit" method="POST">
   <td>{{spirit['spirit_id']}}  </td>  <td><form id="UpdateSpirit" method="POST"><input  type="text"  name="new_name" value = '{{spirit['full_name']}}'></td>
-    <td><input class="btn" type="submit" id="UpdateSpirit" value="Save">        <input type="hidden" name="id_input" value={{spirit['spirit_id']}}>
+    <td colspan=2><input class="btn" type="submit" id="UpdateSpirit" value="Save">        <input type="hidden" name="id_input" value={{spirit['spirit_id']}}>
    <input type="hidden" name="action" value="update">  <input type="hidden" name="edit_form" value=-1
     </td>
    </form>
-    <td> </td>
 
   </tr>
   {% else %}
