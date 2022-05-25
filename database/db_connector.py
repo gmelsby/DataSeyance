@@ -39,6 +39,7 @@ def execute_query(db_connection = None, query = None, query_params = ()):
 
     '''
 
+    db_connection = connect_to_database(host, user, passwd, db)
     if db_connection is None:
         print("No connection to the database found! Have you called connect_to_database() first?")
         return None
@@ -58,6 +59,7 @@ def execute_query(db_connection = None, query = None, query_params = ()):
         params = params + (q)
     '''
     #TODO: Sanitize the query before executing it!!!
+
     cursor.execute(query, query_params)
     # this will actually commit any changes to the database. without this no
     # changes will be committed!

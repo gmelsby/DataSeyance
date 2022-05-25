@@ -8,11 +8,12 @@ from flask_mysqldb import MySQL
 import os
 import MySQLdb
 import database.db_connector as db
-
-db_connection = db.connect_to_database()
+import toml
 
 app = Flask(__name__)
 mysql = MySQL(app)
+
+queries = toml.load("models/queries.toml")
 
 @app.route('/')
 def root():
@@ -37,7 +38,9 @@ def attendees():
                      f'SET full_name = "{full_name_input}" '
                      f'WHERE attendee_id = {id_input};')
             
-            cursor = db.execute_query(db_connection=db_connection, query=query)
+
+            cursor = db.execute_query(query=query)
+
 
             return redirect('/attendees')
 
@@ -69,12 +72,12 @@ def attendees():
         # if we have get query parameter indicating attendee_id we get the info for the dropdown
         if args.get('id'):
             preselect_query = f"SELECT attendee_id, full_name FROM Attendees WHERE attendee_id = {args.get('id')};"
-            cursor = db.execute_query(db_connection=db_connection, query=preselect_query)
+            cursor = db.execute_query(query=preselect_query)
             attendee_to_edit = cursor.fetchone()
             
         # attendee data to be displayed in table and used for update dropdown
         attendee_query = 'SELECT attendee_id, full_name FROM Attendees;'
-        cursor = db.execute_query(db_connection=db_connection, query=attendee_query)
+        cursor = db.execute_query(query=attendee_query)
         attendee_data = cursor.fetchall()
         
         # seance data to be used in dropdown for adding an attendee
@@ -82,7 +85,7 @@ def attendees():
                         'FROM Seances ' 
                         'LEFT JOIN Locations ON Seances.location_id = Locations.location_id;')
                         
-        cursor = db.execute_query(db_connection=db_connection, query=seance_query)
+        cursor = db.execute_query(query=seance_query)
         seance_data = cursor.fetchall()
 
         return render_template('attendees.j2', attendee_data=attendee_data, seance_data=seance_data, attendee_to_edit=attendee_to_edit)
@@ -91,109 +94,83 @@ def attendees():
 @app.route('/delete_attendee/<int:id>')
 def delete_attendee(id):
     query = f'DELETE FROM Attendees WHERE attendee_id = {id};'
+
     cursor = db.execute_query(db_connection=db_connection, query=query)
+
     
     return redirect('/attendees')
 
 
 @app.route('/channelings', methods=['GET', 'POST'])
 def channelings():
-    # our channelings table does not support update, so POST is only creation
+
     if request.method == 'POST':
-        # process our inputs to put in NULL if any are empty
-        seance_input = request.form['seance_id'] if request.form.get('seance_id') else 'NULL'
-        medium_input = request.form['medium_id'] if request.form.get('medium_id') else 'NULL'
-        spirit_input = request.form['spirit_id'] if request.form.get('spirit_id') else 'NULL'
-        method_input = request.form['method_id'] if request.form.get('method_id') else 'NULL'
-        success_input = 1 if request.form.get('is_successful') is not None else 0
-        length_input = request.form['length'] if request.form.get('length') != '' else 'NULL'
-        
-        # query for adding a new channeling
-        query = ('INSERT INTO Channelings (medium_id, seance_id, spirit_id, method_id, is_successful, length_in_minutes) '
-                 'VALUES ('
-                f'{medium_input}, {seance_input}, {spirit_input}, {method_input}, {success_input}, {length_input});')
-                 
-        cursor = db.execute_query(db_connection=db_connection, query=query)
-        
-        # redirect to the inputted seance_id if passed in
-        if seance_input != 'NULL':
-            return redirect(f'/channelings?id={seance_input}')
-        # otherwise just redirect to channelings
-        return redirect('/channelings')
+        content = request.form.to_dict()
+        print(content)
 
-    # read functionality
-    if request.method == 'GET':
-        args = request.args
-        # chosen_seance defaults to None unless we have id passed in in GET param
-        chosen_seance_id = args.get('id')
-        chosen_seance = None
-        if chosen_seance_id:
-            chosen_seance_query = ('SELECT seance_id, Locations.name, Seances.date '
-                                   'FROM Seances '
-                                   'LEFT JOIN Locations ON Seances.location_id = Locations.location_id '
-                                  f'WHERE Seances.seance_id = {chosen_seance_id}')
-            cursor = db.execute_query(db_connection=db_connection, query=chosen_seance_query)
-            chosen_seance = cursor.fetchone()
-        
-        # query for getting all relevant channeling data
-        channeling_query = ('SELECT Channelings.channeling_id, Mediums.full_name AS medium_name, Spirits.full_name AS spirit_name, '
-                           'Methods.name AS method_name, Seances.date, Locations.name AS location_name, '
-                           'Channelings.is_successful, Channelings.length_in_minutes '
-                           'FROM Channelings '
-                           'LEFT JOIN Mediums ON Channelings.medium_id = Mediums.medium_id '
-                           'LEFT JOIN Spirits ON Channelings.spirit_id = Spirits.spirit_id '
-                           'LEFT JOIN Methods ON Channelings.method_id = Methods.method_id '
-                           'LEFT JOIN Seances ON Channelings.seance_id = Seances.seance_id '
-                           'LEFT JOIN Locations ON Seances.location_id = Locations.location_id')
-        # add a filter if a seance_id has been chosen
-        if chosen_seance_id:
-            channeling_query += f' WHERE Seances.seance_id = {chosen_seance_id}'
-        # add a semicolon whether we have a filter or not
-        channeling_query += ';'
-        
-        cursor = db.execute_query(db_connection=db_connection, query=channeling_query)
-        channeling_data = cursor.fetchall()
-        
-        # query for getting seance data to populate dropdown
-        seance_query = ('SELECT seance_id, Locations.name, Seances.date '
-                        'FROM Seances ' 
-                        'LEFT JOIN Locations ON Seances.location_id = Locations.location_id;')
-        cursor = db.execute_query(db_connection=db_connection, query=seance_query)
-        seance_data = cursor.fetchall()
-        
-        # query for getting medium data to populate dropdown
-        medium_query = ('SELECT medium_id, full_name FROM Mediums;')
-        cursor = db.execute_query(db_connection=db_connection, query=medium_query)
-        medium_data = cursor.fetchall()
-        
-        # query for getting spirit data to populate dropdown
-        spirit_query = ('SELECT spirit_id, full_name FROM Spirits;')
-        cursor = db.execute_query(db_connection=db_connection, query=spirit_query)
-        spirit_data = cursor.fetchall()
-        
-        # query for getting method data to populate dropdown
-        method_query = ('SELECT method_id, name FROM Methods;')
-        cursor = db.execute_query(db_connection=db_connection, query=method_query)
-        method_data = cursor.fetchall()
 
-        return render_template('channelings.j2', chosen_seance=chosen_seance, channeling_data=channeling_data, 
-                                seance_data=seance_data, medium_data=medium_data, spirit_data=spirit_data,
-                         method_data=method_data)
 
-@app.route('/delete_channeling/<int:id>')
-def delete_channeling(id):
-     # deletes a channeling based on id
-    query = f'DELETE FROM Channelings WHERE channeling_id = {id};'
-    cursor = db.execute_query(db_connection=db_connection, query=query)
-
+    # if request.method == 'GET':
     args = request.args
-    if args.get('id') is not None:
-        return redirect(f'/channelings?id={args.get("id")}')
+#     # chosen_seance defaults to None unless we have id passed in in GET param
+    chosen_seance_id = args.get('id')
+    chosen_seance = None
+    if chosen_seance_id:
+        chosen_seance_query = ('SELECT seance_id, Locations.name, Seances.date '
+                               'FROM Seances '
+                               'LEFT JOIN Locations ON Seances.location_id = Locations.location_id '
+                              f'WHERE Seances.seance_id = {chosen_seance_id}')
+        cursor = db.execute_query(query=chosen_seance_query)
+        chosen_seance = cursor.fetchone()
 
-    # otherwise redirect to all channelings page
-    return redirect('/channelings')
 
- 
+        # query for getting all relevant channeling data
+    channeling_query = ('SELECT Channelings.channeling_id, Mediums.full_name AS medium_name, Spirits.full_name AS spirit_name, '
+                       'Methods.name AS method_name, Seances.date, Locations.name AS location_name, '
+                       'Channelings.is_successful, Channelings.length_in_minutes '
+                       'FROM Channelings '
+                       'LEFT JOIN Mediums ON Channelings.medium_id = Mediums.medium_id '
+                       'LEFT JOIN Spirits ON Channelings.spirit_id = Spirits.spirit_id '
+                       'LEFT JOIN Methods ON Channelings.method_id = Methods.method_id '
+                       'LEFT JOIN Seances ON Channelings.seance_id = Seances.seance_id '
+                       'LEFT JOIN Locations ON Seances.location_id = Locations.location_id')
+            # add a filter if a seance_id has been chosen
+    if chosen_seance_id:
+        channeling_query += f' WHERE Seances.seance_id = {chosen_seance_id}'
+    # add a semicolon whether we have a filter or not
+        channeling_query += ';'
+
+    cursor = db.execute_query(query=channeling_query)
+    channeling_data = cursor.fetchall()
+
+    # query for getting seance data to populate dropdown
+    seance_query = ('SELECT seance_id, Locations.name, Seances.date '
+                    'FROM Seances ' 
+                    'LEFT JOIN Locations ON Seances.location_id = Locations.location_id;')
+    cursor = db.execute_query(query=seance_query)
+    seance_data = cursor.fetchall()
+
+    # query for getting medium data to populate dropdown
+    medium_query = ('SELECT medium_id, full_name FROM Mediums;')
+    cursor = db.execute_query(query=medium_query)
+    medium_data = cursor.fetchall()
+
+    # query for getting spirit data to populate dropdown
+    spirit_query = ('SELECT spirit_id, full_name FROM Spirits;')
+    cursor = db.execute_query(query=spirit_query)
+    spirit_data = cursor.fetchall()
+
+    # query for getting method data to populate dropdown
+    method_query = ('SELECT method_id, name FROM Methods;')
+    cursor = db.execute_query(query=method_query)
+    method_data = cursor.fetchall()
+
+    return render_template('channelings.j2', chosen_seance='None', channeling_data=channeling_data,
+                            seance_data=seance_data, medium_data=medium_data, spirit_data=spirit_data,
+                            method_data=method_data)
+
+
+
 
 @app.route('/locations', methods=['GET', 'POST'])
 def locations():
@@ -219,7 +196,9 @@ def locations():
                     f'country = {country_input} '
                     f'WHERE location_id = {id_input}')
             
-            cursor = db.execute_query(db_connection=db_connection, query=query)
+
+            cursor = db.execute_query(query=query)
+
             
             return redirect('/locations')
 
@@ -237,7 +216,9 @@ def locations():
             query = ('INSERT INTO Locations (name, street_address, city, zip, state, country) '
                     f'VALUES ({name_input}, {street_input}, {city_input}, {zip_input}, {state_input}, {country_input});')
 
-            cursor = db.execute_query(db_connection=db_connection, query=query)
+
+            cursor = db.execute_query(query=query)
+
 
             return redirect('/locations')
 
@@ -253,7 +234,7 @@ def locations():
             preselect_query = ('SELECT location_id, name, street_address, city, zip, state, country '
                                'FROM Locations '
                                f'WHERE location_id = {args.get("id")};')
-            cursor = db.execute_query(db_connection=db_connection, query=preselect_query)
+            cursor = db.execute_query(query=preselect_query)
             location_to_edit = cursor.fetchone()
             
             # Removes 'None' from prefill--if a value is NULL, we get empty string instead
@@ -265,7 +246,7 @@ def locations():
         # query for displaying all info about Locations in table
         query = ('SELECT location_id, name, street_address, city, zip, state, country '
                  'FROM Locations;')
-        cursor = db.execute_query(db_connection=db_connection, query=query)
+        cursor = db.execute_query(query=query)
         location_data = cursor.fetchall()
 
         return render_template('locations.j2', location_data=location_data, location_to_edit=location_to_edit)
@@ -274,7 +255,9 @@ def locations():
 def delete_location(id):
     # removes the location with indicated id
     query = f'DELETE FROM Locations WHERE location_id = {id};'
-    cursor = db.execute_query(db_connection=db_connection, query=query)
+
+    cursor = db.execute_query(query=query)
+
     
     return redirect('/locations')
 
@@ -292,7 +275,9 @@ def mediums():
                      f'SET full_name = "{full_name_input}" '
                      f'WHERE medium_id = {id_input};')
 
-            cursor = db.execute_query(db_connection=db_connection, query=query)
+            cursor = db.execute_query(query=query)
+
+
             
             return redirect('/mediums')
 
@@ -301,7 +286,10 @@ def mediums():
         if request.form.get('name'):
             full_name_input = request.form['name'].strip()
             query = f'INSERT INTO Mediums (full_name) VALUES ("{full_name_input}");'
-            cursor = db.execute_query(db_connection=db_connection, query=query)
+
+            cursor = db.execute_query(query=query)
+            mysql.connection.commit()
+
             
         return redirect('/mediums')
 
@@ -313,12 +301,12 @@ def mediums():
         # uses a select query to get info to preselect dropdown menu and prepopulate input
         if args.get('id'):
             preselect_query = f"SELECT medium_id, full_name FROM Mediums WHERE medium_id = {args.get('id')};"
-            cursor = db.execute_query(db_connection=db_connection, query=preselect_query)
+            cursor = db.execute_query(query=preselect_query)
             medium_to_edit = cursor.fetchone()
             
         # main query for getting info for medium table
         query = 'SELECT medium_id, full_name FROM Mediums;'
-        cursor = db.execute_query(db_connection=db_connection, query=query)
+        cursor = db.execute_query(query=query)
         medium_data = cursor.fetchall()
 
         return render_template('mediums.j2', medium_data=medium_data, medium_to_edit=medium_to_edit)
@@ -327,7 +315,9 @@ def mediums():
 def delete_medium(id):
     # deletes a medium based on id
     query = f'DELETE FROM Mediums WHERE medium_id = {id};'
-    cursor = db.execute_query(db_connection=db_connection, query=query)
+
+    cursor = db.execute_query(query=query)
+
     
     return redirect('/mediums')
 
@@ -353,7 +343,10 @@ def methods():
                      f'description = {description_input} '
                      f'WHERE method_id = {id_input};')
 
-            cursor = db.execute_query(db_connection=db_connection, query=query)
+
+            cursor = db.execute_query(query=query)
+
+
             
             return redirect('/methods')
 
@@ -366,7 +359,10 @@ def methods():
                 description_input = f'"{request.form["description"]}"'
             # creates new method
             query = f'INSERT INTO Methods (name, description) VALUES ("{name_input}", {description_input});'
-            cursor = db.execute_query(db_connection=db_connection, query=query)
+
+            cursor = db.execute_query(query=query)
+
+
             
         return redirect('/methods')
 
@@ -377,7 +373,7 @@ def methods():
         method_to_edit = None
         if args.get('id'):
             preselect_query = f"SELECT method_id, name, description FROM Methods WHERE method_id = {args.get('id')};"
-            cursor = db.execute_query(db_connection=db_connection, query=preselect_query)
+            cursor = db.execute_query(query=preselect_query)
             method_to_edit = cursor.fetchone()
             
             # Remvoes 'None' from prefilled text input--if a value is NULL we just want an empty string
@@ -386,7 +382,7 @@ def methods():
                     method_to_edit[key] = ''
             
         query = 'SELECT method_id, name, description FROM Methods;'
-        cursor = db.execute_query(db_connection=db_connection, query=query)
+        cursor = db.execute_query(query=query)
         method_data = cursor.fetchall()
 
         return render_template('methods.j2', method_data=method_data, method_to_edit=method_to_edit)
@@ -396,7 +392,9 @@ def methods():
 def delete_method(id):
     # removes method with associated method_id
     query = f'DELETE FROM Methods WHERE method_id = {id};'
-    cursor = db.execute_query(db_connection=db_connection, query=query)
+
+    cursor = db.execute_query(query=query)
+
     
     return redirect('/methods')
 
@@ -542,7 +540,9 @@ def seances():
                     f'location_id = {location_id_input} '
                     f'WHERE seance_id = {id_input};')
             
-            cursor = db.execute_query(db_connection=db_connection, query=query)
+
+            cursor = db.execute_query(query=query)
+
 
             return redirect('/seances')
 
@@ -556,7 +556,8 @@ def seances():
             query = ('INSERT INTO Seances (date, location_id) '
                     f'VALUES ({date_input}, {location_id_input});')
 
-            cursor = db.execute_query(db_connection=db_connection, query=query)
+            cursor = db.execute_query(query=query)
+
 
             return redirect('/seances')
 
@@ -577,12 +578,12 @@ def seances():
         seance_query = ("SELECT Seances.seance_id, Locations.name, Seances.date "
                         "FROM Seances "
                         "LEFT JOIN Locations ON Seances.location_id = Locations.location_id;")
-        cursor = db.execute_query(db_connection=db_connection, query=seance_query)
+        cursor = db.execute_query(query=seance_query)
         seance_data = cursor.fetchall()
 
         # gets list of locations to populate dropdowns
         location_query = ("SELECT location_id, name FROM Locations;")
-        cursor = db.execute_query(db_connection=db_connection, query=location_query)
+        cursor = db.execute_query(query=location_query)
         location_data = cursor.fetchall()
         return render_template('seances.j2', seance_data=seance_data, seance_to_edit=seance_to_edit, location_data=location_data)
 
@@ -590,60 +591,45 @@ def seances():
 def delete_seance(id):
     # removes a seance by id
     query = f'DELETE FROM Seances WHERE seance_id = {id};'
-    cursor = db.execute_query(db_connection=db_connection, query=query)
+
+    cursor = db.execute_query(query=query)
+
     
     return redirect('/seances')
 
 
 @app.route('/spirits', methods=['GET', 'POST'])
 def spirits():
-    # if method is POST we are either Creating or Updating
+    # method will be post or get, get will pass to line 468
+    edit_form = -1
     if request.method == 'POST':
-        # if POST request has id_input we are updating
-        if request.form.get('id_input') and request.form.get('new_name'):
-            full_name_input = request.form['new_name'].strip()
-            id_input = request.form['id_input']
 
-            query = ('UPDATE Spirits ' 
-                     f'SET full_name = "{full_name_input}" '
-                     f'WHERE spirit_id = {id_input};')
+        # we had a post so we are going to look at a parameter passed from a hidden form value
+        # get form values as dict
+        content = request.form.to_dict()
+        # this hidden form value will tell us what to do
+        action = content['action']
+        #hidden value says upddate
+        if action == 'tagupdate':
+           edit_form = int(content['id_input'])
 
-            cursor = db.execute_query(db_connection=db_connection, query=query)
-            
-            return redirect('/spirits')
+        if action == 'update':
+            #get update query from toml and send it with parameters (see /home/ed/DataSeyance/models/queries.toml)
+            print(int(content['id_input']))
+            db.execute_query(query=queries['spirits'][action]
+                             , query_params=(content['new_name'], int(content['id_input'])))
+        # get insert query from toml and send it with parameter (see /home/ed/DataSeyance/models/queries.toml)
+        if action == 'insert':
+            db.execute_query(query=queries['spirits'][action], query_params=(content['insert_full_name'],))
 
-        # if POST request has name we are creating
-        if request.form.get('name').strip() != '':
-            full_name_input = request.form['name'].strip()
-            query = f'INSERT INTO Spirits (full_name) VALUES ("{full_name_input}");'
-            cursor = db.execute_query(db_connection=db_connection, query=query)
-            
-        return redirect('/spirits')
+        if action == 'delete':
+            db.execute_query(query=queries['spirits'][action], query_params=(content['spirit_id'],))
 
-    # Read functionality
-    if request.method == 'GET':
-        args = request.args
-        # sprit_to_edit defaults to None unless id is passed in Get params
-        spirit_to_edit = None
-        if args.get('id'):
-            preselect_query = f"SELECT spirit_id, full_name FROM Spirits WHERE spirit_id = {args.get('id')};"
-            cursor = db.execute_query(db_connection=db_connection, query=preselect_query)
-            spirit_to_edit = cursor.fetchone()
+    spirit_data = db.execute_query(query=queries['spirits']['select'])
 
-        # gets info about all spirits in our db to display in table
-        query = 'SELECT spirit_id, full_name FROM Spirits;'
-        cursor = db.execute_query(db_connection=db_connection, query=query)
-        spirit_data = cursor.fetchall()
+    return render_template('spirits.j2', spirit_data=spirit_data,  edit_form=edit_form)
 
-        return render_template('spirits.j2', spirit_data=spirit_data, spirit_to_edit=spirit_to_edit)
-    
-@app.route('/delete_spirit/<int:id>')
-def delete_spirit(id):
-    # deletes spirit based on id
-    query = f'DELETE FROM Spirits WHERE spirit_id = {id};'
-    cursor = db.execute_query(db_connection=db_connection, query=query)
-    
-    return redirect('/spirits')
+
 
 
 
