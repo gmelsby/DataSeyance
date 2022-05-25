@@ -27,7 +27,7 @@ def connect_to_database(host = host, user = user, passwd = passwd, db = db):
     db_connection.ping(True)
     return db_connection
 
-def execute_query(db_connection = None, query = None, query_params = ()):
+def execute_query(query, query_params=()):
     '''
     executes a given SQL query on the given db connection and returns a Cursor object
 
@@ -66,10 +66,11 @@ def execute_query(db_connection = None, query = None, query_params = ()):
     db_connection.commit();
     return cursor
 
-def execute_queries(db_connection = None, queries = None, query_params = ()):
+def execute_queries(queries, query_params = ()):
     '''
-    Same as execute_query but takes a list of queries
+    Same as execute_query but takes a list of queries and a list of params for each query
     '''
+    db_connection = connect_to_database(host, user, passwd, db)
     if db_connection is None:
         print("No connection to the database found! Have you called connect_to_database() first?")
         return None
@@ -78,9 +79,9 @@ def execute_queries(db_connection = None, queries = None, query_params = ()):
         return None
 
     cursor = db_connection.cursor(MySQLdb.cursors.DictCursor)
-    for query in queries:
+    for index, query in enumerate(queries):
         print(f"Executing {query} with {query_params}")
-        cursor.execute(query, query_params)
+        cursor.execute(query, query_params[index])
         
     db_connection.commit();
     return cursor

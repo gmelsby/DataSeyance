@@ -1,4 +1,4 @@
-# Citation for following file
+#rams=() Citation for following file
 # Date: 5/19/2022
 # Routing inspired/guided by CS340 Flask Starter App
 # URL: https://github.com/osu-cs340-ecampus/flask-starter-app/blob/master/bsg_people_app/app.py
@@ -6,7 +6,6 @@
 from flask import Flask, render_template, redirect, json, request
 from flask_mysqldb import MySQL
 import os
-import MySQLdb
 import database.db_connector as db
 import toml
 
@@ -33,34 +32,18 @@ def attendees():
             # prepare entered strings for SQL Query
             full_name_input = request.form['new_name'].strip()
             id_input = request.form['id_input']
-            
-            query = ('UPDATE Attendees '
-                     f'SET full_name = "{full_name_input}" '
-                     f'WHERE attendee_id = {id_input};')
-            
 
-            cursor = db.execute_query(query=query)
-
+            cursor = db.execute_query(queries['attendees']['update'], (full_name_input, int(id_input)))
 
             return redirect('/attendees')
 
         # otherwise we are inserting a new Attendee
         # We do not want Attendees with empty names
         if request.form.get('name'):
-            full_name_input = request.form['name'].strip()
-            # Because we are potentially inserting into our intersection table too, we want an array of queries
-            # These will be executed sequentially
-            queries = [f'INSERT INTO Attendees (full_name) VALUES ("{full_name_input}");']
-            # if a seance_id has been selected we also add the Attendee to the SeanceAttendees table
-            if request.form['seance_id']:
-                queries.append(f'SET @new_attendee_id = LAST_INSERT_ID();')
-                seance_id_input = request.form['seance_id']
-                queries.append('INSERT INTO SeanceAttendees (attendee_id, seance_id) '
-                         f'VALUES (@new_attendee_id, {seance_id_input});')
-                
-            # These queries must be executed all at once in a unit
-            # We only commit when all are executed
-            cursor = db.execute_queries(db_connection=db_connection, queries=queries)
+            # our one multi-query transaction
+            # we need to call execute_queries to have all modifications executed as one
+            # and pass in lists of queries and parameters
+            cursor = db.execute_queries(queries['attendees']['insert'], [(request.form.get('name'),), (), (request.form.get('seance_id'),)])
         return redirect('/attendees')
             
             
@@ -93,9 +76,8 @@ def attendees():
 
 @app.route('/delete_attendee/<int:id>')
 def delete_attendee(id):
-    query = f'DELETE FROM Attendees WHERE attendee_id = {id};'
-
-    cursor = db.execute_query(db_connection=db_connection, query=query)
+    query = queries['attendees']['delete']
+    cursor = db.execute_query(query, (id,))
 
     
     return redirect('/attendees')
@@ -414,7 +396,7 @@ def seanceattendees():
                     f'WHERE attendee_id = {attendee_id} '
                     f'AND seance_id = {old_seance_id};')
 
-            cursor = db.execute_query(db_connection=db_connection, query=query)
+            cursor = db.execute_query(query=query)
 
             return redirect(f'/seanceattendees?seance_id_input={old_seance_id}')
 
@@ -427,7 +409,7 @@ def seanceattendees():
             # inserts a new row into SeanceAttendees intersection table
             query = ('INSERT INTO SeanceAttendees (attendee_id, seance_id) '
                     f'VALUES ({attendee_id}, {seance_id});')
-            cursor = db.execute_query(db_connection=db_connection, query=query)
+            cursor = db.execute_query(query=query)
 
             return redirect(f'/seanceattendees?seance_id_input={seance_id}')
 
@@ -442,7 +424,7 @@ def seanceattendees():
         # there are potentially many entries where attendee_id is NULL, and it is hard to tell them apart
         if chosen_attendee_id is not None and chosen_attendee_id != 'None':
             chosen_attendee_query = f'SELECT attendee_id, full_name FROM Attendees WHERE attendee_id = {chosen_attendee_id}'
-            cursor = db.execute_query(db_connection=db_connection, query=chosen_attendee_query)
+            cursor = db.execute_query(query=chosen_attendee_query)
             chosen_attendee = cursor.fetchone()
 
         # chosen seance defaults to None unless we have id passed in in GET args
@@ -454,14 +436,14 @@ def seanceattendees():
                                    'FROM Seances '
                                    'LEFT JOIN Locations ON Seances.location_id = Locations.location_id '
                                   f'WHERE Seances.seance_id = {chosen_seance_id}')
-            cursor = db.execute_query(db_connection=db_connection, query=chosen_seance_query)
+            cursor = db.execute_query(query=chosen_seance_query)
             chosen_seance = cursor.fetchone()
             
         # query for populating dropdown menu to choose a seance        
         seance_query = ('SELECT Seances.seance_id, Locations.name, Seances.date '
                        'FROM Seances '
                        'LEFT JOIN Locations ON Seances.location_id = Locations.location_id; ')
-        cursor = db.execute_query(db_connection=db_connection, query=seance_query)
+        cursor = db.execute_query(query=seance_query)
         seance_data = cursor.fetchall()
         
         # query for getting all seances that are not the selected seance
@@ -471,7 +453,7 @@ def seanceattendees():
                                    'FROM Seances '
                                    'INNER JOIN Locations ON Seances.location_id = Locations.location_id '
                                   f'WHERE seance_id <> {chosen_seance_id};')
-            cursor = db.execute_query(db_connection=db_connection, query=other_seances_query)
+            cursor = db.execute_query(query=other_seances_query)
             other_seances = cursor.fetchall()
 
 
@@ -486,7 +468,7 @@ def seanceattendees():
         # needs a semicolon no matter what
         attendee_query += ';'
         
-        cursor = db.execute_query(db_connection=db_connection, query=attendee_query)
+        cursor = db.execute_query(query=attendee_query)
         attendee_data = cursor.fetchall()
         
         # query for getting all attendees that did not attend the seance
@@ -499,7 +481,7 @@ def seanceattendees():
                               'FROM Attendees '
                               'INNER JOIN SeanceAttendees ON Attendees.attendee_id = SeanceAttendees.attendee_id '
                              f'WHERE SeanceAttendees.seance_id = {chosen_seance_id});')
-            cursor = db.execute_query(db_connection=db_connection, query=not_attended_query)
+            cursor = db.execute_query(query=not_attended_query)
             not_attended_list = cursor.fetchall()
 
         # renders the page with prefilled dropdowns
@@ -511,7 +493,7 @@ def seanceattendees():
 def delete_seanceattendee(id):
      # deletes a seance attendence record based on id
     query = f'DELETE FROM SeanceAttendees WHERE seanceattendees_id = {id};'
-    cursor = db.execute_query(db_connection=db_connection, query=query)
+    cursor = db.execute_query(query=query)
 
     args = request.args
     if args.get('seance_id_input') is not None:
@@ -571,7 +553,7 @@ def seances():
                                "FROM Seances "
                                "LEFT JOIN Locations ON Seances.location_id = Locations.location_id "
                                f"WHERE Seances.seance_id = {args.get('id')};")
-            cursor = db.execute_query(db_connection, query=preselect_query)
+            cursor = db.execute_query(query=preselect_query)
             seance_to_edit = cursor.fetchone()
 
         # gets list of seances to display in table and populate dropdowns
