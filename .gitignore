@@ -59,6 +59,9 @@ local_settings.py
 instance/
 .webassets-cache
 
+# Vim files
+*.un
+
 # Scrapy stuff:
 .scrapy
 

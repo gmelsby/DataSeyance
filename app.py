@@ -1,3 +1,8 @@
+# Citation for following file
+# Date: 5/19/2022
+# Routing inspired/guided by CS340 Flask Starter App
+# URL: https://github.com/osu-cs340-ecampus/flask-starter-app/blob/master/bsg_people_app/app.py
+
 from flask import Flask, render_template, redirect, json, request
 from flask_mysqldb import MySQL
 import os
@@ -33,8 +38,9 @@ def attendees():
                      f'SET full_name = "{full_name_input}" '
                      f'WHERE attendee_id = {id_input};')
             
+
             cursor = db.execute_query(query=query)
-            mysql.connection.commit()
+
 
             return redirect('/attendees')
 
@@ -54,11 +60,7 @@ def attendees():
                 
             # These queries must be executed all at once in a unit
             # We only commit when all are executed
-            cursor = db_connection.cursor(MySQLdb.cursors.DictCursor)
-            for query in queries:
-                cursor.execute(query)
-            mysql.connection.commit()
-            
+            cursor = db.execute_queries(db_connection=db_connection, queries=queries)
         return redirect('/attendees')
             
             
@@ -92,14 +94,16 @@ def attendees():
 @app.route('/delete_attendee/<int:id>')
 def delete_attendee(id):
     query = f'DELETE FROM Attendees WHERE attendee_id = {id};'
-    cursor = db.execute_query(query=query)
-    mysql.connection.commit()
+
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+
     
     return redirect('/attendees')
 
 
 @app.route('/channelings', methods=['GET', 'POST'])
 def channelings():
+
     if request.method == 'POST':
         content = request.form.to_dict()
         print(content)
@@ -116,8 +120,9 @@ def channelings():
                                'FROM Seances '
                                'LEFT JOIN Locations ON Seances.location_id = Locations.location_id '
                               f'WHERE Seances.seance_id = {chosen_seance_id}')
-        cursor = db.execute_query( query=chosen_seance_query)
+        cursor = db.execute_query(query=chosen_seance_query)
         chosen_seance = cursor.fetchone()
+
 
         # query for getting all relevant channeling data
     channeling_query = ('SELECT Channelings.channeling_id, Mediums.full_name AS medium_name, Spirits.full_name AS spirit_name, '
@@ -166,6 +171,7 @@ def channelings():
 
 
 
+
 @app.route('/locations', methods=['GET', 'POST'])
 def locations():
     if request.method == 'POST':
@@ -190,8 +196,9 @@ def locations():
                     f'country = {country_input} '
                     f'WHERE location_id = {id_input}')
             
+
             cursor = db.execute_query(query=query)
-            mysql.connection.commit()
+
             
             return redirect('/locations')
 
@@ -209,8 +216,9 @@ def locations():
             query = ('INSERT INTO Locations (name, street_address, city, zip, state, country) '
                     f'VALUES ({name_input}, {street_input}, {city_input}, {zip_input}, {state_input}, {country_input});')
 
+
             cursor = db.execute_query(query=query)
-            mysql.connection.commit()
+
 
             return redirect('/locations')
 
@@ -247,8 +255,9 @@ def locations():
 def delete_location(id):
     # removes the location with indicated id
     query = f'DELETE FROM Locations WHERE location_id = {id};'
+
     cursor = db.execute_query(query=query)
-    mysql.connection.commit()
+
     
     return redirect('/locations')
 
@@ -267,7 +276,8 @@ def mediums():
                      f'WHERE medium_id = {id_input};')
 
             cursor = db.execute_query(query=query)
-            mysql.connection.commit()
+
+
             
             return redirect('/mediums')
 
@@ -276,8 +286,10 @@ def mediums():
         if request.form.get('name'):
             full_name_input = request.form['name'].strip()
             query = f'INSERT INTO Mediums (full_name) VALUES ("{full_name_input}");'
+
             cursor = db.execute_query(query=query)
             mysql.connection.commit()
+
             
         return redirect('/mediums')
 
@@ -303,8 +315,9 @@ def mediums():
 def delete_medium(id):
     # deletes a medium based on id
     query = f'DELETE FROM Mediums WHERE medium_id = {id};'
+
     cursor = db.execute_query(query=query)
-    mysql.connection.commit()
+
     
     return redirect('/mediums')
 
@@ -330,8 +343,10 @@ def methods():
                      f'description = {description_input} '
                      f'WHERE method_id = {id_input};')
 
+
             cursor = db.execute_query(query=query)
-            mysql.connection.commit()
+
+
             
             return redirect('/methods')
 
@@ -344,8 +359,10 @@ def methods():
                 description_input = f'"{request.form["description"]}"'
             # creates new method
             query = f'INSERT INTO Methods (name, description) VALUES ("{name_input}", {description_input});'
+
             cursor = db.execute_query(query=query)
-            mysql.connection.commit()
+
+
             
         return redirect('/methods')
 
@@ -375,15 +392,137 @@ def methods():
 def delete_method(id):
     # removes method with associated method_id
     query = f'DELETE FROM Methods WHERE method_id = {id};'
+
     cursor = db.execute_query(query=query)
-    mysql.connection.commit()
+
     
     return redirect('/methods')
 
 
-@app.route('/seanceattendees')
+@app.route('/seanceattendees', methods=['GET', 'POST'])
 def seanceattendees():
-    return render_template('seanceattendees.j2')
+    if request.method == 'POST':
+        # if form contains update_seance_id we are updating a row in SeanceaAttendees
+        if request.form.get('update_attendee_id'):
+            attendee_id = request.form.get('update_attendee_id')
+            seance_id = request.form.get('update_seance_id')
+            old_seance_id = request.form.get('current_seance_id')
+            
+            # updates matching entries in SeanceAttendees
+            query = ('UPDATE SeanceAttendees '
+                    f'SET seance_id = {seance_id} '
+                    f'WHERE attendee_id = {attendee_id} '
+                    f'AND seance_id = {old_seance_id};')
+
+            cursor = db.execute_query(db_connection=db_connection, query=query)
+
+            return redirect(f'/seanceattendees?seance_id_input={old_seance_id}')
+
+            
+        # if form contains also_attended_id we are creating a new entry in SeanceAttendees
+        if request.form.get('also_attended_id'):
+            attendee_id = request.form.get('also_attended_id')
+            seance_id = request.form.get('selected_seance_id')
+            
+            # inserts a new row into SeanceAttendees intersection table
+            query = ('INSERT INTO SeanceAttendees (attendee_id, seance_id) '
+                    f'VALUES ({attendee_id}, {seance_id});')
+            cursor = db.execute_query(db_connection=db_connection, query=query)
+
+            return redirect(f'/seanceattendees?seance_id_input={seance_id}')
+
+
+    # read functionality
+    if request.method == 'GET':
+        args = request.args
+        # chosen attendee defaults to None unless we have id passed in in GET args
+        chosen_attendee_id = args.get('attendee_id_input')
+        chosen_attendee = None
+        # we are not supporting autofilling when attendee_id is NULL
+        # there are potentially many entries where attendee_id is NULL, and it is hard to tell them apart
+        if chosen_attendee_id is not None and chosen_attendee_id != 'None':
+            chosen_attendee_query = f'SELECT attendee_id, full_name FROM Attendees WHERE attendee_id = {chosen_attendee_id}'
+            cursor = db.execute_query(db_connection=db_connection, query=chosen_attendee_query)
+            chosen_attendee = cursor.fetchone()
+
+        # chosen seance defaults to None unless we have id passed in in GET args
+        chosen_seance_id = args.get('seance_id_input')
+        chosen_seance = None
+        # if a seance_id has been passed in, get info about it
+        if chosen_seance_id:
+            chosen_seance_query = ('SELECT seance_id, Locations.name, Seances.date '
+                                   'FROM Seances '
+                                   'LEFT JOIN Locations ON Seances.location_id = Locations.location_id '
+                                  f'WHERE Seances.seance_id = {chosen_seance_id}')
+            cursor = db.execute_query(db_connection=db_connection, query=chosen_seance_query)
+            chosen_seance = cursor.fetchone()
+            
+        # query for populating dropdown menu to choose a seance        
+        seance_query = ('SELECT Seances.seance_id, Locations.name, Seances.date '
+                       'FROM Seances '
+                       'LEFT JOIN Locations ON Seances.location_id = Locations.location_id; ')
+        cursor = db.execute_query(db_connection=db_connection, query=seance_query)
+        seance_data = cursor.fetchall()
+        
+        # query for getting all seances that are not the selected seance
+        other_seances = []
+        if chosen_seance_id:
+            other_seances_query = ('SELECT Seances.date, Locations.name, Seances.seance_id '
+                                   'FROM Seances '
+                                   'INNER JOIN Locations ON Seances.location_id = Locations.location_id '
+                                  f'WHERE seance_id <> {chosen_seance_id};')
+            cursor = db.execute_query(db_connection=db_connection, query=other_seances_query)
+            other_seances = cursor.fetchall()
+
+
+    
+        # query for getting info about all attendees in the SeanceAttendees table for all seances or a particular one
+        attendee_query = ('SELECT SeanceAttendees.seance_id, Attendees.attendee_id, Attendees.full_name, SeanceAttendees.seanceattendees_id '
+                          'FROM SeanceAttendees '
+                          'LEFT JOIN Attendees ON SeanceAttendees.attendee_id = Attendees.attendee_id')
+        # add filter if we have chosen a seance
+        if chosen_seance_id:
+             attendee_query += f' WHERE SeanceAttendees.seance_id = {chosen_seance_id}'
+        # needs a semicolon no matter what
+        attendee_query += ';'
+        
+        cursor = db.execute_query(db_connection=db_connection, query=attendee_query)
+        attendee_data = cursor.fetchall()
+        
+        # query for getting all attendees that did not attend the seance
+        not_attended_list = []
+        if chosen_seance_id:
+            not_attended_query = ('SELECT Attendees.attendee_id, Attendees.full_name '
+                              'FROM Attendees '
+                              'WHERE attendee_id NOT IN ('
+                              'SELECT Attendees.attendee_id '
+                              'FROM Attendees '
+                              'INNER JOIN SeanceAttendees ON Attendees.attendee_id = SeanceAttendees.attendee_id '
+                             f'WHERE SeanceAttendees.seance_id = {chosen_seance_id});')
+            cursor = db.execute_query(db_connection=db_connection, query=not_attended_query)
+            not_attended_list = cursor.fetchall()
+
+        # renders the page with prefilled dropdowns
+        return render_template('seanceattendees.j2', chosen_seance=chosen_seance, seance_data=seance_data,
+                               other_seances=other_seances, chosen_attendee=chosen_attendee,
+                               attendee_data=attendee_data, not_attended_list=not_attended_list)
+
+@app.route('/delete_seanceattendee/<int:id>')
+def delete_seanceattendee(id):
+     # deletes a seance attendence record based on id
+    query = f'DELETE FROM SeanceAttendees WHERE seanceattendees_id = {id};'
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+
+    args = request.args
+    if args.get('seance_id_input') is not None:
+        return redirect(f'/seanceattendees?seance_id_input={args.get("seance_id_input")}')
+
+    # otherwise redirect to all seanceattendees page
+    return redirect('/seanceattendees')
+
+
+        
+
 
 @app.route('/seances', methods=['GET', 'POST'])
 def seances():
@@ -401,8 +540,9 @@ def seances():
                     f'location_id = {location_id_input} '
                     f'WHERE seance_id = {id_input};')
             
+
             cursor = db.execute_query(query=query)
-            mysql.connection.commit()
+
 
             return redirect('/seances')
 
@@ -417,7 +557,7 @@ def seances():
                     f'VALUES ({date_input}, {location_id_input});')
 
             cursor = db.execute_query(query=query)
-            mysql.connection.commit()
+
 
             return redirect('/seances')
 
@@ -451,8 +591,9 @@ def seances():
 def delete_seance(id):
     # removes a seance by id
     query = f'DELETE FROM Seances WHERE seance_id = {id};'
+
     cursor = db.execute_query(query=query)
-    mysql.connection.commit()
+
     
     return redirect('/seances')
 
@@ -462,6 +603,7 @@ def spirits():
     # method will be post or get, get will pass to line 468
     edit_form = -1
     if request.method == 'POST':
+
         # we had a post so we are going to look at a parameter passed from a hidden form value
         # get form values as dict
         content = request.form.to_dict()
@@ -490,6 +632,7 @@ def spirits():
 
 
 
+
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5005))
-    app.run(port=port, debug=True)
+    port = int(os.environ.get('PORT', 3023))
+    app.run(port=port)

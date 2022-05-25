@@ -1,3 +1,9 @@
+# Citation for the following file
+# Date: 5/19/2022
+# Mostly Copied from CS340 Flask Starter App
+# source URL: https://github.com/osu-cs340-ecampus/flask-starter-app/blob/master/database/db_connector.py
+# Added db_connection.ping(True) and execute_queries function ourselves
+
 import MySQLdb
 import os
 from dotenv import load_dotenv, find_dotenv
@@ -16,6 +22,9 @@ def connect_to_database(host = host, user = user, passwd = passwd, db = db):
     connects to a database and returns a database objects
     '''
     db_connection = MySQLdb.connect(host,user,passwd,db)
+            
+            
+    db_connection.ping(True)
     return db_connection
 
 def execute_query(db_connection = None, query = None, query_params = ()):
@@ -54,6 +63,25 @@ def execute_query(db_connection = None, query = None, query_params = ()):
     cursor.execute(query, query_params)
     # this will actually commit any changes to the database. without this no
     # changes will be committed!
+    db_connection.commit();
+    return cursor
+
+def execute_queries(db_connection = None, queries = None, query_params = ()):
+    '''
+    Same as execute_query but takes a list of queries
+    '''
+    if db_connection is None:
+        print("No connection to the database found! Have you called connect_to_database() first?")
+        return None
+    if queries is None or len(queries) == 0:
+        print("You need to pass in a list of SQL queries")
+        return None
+
+    cursor = db_connection.cursor(MySQLdb.cursors.DictCursor)
+    for query in queries:
+        print(f"Executing {query} with {query_params}")
+        cursor.execute(query, query_params)
+        
     db_connection.commit();
     return cursor
 

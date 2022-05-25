@@ -9,47 +9,67 @@
 &nbsp;
 </div>
 
-<label for="seance-select">Choose a seance to view attendees for:</label>
-<select name="seances" id="seance-select">
-    <option value="seance1_id">1920-08-26 at Edgar Cayce's Houston A.R.E. Center</option>
-    <option value="seance2_id">1857-11-21 at Beachland Ballroom & Tavern</option>
+<form>
+<label for="seance_id_input">Choose a seance to view attendees for:</label>
+<select name="seance_id_input" id="seance-select">
+    <option value=''>View all attendees for all seances</option>
+    {% for seance in seance_data %}
+    <option value={{seance['seance_id']}} 
+    {% if chosen_seance['seance_id']==seance['seance_id'] %} selected {% endif %}>
+    {{seance['date']}} at {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
+    {% endfor %}
 </select>
-
 <input class="btn" type="submit" id="filter" value="Filter">
+</form>
 
 <div>
 &nbsp;
 </div>
 
 <table border="5" cellpadding="10">
-  <caption>Seance Attendees for Seance that took place on 1920-08-26 at Edgar Cayce's Houston A.R.E. Center</caption>
+  <caption>Seance Attendees for
+  {% if chosen_seance!=None %} Seance that took place on {{chosen_seance['date']}} at {{chosen_seance['name']}} | seance_id:{{chosen_seance['seance_id']}}
+  {% else %} all seances{% endif %}</caption>
+  <thead>
   <tr>
+    <th>seance_id</th>
     <th>attendee_id</th>
     <th>full_name</th>
     <th>Delete</th>
+    {% if chosen_seance!=None %}
     <th>Edit</th>
+    {% endif %}
   </tr>
+  </thead>
+  <tbody>
+  {% for attendee in attendee_data %}
   <tr>
-    <td>1</td>
-    <td>Bess Houdini</td>
-    <td><a href="_">Delete</a></td>
-    <td><a href="_">Edit</a></td>
+    <td>{{attendee['seance_id']}}</td>
+    <td>{{attendee['attendee_id']}}</td>
+    <td>{{attendee['full_name']}}</td>
+    <td><a href="delete_seanceattendee/{{attendee['seanceattendees_id']}}{% if chosen_seance!=None %}?seance_id_input={{chosen_seance['seance_id']}}{% endif %}">
+    Delete</a></td>
+    {% if chosen_seance!=None %}
+    <td><a href="seanceattendees?seance_id_input={{chosen_seance['seance_id']}}&attendee_id_input={{attendee['attendee_id']}}">Edit</a></td>
+    {% endif %}
   </tr>
-  <tr>
-    <td>2</td>
-    <td>Sir Arthur Conan Doyle</td>
-    <td><a href="_">Delete</a></td>
-    <td><a href="_">Edit</a></td>
-  </tr>
+  {% endfor %}
+  </tbody>
 </table>
 
+{% if chosen_seance!=None %}
+
 <div id="insert" style="display: block">
-  <form id="InsertSeanceAttendee">
-      <legend><strong>Insert Attendee for Seance at 1920-08-26 at Edgar Cayce's Houston A.R.E. Center</strong></legend>
-      <label for="attended">Attendee to be inserted</label>
-          <select name="attended" id="attended">
-              <option value="Hilma">Hilma Klimt | id: 3</option>
+  <form id="InsertSeanceAttendee" method="POST">
+      <legend><strong>Insert Attendee for Seance at {{chosen_seance['date']}} at {{chosen_seance['name']}}</strong></legend>
+      <label for="also_attended_id">Attendee to be inserted</label>
+          <select name="also_attended_id" id="attended">
+          {% for attendee in not_attended_list %}
+              <option value={{attendee['attendee_id']}}>
+              {{attendee['full_name']}} | attendee_id: {{attendee['attendee_id']}}</option>
+          {% endfor %}
           </select>
+          <input type=hidden name=selected_seance_id value={{chosen_seance['seance_id']}}>
       <br>
 
     <input class="btn" type="submit" id="InsertAttendee" value="Insert Attendee">
@@ -61,30 +81,35 @@
 </div>
 
 <div id="update" style="display: block">
-  <form id="UpdateSeanceAttendee">
+  <form id="UpdateSeanceAttendee" method="POST">
       <legend><strong>Update which Seance Attendee Attended</strong></legend>
-      <p>To be used if Attendee actually attended a different Seance than 1920-08-26 at Edgar Cayce's Houston A.R.E. Center</p>
+      <p>To be used if Attendee actually attended a different Seance than {{chosen_seance['date']}} at {{chosen_seance['name']}}</p>
       <fieldset class="fields">
-      <label for="updateattended">Seance Attendee to update: </label>
-       <select name="updateattended" id="updateattended">
-                   <option value="None"> </option>
-           <option value="Bess">Bess Houdini | id: 1</option>
-           <option value="Arthur">Sir Arthur Conan Doyle | id: 2</option>
+      <label for="update_attendee_id">Seance Attendee to update: </label>
+       <select name="update_attendee_id" id="updateattended">
+           <option value=""> </option>
+           {% for attendee in attendee_data %}
+           <option value={{attendee['attendee_id']}}
+           {% if attendee['attendee_id']==chosen_attendee['attendee_id'] %} selected {% endif %}>
+           {{attendee['full_name']}} | attendee_id: {{attendee['attendee_id']}}</option>
+           {% endfor %}
        </select>
 
       <legend>Seance they Actually Attended</legend>
-      <label for="actaullyattended">What Seance did they actually attend?</label>
-       <select name="actuallyattended" id="actuallyattended">
-           <option value="None"></option>
-           <option value="Beachland">1857-11-21 at Beachland Ballroom & Tavern | id: 1</option>
+      <label for="update_seance_id">What Seance did they actually attend?</label>
+       <select name="update_seance_id" id="actuallyattended">
+           <option value=""></option>
+           {% for seance in other_seances %}
+           <option value={{seance['seance_id']}}>
+           {{seance['date']}} at {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
+           {% endfor %}
        </select>
-      <input class="btn" type="submit" id="actuallyattended" value="Update Seance Attendee">
+       <input type=hidden name=current_seance_id value={{chosen_seance['seance_id']}}>
+      <input class="btn" type="submit" id="actuallyattended_button" value="Update Seance Attendee">
     </fieldset>
   </form>
 </div>
 
-
-<div>
-&nbsp;
-</div>
-
+{% else %}
+<p>Choose a Seance in the dropdown menu above to add or update attendees for that seance.</p>
+{% endif %}

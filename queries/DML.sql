@@ -257,7 +257,7 @@ VALUES (:attendee_id_input, :seance_id_input);
 -- To be used in displaying table on SeanceAttendee page
 -- To be used in dropdown for updating SeanceAttendee entry
 -- Colon denotes variable that will be obtained through form submission or specific table row
-SELECT Attendees.attendee_id, Attendees.full_name
+SELECT SeanceAttendees.seance_id, Attendees.attendee_id, Attendees.full_name, SeanceAttendees.seanceattendees_id
 FROM SeanceAttendees
 INNER JOIN Attendees ON SeanceAttendees.attendee_id = Attendees.attendee_id
 WHERE SeanceAttendees.seance_id = :seance_id_input;
@@ -266,20 +266,21 @@ WHERE SeanceAttendees.seance_id = :seance_id_input;
 -- seance_id_input is determined by the dropdown menu on the SeanceAttendee page
 -- To be used in the dropdown for adding an Attendee to a Seance
 -- Colon denotes variable that will be obtained through form submission or specific table row
-SELECT Attendees.attendee_id, Attendees.full_name
+SELECT Attendees.attendee_id, Attendees.full_name 
 FROM Attendees
 WHERE attendee_id NOT IN (
-                         SELECT Attendees.attendee_id
-                         FROM SeanceAttendees
-                         WHERE SeanceAttendees.seance_id = seance_id_input;
-                         );
+                          SELECT Attendees.attendee_id 
+                          FROM Attendees 
+                          INNER JOIN SeanceAttendees ON Attendees.attendee_id = SeanceAttendees.attendee_id 
+                          WHERE SeanceAttendees.seance_id = {chosen_seance_id}
+                        );
 
 -- Query for getting the date, location name, and id of all Seances NOT the one currently displayed on the SeanceAttendee page
 -- To be used for generating dropdown for Seance Attendee Actually Attended (UPDATE on SeanceAttendees)
 -- Colon denotes variable that will be obtained through being on a specific SeanceAttendee page
 SELECT Seances.date, Locations.name, Seances.seance_id
 FROM Seances
-INNER JOIN Locations ON Locations.location_id
+INNER JOIN Locations ON Seances.location_id = Locations.location_id
 WHERE seance_id <> :seance_id_from_input;
 
 -- Query for updating an entry in SeanceAttendees to have Attendee attend a different seance than the one listed as attended
