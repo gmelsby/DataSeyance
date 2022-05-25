@@ -130,8 +130,7 @@ def channelings():
     medium_data = cursor.fetchall()
 
     # query for getting spirit data to populate dropdown
-    spirit_query = ('SELECT spirit_id, full_name FROM Spirits;')
-    cursor = db.execute_query(query=spirit_query)
+    cursor = db.execute_query(queries['spirits']['select'])
     spirit_data = cursor.fetchall()
 
     # query for getting method data to populate dropdown
