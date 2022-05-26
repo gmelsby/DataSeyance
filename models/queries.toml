@@ -23,12 +23,26 @@ VALUES
  (%s),
  (%s)
 );"""
-update = "UPDATE Spirits SET full_name = (%s) WHERE spirit_id = (%s);"
+
+update = """UPDATE Channelings SET
+medium_id = (%s)
+, spirit_id = (%s)
+, method_id =  (%s)
+, seance_id =  (%s)
+, is_successful =  (%s)
+, length_in_minutes =  (%s)
+WHERE channeling_id = (%s);"""
+
 delete = "DELETE FROM Channelings  WHERE channeling_id = (%s);"
 
 select = """ 
-SELECT Channelings.channeling_id, Mediums.full_name AS medium_name, Spirits.full_name AS spirit_name, 
-Methods.name AS method_name, Seances.date, Locations.name AS location_name,
+SELECT Channelings.channeling_id, Channelings.medium_id
+, Mediums.full_name AS medium_name
+, Spirits.spirit_id, Spirits.full_name AS spirit_name
+, Channelings.method_id
+, Methods.name AS method_name
+, Seances.seance_id
+, Seances.date, Locations.name AS location_name,
 Channelings.is_successful, Channelings.length_in_minutes
 FROM Channelings
 LEFT JOIN Mediums ON Channelings.medium_id = Mediums.medium_id

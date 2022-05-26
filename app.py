@@ -79,7 +79,7 @@ def delete_attendee(id):
 
 @app.route('/channelings', methods=['GET', 'POST'])
 def channelings():
-
+    edit_form = -1
     if request.method == 'POST':
         content = request.form.to_dict()
         print(content)
@@ -100,12 +100,27 @@ def channelings():
              content['seance_date'],
              content['is_successful'],
              content['insert_full_name']
-            ))
+            ) )
 
         if action == 'delete':
             db.execute_query(queries['channelings'][action], (
             int( content['channeling_id']),)
             )
+
+        if action == 'tagupdate':
+            edit_form = int(content['channeling_id'])
+
+        if action == 'update':
+            db.execute_query(queries['channelings'][action], (
+             content['medium_id'],
+             content['spirit_id'],
+             content['method_id'],
+             content['seance_id'],
+             content['is_successful'],
+             content['length_in_minutes'],
+             content['id_input']
+            ))
+
 
 
     # query for getting seance data to populate dropdown
@@ -142,7 +157,7 @@ def channelings():
         channeling_query = queries['channelings']['select_specific']
         channeling_params = (int(chosen_seance_id),)
 
-    return render_template('channelings.j2', chosen_seance=chosen_seance, channeling_data=channeling_data,
+    return render_template('channelings.j2', edit_form=edit_form, chosen_seance=chosen_seance, channeling_data=channeling_data,
                             seance_data=seance_data, medium_data=medium_data, spirit_data=spirit_data,
                             method_data=method_data)
 
