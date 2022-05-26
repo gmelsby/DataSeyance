@@ -32,7 +32,7 @@
     <td><a href="/delete_seance/{{seance['seance_id']}}">Delete</a></td>
     <td><a href="seances?id={{seance['seance_id']}}">Edit</a></td>
     <td><a href="seanceattendees?seance_id_input={{seance['seance_id']}}">View and Edit Seance Attendees</a></td>
-    <td><a href="channelings?id={{seance['seance_id']}}">View and Edit Channelings at this Seance
+    <td><a href="channelings?chosen_seance_id={{seance['seance_id']}}">View and Edit Channelings at this Seance
   </tr>
   {% endfor %}
   </tbody>

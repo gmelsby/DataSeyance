@@ -220,7 +220,14 @@ VALUES
 
 -- Query for filtering Channelings based on Seance
 -- Colon denotes variable that will be obtained through form submission or specific table row
-SELECT Channelings.channeling_id, Mediums.full_name, Spirits.full_name, Methods.name, Seances.date, Locations.name, Channelings.is_successful, Channelings.length_in_minutes
+SELECT Channelings.channeling_id, Channelings.medium_id
+, Mediums.full_name AS medium_name
+, Spirits.spirit_id, Spirits.full_name AS spirit_name
+, Channelings.method_id
+, Methods.name AS method_name
+, Seances.seance_id
+, Seances.date, Locations.name AS location_name,
+Channelings.is_successful, Channelings.length_in_minutes
 FROM Channelings
 LEFT JOIN Mediums ON Channelings.medium_id = Mediums.medium_id
 LEFT JOIN Spirits ON Channelings.spirit_id = Spirits.spirit_id
@@ -231,7 +238,15 @@ WHERE Seances.seance_id = :seance_id_from_dropdown_with_seance_locations_and_dat
 
 -- Query for displaying all Channelings with Medium name, Spirit name, Method name, date, and stats
 -- Colon denotes variable that will be obtained through form submission or specific table row
-SELECT Channelings.channeling_id, Mediums.full_name, Spirits.full_name, Methods.name, Seances.date, Locations.name, Channelings.is_successful, Channelings.length_in_minutes
+SELECT Channelings.channeling_id, Channelings.medium_id
+, Mediums.full_name AS medium_name
+, Spirits.spirit_id, Spirits.full_name AS spirit_name
+, Channelings.method_id
+, Methods.name AS method_name
+, Seances.seance_id
+, Seances.date, Locations.name AS location_name,
+Channelings.is_successful, Channelings.length_in_minutes
+
 FROM Channelings
 LEFT JOIN Mediums ON Channelings.medium_id = Mediums.medium_id
 LEFT JOIN Spirits ON Channelings.spirit_id = Spirits.spirit_id

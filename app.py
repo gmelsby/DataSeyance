@@ -124,7 +124,7 @@ def channelings():
              content['id_input']
             ))
 
-    # if request.method is "GET"--useful for linking from other pages
+    # use args if request.method is "POST" OR "GET"--useful for linking from other pages
     if request.args.get('chosen_seance_id'): 
         channeling_query = queries['channelings']['select_specific']
         channeling_params = (int(request.args['chosen_seance_id']),)
