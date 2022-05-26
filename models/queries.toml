@@ -52,9 +52,14 @@ LEFT JOIN Seances ON Channelings.seance_id = Seances.seance_id
 LEFT JOIN Locations ON Seances.location_id = Locations.location_id;
 """
 
-select_specific = """
-SELECT Channelings.channeling_id, Mediums.full_name AS medium_name, Spirits.full_name AS spirit_name, 
-Methods.name AS method_name, Seances.date, Locations.name AS location_name,
+select_specific = """ 
+SELECT Channelings.channeling_id, Channelings.medium_id
+, Mediums.full_name AS medium_name
+, Spirits.spirit_id, Spirits.full_name AS spirit_name
+, Channelings.method_id
+, Methods.name AS method_name
+, Seances.seance_id
+, Seances.date, Locations.name AS location_name,
 Channelings.is_successful, Channelings.length_in_minutes
 FROM Channelings
 LEFT JOIN Mediums ON Channelings.medium_id = Mediums.medium_id

@@ -2,10 +2,8 @@
 <!DOCTYPE html>
 
 <style>
-body {font-family: Arial, Helvetica, sans-serif;}
-* {box-sizing: border-box;}
 
-/* Button used to open the contact form - fixed at the bottom of the page */
+/* Button used to open the form - fixed at the bottom of the page */
 .open-button {
   background-color: #555;
   color: white;
@@ -37,7 +35,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
 }
 
 /* Full-width input fields */
-.form-container input[type=text], .form-container input[type=password] {
+.form-container input[type=date], .form-container input[type=select] {
   width: 100%;
   padding: 15px;
   margin: 5px 0 22px 0;
@@ -46,12 +44,12 @@ body {font-family: Arial, Helvetica, sans-serif;}
 }
 
 /* When the inputs get focus, do something */
-.form-container input[type=text]:focus, .form-container input[type=password]:focus {
+.form-container input[type=date]:focus, .form-container input[type=select]:focus {
   background-color: #ddd;
   outline: none;
 }
 
-/* Set a style for the submit/login button */
+/* Set a style for the submit button */
 .form-container .btn {
   background-color: #04AA6D;
   color: white;
@@ -88,7 +86,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
 &nbsp;
 </div>
 
-<form id="FilterList" method="POST">
+<form id="FilterList">
 <label for="seance-select">Choose a seance to view channelings for:</label>
 <select name="chosen_seance_id" id="seance-select">
     <option value="">Show me channelings from all seances</option>
@@ -98,7 +96,6 @@ body {font-family: Arial, Helvetica, sans-serif;}
     {{seance['date']}} at {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
     {% endfor %}
 </select>
-<input type="hidden" name="action" value="filter">
 <input class="btn" type="submit" id="filter" value="Filter">
 </form>
 
@@ -128,7 +125,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
 
   {% for channeling in channeling_data %}
-   {%if channeling['channeling_id'] == edit_form %}
+   {%if channeling['channeling_id']==channeling_id_to_edit %}
     <tr>
             <form id="UpdateChanneling" method="POST">
     <td>{{channeling['channeling_id']}}</td>
@@ -136,13 +133,9 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
           <option value=""> </option>
           {% for medium in medium_data %}
-           {%if medium['medium_id'] == channeling['medium_id'] %}
-          <option value={{channeling['medium_id']}} selected>
-              {{medium['full_name']}} | medium_id: {{medium['medium_id']}}</option>
-          {% else %}
-           <option value={{channeling['medium_id']}}>
+           <option value={{channeling['medium_id']}}
+           {% if medium['medium_id']==channeling['medium_id'] %} selected {% endif %}>
           {{medium['full_name']}} | medium_id: {{medium['medium_id']}}</option>
-          {% endif %}
           {% endfor %}
         </select>
     </td>
@@ -151,13 +144,9 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
           <option value=""> </option>
           {% for spirit in spirit_data %}
-           {%if spirit['spirit_id'] == channeling['spirit_id'] %}
-          <option value={{spirit['spirit_id']}} selected>
+          <option value={{spirit['spirit_id']}}
+           {% if spirit['spirit_id']==channeling['spirit_id'] %} selected {% endif %}>
               {{spirit['full_name']}} | medium_id: {{spirit['spirit_id']}}</option>
-          {% else %}
-           <option value={{spirit['spirit_id']}}>
-          {{spirit['full_name']}} | medium_id: {{spirit['spirit_id']}}</option>
-          {% endif %}
           {% endfor %}
         </select></td>
     <td>
@@ -166,13 +155,9 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
           <option value=""> </option>
           {% for method in method_data %}
-           {%if method['method_id'] == channeling['method_id'] %}
-          <option value={{method['method_id']}} selected>
+          <option value={{method['method_id']}} 
+          {% if method['method_id']==channeling['method_id'] %} selected {% endif %}>
               {{method['name']}} | medium_id: {{method['method_id']}}</option>
-          {% else %}
-           <option value={{method['method_id']}}>
-          {{method['name']}} | medium_id: {{method['method_id']}}</option>
-          {% endif %}
           {% endfor %}
         </select></td>
 
@@ -182,13 +167,9 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
           <option value=""> </option>
           {% for seance in seance_data %}
-           {%if seance['seance_id'] == channeling['seance_id'] %}
-          <option value={{seance['seance_id']}} selected>
-                {{seance['date']}} |   {{seance['name']}} | seance: {{seance['seance_id']}}</option>
-          {% else %}
-           <option value={{seance['seance_id']}}>
-          {{seance['date']}} |    {{seance['name']}} |  seance: {{seance['seance_id']}}</option>
-          {% endif %}
+          <option value={{seance['seance_id']}} 
+          {% if seance['seance_id'] == channeling['seance_id'] %} selected {% endif %}>
+          {{seance['date']}} |   {{seance['name']}} | seance: {{seance['seance_id']}}</option>
           {% endfor %}
         </select></td>
 
@@ -196,24 +177,23 @@ body {font-family: Arial, Helvetica, sans-serif;}
     <td>
           <select name="is_successful">
        {% for item in[ {'string':'Yes', 'value':1}  , {'string':'No', 'value':0}  ] %}
-           {%if item['value'] == channeling['is_successful'] %}
-          <option value={{item['value']}} selected>{{item['string']}}</option>
-          {%else%}
-                   <option value={{item['value']}} >{{item['string']}}</option>
-                            {% endif %}
-            {% endfor %}
+          <option value={{item['value']}} 
+           {% if item['value'] == channeling['is_successful'] %} selected {% endif %}>
+          {{item['string']}}</option>
+          {% endfor %}
         </select>
 
 
     </td>
-   <td><input  type="integer"  name="length_in_minutes" value ={{channeling['length_in_minutes']}} ></td>
+   <td><input  type="integer"  name="length_in_minutes" 
+   {% if channeling['length_in_minutes']!=None %}value ={{channeling['length_in_minutes']}}{% endif %} ></td>
 
     <td>
 
         <input class="btn" type="submit" id="UpdateChanneling" value="Save">
         <input type="hidden" name="action" value="update">
         <input type="hidden" name="id_input" value={{channeling['channeling_id']}}
-         <input type="hidden" name="edit_form" value={{channeling['channeling_id']}}
+         <input type="hidden" name="channeling_id_to_edit" value={{channeling['channeling_id']}}
 
 
       </td>
@@ -240,14 +220,14 @@ body {font-family: Arial, Helvetica, sans-serif;}
         <input class="btn" type="submit" id="UpdateChanneling" value="Update Channeling">
         <input type="hidden" name="action" value="tagupdate">
         <input type="hidden" name="channeling_id" value={{channeling['channeling_id']}}
-         <input type="hidden" name="edit_form" value={{channeling['channeling_id']}}
-
+         <input type="hidden" name="channeling_id_to_edit" value={{channeling['channeling_id']}}
       </td>  </form>
+
     <td>       <form id="DeleteChanneling" method="POST">
         <input class="btn" type="submit" id="DeleteChanneling" value="Delete Channeling">
         <input type="hidden" name="action" value="delete">
         <input type="hidden" name="channeling_id" value={{channeling['channeling_id']}}
-                 </td>
+     </td>
           </form>
 
 
@@ -257,7 +237,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
 
     <tr>
-       <form id="InsertSpirit" method="POST">
+       <form id="InsertChanneling" method="POST">
     <td>Insert Channeling</td>
   <td>         <select name="medium_id">
 
@@ -290,7 +270,8 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
     <option value=""></option>
     {% for seance in seance_data %}
-    <option value={{seance['seance_id']}}>
+    <option value={{seance['seance_id']}}
+    {% if chosen_seance['seance_id']==seance['seance_id'] %} selected {% endif %}>
     {{seance['date']}} {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
     {% endfor %}
     <option value='AddSeance'>+ Add Seance</option>
@@ -299,14 +280,13 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
     <td>
       <select name="is_successful">
-          <option value=1>Yes</option>
            <option value=0>No</option>
+          <option value=1>Yes</option>
         </select>
     </td>
     <td><input  type="integer"  name="insert_full_name"></td>
     <td>
-        <form id="InsertSpirit" method="POST">
-        <input class="btn" type="submit" id="UpdateSpirit" value="Insert Channeling">
+        <input class="btn" type="submit" id="InsertChanneling" value="Insert Channeling">
         <input type="hidden" name="action" value="insert">
         </form>
     </td>
@@ -321,12 +301,18 @@ body {font-family: Arial, Helvetica, sans-serif;}
 <div class="form-popup" id="myForm">
   <form action="/action_page.php" class="form-container">
 
-    <label for="email"><b>Date</b></label>
-    <input type="text"  name="email" required>
+    <label for="date"><b>Date</b></label>
+    <input type="date"  name="date">
 
-    <label for="psw"><b>Location</b></label>
-    <input type="password" name="psw" required>
-
+    <label for="location"><b>Location</b></label>
+    <select name="location_id" id="newloc">
+    <option value=""></option>
+    {% for location in location_data %}
+      <option value={{location['location_id']}}>
+      {{location['name']}} | location_id {{location['location_id']}}
+      </option>
+     {% endfor %}
+     </select>
 
   </form>
 </div>

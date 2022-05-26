@@ -81,7 +81,7 @@ def delete_attendee(id):
 def channelings():
     channeling_query = queries['channelings']['select']
     channeling_params = ()
-    edit_form = -1
+    channeling_id_to_edit = -1
     chosen_seance = None
     if request.method == 'POST':
         content = request.form.to_dict()
@@ -111,7 +111,7 @@ def channelings():
             )
 
         if action == 'tagupdate':
-            edit_form = int(content['channeling_id'])
+            channeling_id_to_edit = int(content['channeling_id'])
 
         if action == 'update':
             db.execute_query(queries['channelings'][action], (
@@ -124,13 +124,20 @@ def channelings():
              content['id_input']
             ))
 
-        if action == 'filter' and content['chosen_seance_id']:
-            channeling_query = queries['channelings']['select_specific']
-            channeling_params = (content['chosen_seance_id'],)
+    # if request.method is "GET"--useful for linking from other pages
+    if request.args.get('chosen_seance_id'): 
+        channeling_query = queries['channelings']['select_specific']
+        channeling_params = (int(request.args['chosen_seance_id']),)
+        cursor = db.execute_query(queries['seances']['select_specific'], channeling_params)
+        chosen_seance = cursor.fetchone()
 
     # query for getting seance data to populate dropdown
     cursor = db.execute_query(queries['seances']['select'])
     seance_data = cursor.fetchall()
+    
+    # queryfor getting location data to populate add seance dropdown
+    cursor = db.execute_query(queries['locations']['select'])
+    location_data = cursor.fetchall()
 
     # query for getting medium data to populate dropdown
     cursor = db.execute_query(queries['mediums']['select'])
@@ -148,10 +155,9 @@ def channelings():
     cursor = db.execute_query(channeling_query, channeling_params)
     channeling_data = cursor.fetchall()
 
-
-    return render_template('channelings.j2', edit_form=edit_form, chosen_seance=chosen_seance, channeling_data=channeling_data,
+    return render_template('channelings.j2', channeling_id_to_edit=channeling_id_to_edit, chosen_seance=chosen_seance, channeling_data=channeling_data,
                             seance_data=seance_data, medium_data=medium_data, spirit_data=spirit_data,
-                            method_data=method_data)
+                            method_data=method_data, location_data=location_data)
 
 
 
