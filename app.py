@@ -170,64 +170,71 @@ def add_seance():
 
 @app.route('/locations', methods=['GET', 'POST'])
 def locations():
+    channeling_params = ()
+    location_to_edit = -1
     if request.method == 'POST':
-        # if POST form has id_input, update form has been submitted
-        if request.form.get('id_input'):
-            # Process each input to be NULL if empty string
-            # execute_query turns None into NULL through cursor.execute
-            id_input = request.form['id_input']
-            name_input = f'{request.form["new_name"].strip()}' if request.form.get('new_name').strip() != '' else None
-            street_input = f'{request.form["new_street_address"].strip()}' if request.form.get('new_street_address').strip() != '' else None
-            city_input = f'{request.form["new_city"].strip()}' if request.form.get('new_city').strip() != '' else None
-            zip_input = f'{request.form["new_zip"]}' if request.form.get('new_zip') else None
-            state_input = f'{request.form["new_state"]}' if request.form.get('new_state') else None
-            country_input = f'{request.form["new_country"].strip()}' if request.form.get('new_country').strip() != '' else None
-            
-            # query for updating location with location_id id_input
-            cursor = db.execute_query(queries['locations']['update'], (name_input, street_input, city_input, zip_input, state_input, country_input, id_input))
+        content = request.form.to_dict()
+        print(content)
+        action = content['action']
+        for key, value in content.items():
+            if key == 'action':
+                continue
+            if not value:
+                content[key] = None
+            else:
+                content[key] = value
 
-            
-            return redirect('/locations')
+        if action == 'insert':
 
-        # if POST form has name, create form has been submitted
-        if request.form.get('name') is not None:
-            # Process each input to be NULL if empty string
-            name_input = f'{request.form["name"].strip()}' if request.form.get('name').strip() != '' else None
-            street_input = f'{request.form["street_address"].strip()}' if request.form.get('street_address').strip() != '' else None
-            city_input = f'{request.form["city"].strip()}' if request.form.get('city').strip() != '' else None
-            zip_input = f'{request.form["zip"]}' if request.form.get('zip') else None
-            state_input =f'{request.form["state"]}' if request.form.get('state') else None
-            country_input = f'{request.form["country"].strip()}' if request.form.get('country') != '' else None
-            
-            # query for making new location
-            cursor = db.execute_query(queries['locations']['insert'], (name_input, street_input, city_input, zip_input, state_input, country_input))
+            db.execute_query(queries['locations'][action], (
+                content['location_name'],
+                content['street_address'],
+                content['city'],
+                content['zip'],
+                content['state'],
+                content['country']
+            ))
 
+        if action == 'delete':
+            db.execute_query(queries['locations'][action], (
+                int(content['location_id']),)
+                             )
 
-            return redirect('/locations')
+        if action == 'tagupdate':
+            location_to_edit = int(content['location_id'])
 
-        return redirect('/locations')
+        if action == 'update':
+            print('inserting...')
+            db.execute_query(queries['locations'][action], (
+                content['location_name'],
+                content['street_address'],
+                content['city'],
+                content['zip'],
+                content['state'],
+                content['country'],
+                int(content['location_id'])
+            ))
 
-
-    # Read functionality
-    if request.method == 'GET':
-        args = request.args
-        # only have a location to edit if id passed in in GET params, othewise it's None
-        location_to_edit = None
-        if args.get('id'):
-            cursor = db.execute_query(queries['locations']['select_specific'], (int(args.get('id')),))
-            location_to_edit = cursor.fetchone()
-            
-            # Removes 'None' from prefill--if a value is NULL, we get empty string instead
-            for key, value in location_to_edit.items():
-                if value is None:
-                    location_to_edit[key] = ''
+    # # Read functionality
+    # if request.method == 'GET':
+    #     args = request.args
+    #     # only have a location to edit if id passed in in GET params, othewise it's None
+    #     location_to_edit = None
+    #     if args.get('id'):
+    #         cursor = db.execute_query(queries['locations']['select_specific'], (int(args.get('id')),))
+    #         location_to_edit = cursor.fetchone()
+    #
+    #         # Removes 'None' from prefill--if a value is NULL, we get empty string instead
+    #         for key, value in location_to_edit.items():
+    #             if value is None:
+    #                 location_to_edit[key] = ''
 
 
         # query for displaying all info about Locations in table
-        cursor = db.execute_query(queries['locations']['select'])
-        location_data = cursor.fetchall()
+    cursor = db.execute_query(queries['locations']['select'])
+    location_data = cursor.fetchall()
 
-        return render_template('locations.j2', location_data=location_data, location_to_edit=location_to_edit)
+    return render_template('locations.j2', location_data=location_data, location_to_edit=location_to_edit)
 
 @app.route('/delete_location/<int:id>')
 def delete_location(id):
