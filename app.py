@@ -160,6 +160,12 @@ def channelings():
                             method_data=method_data, location_data=location_data)
 
 
+@app.route('/add_seance', methods=['POST'])
+def add_seance():
+    content = request.form.to_dict()
+    print(content)
+    db.execute_query(queries['seances']['insert'], (content['date'], content['location_id']))
+    return redirect('/channelings')
 
 
 @app.route('/locations', methods=['GET', 'POST'])

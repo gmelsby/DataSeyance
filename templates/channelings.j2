@@ -299,7 +299,7 @@
 </table>
 
 <div class="form-popup" id="myForm">
-  <form action="/action_page.php" class="form-container">
+  <form action="/add_seance" class="form-container" method="POST">
 
     <label for="date"><b>Date</b></label>
     <input type="date"  name="date">
@@ -313,6 +313,11 @@
       </option>
      {% endfor %}
      </select>
+     <div>
+&nbsp;
+</div>
+<input class="btn" type="submit" id="InsertChanneling" value="Insert Channeling">
+
 
   </form>
 </div>
