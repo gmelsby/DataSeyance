@@ -282,58 +282,33 @@ def delete_medium(id):
 
 @app.route('/methods', methods=['GET', 'POST'])
 def methods():
-    # if the reqeust if of method POST we are either updating or creating
+    method_to_edit = -1
     if request.method == 'POST':
-        # if id_input is in the request we are updating
-        # makes sure new_name is not empty string
-        if request.form.get('id_input') and request.form.get('new_name'):
-            name_input = request.form['new_name'].strip()
-            id_input = int(request.form['id_input'])
-            # if description_input is empty string we skip processing it and instead send in None to be turned into NULL
-            description_input = None
-            if request.form.get('new_description'):
-                description_input = f'{request.form["new_description"]}'
 
-            cursor = db.execute_query(queries['methods']['update'], (name_input, description_input, id_input))
-            return redirect('/methods')
+        # we had a post so we are going to look at a parameter passed from a hidden form value
+        # get form values as dict
+        content = request.form.to_dict()
+        # this hidden form value will tell us what to do
+        action = content['action']
+        # hidden value says upddate
+        if action == 'tagupdate':
+            method_to_edit = int(content['method_id'])
 
-        # Create functionality--to be skipped if submitted name is empty
-        if request.form.get('name'):
-            name_input = request.form['name'].strip()
-            # description is optional so initially set to None for NULL in case of empty string
-            description_input = None
-            if request.form.get('description'):
-                description_input = f'{request.form["description"]}'
-            # creates new method
-            cursor = db.execute_query(queries['methods']['insert'], (name_input, description_input))
-            
-        return redirect('/methods')
+        if action == 'update':
+            # get update query from toml and send it with parameters (see /home/ed/DataSeyance/models/queries.toml)
+            db.execute_query(queries['methods'][action]
+                             , (content['name'], content['description'],int(content['method_id'])))
+        # get insert query from toml and send it with parameter (see /home/ed/DataSeyance/models/queries.toml)
+        if action == 'insert':
+            db.execute_query(queries['methods'][action], (content['name'], content['description'],))
 
-    # Read functionality
-    if request.method == 'GET':
-        args = request.args
-        # we might not have a preselected method in the query parameters, so default to None and adjust if necessary
-        method_to_edit = None
-        if args.get('id'):
-            cursor = db.execute_query(queries['methods']['select_specific'], (int(args.get('id')),))
-            method_to_edit = cursor.fetchone()
-            
-            # Remvoes 'None' from prefilled text input--if a value is NULL we just want an empty string
-            for key, value in method_to_edit.items():
-                if value is None:
-                    method_to_edit[key] = ''
-            
-        cursor = db.execute_query(queries['methods']['select_detailed'])
-        method_data = cursor.fetchall()
+        if action == 'delete':
+            db.execute_query(queries['methods'][action], (content['method_id'],))
 
-        return render_template('methods.j2', method_data=method_data, method_to_edit=method_to_edit)
-    
+    cursor = db.execute_query(queries['methods']['select_detailed'])
+    method_data = cursor.fetchall()
 
-@app.route('/delete_method/<int:id>')
-def delete_method(id):
-    # removes method with associated method_id
-    cursor = db.execute_query(queries['methods']['delete'], (int(id),))
-    return redirect('/methods')
+    return render_template('methods.j2', method_data=method_data, method_to_edit=method_to_edit)
 
 
 @app.route('/seanceattendees', methods=['GET', 'POST'])
@@ -412,6 +387,7 @@ def seanceattendees():
                                other_seances=other_seances, chosen_attendee=chosen_attendee,
                                attendee_data=attendee_data, not_attended_list=not_attended_list)
 
+
 @app.route('/delete_seanceattendee/<int:id>')
 def delete_seanceattendee(id):
      # deletes a seance attendence record based on id
@@ -424,8 +400,6 @@ def delete_seanceattendee(id):
 
     # otherwise redirect to all seanceattendees page
     return redirect('/seanceattendees')
-
-        
 
 
 @app.route('/seances', methods=['GET', 'POST'])

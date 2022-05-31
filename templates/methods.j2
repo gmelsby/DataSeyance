@@ -22,54 +22,63 @@
   </thead>
   <tbody>
   {% for method in method_data %}
+         {%if method['method_id'] == method_to_edit %}
   <tr>
+        <form id="UpdateMethod" method="POST">
     <td>{{method['method_id']}}</td>
-    <td>{{method['name']}}</td>
-    <td>{{method['description']}}</td>
-    <td><a href="delete_method/{{method['method_id']}}">Delete</a></td>
-    <td><a href="methods?id={{method['method_id']}}">Edit</a></td>
+        <td><input  type="text"  name="name" value='{{method['name']}}'></td>
+            <td><input  type="text"  name="description" value='{{method['description']}}'></td>
+ <td>
+        <input class="btn" type="submit" id="UpdateMethod" value="Save">
+        <input type="hidden" name="action" value="update">
+        <input type="hidden" name="method_id" value={{method['method_id']}}
+         </td>
+   </form>
+    <td>
+       <form id="cancel" method="GET">
+      <input class="btn" type="submit" id="cancel" value="Cancel">
+     </td>
+        </form>
   </tr>
+
+    {% else %}
+      <tr>
+
+     <td>{{method['method_id']}}</td>
+    <td>{{method['name']}}</td>
+        <td>{{method['description']}}</td>
+   <td>
+      <form id="UpdateMethod" method="POST">
+        <input class="btn" type="submit" id="UpdateMethod" value="Update Method">
+        <input type="hidden" name="action" value="tagupdate">
+        <input type="hidden" name="method_id" value={{method['method_id']}}
+
+         </td>
+         </form>
+    <td>
+           <form id="DeleteMethod" method="POST">
+        <input class="btn" type="submit" id="DeleteMethod" value="Delete Method">
+        <input type="hidden" name="action" value="delete">
+        <input type="hidden" name="method_id" value={{method['method_id']}}
+
+    </td>         </form>
+  </tr>
+        {% endif %}
   {% endfor %}
+
+
+    <tr>          <form id="InsertMethod" method="POST">
+    <td>Insert New Method</td>
+    <td> <input  type="text"  name="name"></td>
+        <td> <textarea rows="3" cols="100" name="description" form="InsertMethod"></textarea>
+    </fieldset></td>
+ <td colspan=2>   <input class="btn" type="submit" id="InsertMethod" value="Insert Method">
+         <input type="hidden" name="action" value="insert">
+        </form>
+        </tr>
+
   </tbody>
 </table>
-
-<div id="insert" style="display: block">
-  <form id="InsertMethod" method="POST">
-      <legend><strong>Insert Method</strong></legend>
-          <fieldset class="fields">
-        <label> Name: </label> <input  type="text"  name="name">
-        <label> Description: </label> <textarea rows="3" cols="100" name="description" form="InsertMethod"></textarea>
-    </fieldset>
-    <input class="btn" type="submit" id="InsertMethod" value="Insert Method">
-  </form>
-</div>
-
-<div>
-&nbsp;
-</div>
-
-<div id="update" style="display: block">
-  <form id="UpdateMethod" method="POST">
-      <legend><strong>Update Method</strong></legend>
-            <label for="id_input">Method to Update: </label>
-            <select name="id_input" id="toupdate">
-              <option value=""> </option>
-              {% for method in method_data %}
-              <option value="{{method['method_id']}}"
-              {% if method_to_edit['method_id']==method['method_id'] %} selected {% endif %}>
-                {{method['name']}} | id: {{method['method_id']}}
-              </option>
-              {% endfor %}
-            </select>
-        <fieldset class="fields">
-          <legend>New information</legend>
-         <label> Name: </label> <input type="text" name="new_name" value="{{method_to_edit['name']}}">
-         <label> Description: </label> 
-         <textarea rows="3" cols="100" name="new_description" form="UpdateMethod">{{method_to_edit['description']}}</textarea> 
-    </fieldset>
-    <input class="btn" type="submit" id="UpdateMethod" value="Update Method">
-  </form>
-</div>
 
 
 <div>
