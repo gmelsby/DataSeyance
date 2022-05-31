@@ -160,10 +160,14 @@ def channelings():
                             method_data=method_data, location_data=location_data)
 
 
+
 @app.route('/add_seance', methods=['POST'])
 def add_seance():
+    """
+    used to add a seance using a pop up while on the channleings page
+    :return:
+    """
     content = request.form.to_dict()
-    print(content)
     db.execute_query(queries['seances']['insert'], (content['date'], content['location_id']))
     return redirect('/channelings')
 
@@ -236,48 +240,38 @@ def locations():
 
     return render_template('locations.j2', location_data=location_data, location_to_edit=location_to_edit)
 
-@app.route('/delete_location/<int:id>')
-def delete_location(id):
-    # removes the location with indicated id
-    cursor = db.execute_query(queries['locations']['delete'], (int(id),))
-    return redirect('/locations')
 
 
 @app.route('/mediums', methods=['GET', 'POST'])
 def mediums():
+    # method will be post or get, get will pass to line 468
+    medium_to_edit = -1
     if request.method == 'POST':
-        # if the POST form has id_input the update form has been submitted
-        # We only want to update if the name is nonempty
-        if request.form.get('id_input') and request.form.get('new_name'):
-            full_name_input = request.form['new_name'].strip()
-            id_input = request.form['id_input']
 
-            cursor = db.execute_query(queries['mediums']['update'], (full_name_input, int(id_input)))
-            return redirect('/mediums')
+        # we had a post so we are going to look at a parameter passed from a hidden form value
+        # get form values as dict
+        content = request.form.to_dict()
+        # this hidden form value will tell us what to do
+        action = content['action']
+        #hidden value says upddate
+        if action == 'tagupdate':
+           medium_to_edit = int(content['medium_id'])
 
-        # otherwise if the POST form has name the insert form has been submitted
-        # if name is empty we just skip the insert and redirect back to /mediums
-        if request.form.get('name'):
-            full_name_input = request.form['name'].strip()
-            cursor = db.execute_query(queries['mediums']['insert'], (full_name_input,))
-            
-        return redirect('/mediums')
+        if action == 'update':
+            #get update query from toml and send it with parameters (see /home/ed/DataSeyance/models/queries.toml)
+            db.execute_query(queries['mediums'][action]
+                             , (content['full_name'], int(content['medium_id'])))
+        # get insert query from toml and send it with parameter (see /home/ed/DataSeyance/models/queries.toml)
+        if action == 'insert':
+            db.execute_query(queries['mediums'][action], (content['full_name'],))
 
-    # displays table with all mediums
-    if request.method == 'GET':
-        args = request.args
-        # if there is no medium to edit passed in in the get parameters we just leave medium_to_edit as None
-        medium_to_edit = None
-        # uses a select query to get info to preselect dropdown menu and prepopulate input
-        if args.get('id'):
-            cursor = db.execute_query(queries['mediums']['select_specific'], (int(id),))
-            medium_to_edit = cursor.fetchone()
-            
-        # main query for getting info for medium table
-        cursor = db.execute_query(queries['mediums']['select'])
-        medium_data = cursor.fetchall()
+        if action == 'delete':
+            db.execute_query(queries['mediums'][action], (content['medium_id'],))
 
-        return render_template('mediums.j2', medium_data=medium_data, medium_to_edit=medium_to_edit)
+    cursor = db.execute_query(queries['mediums']['select'])
+    medium_data = cursor.fetchall()
+
+    return render_template('mediums.j2', medium_data=medium_data, medium_to_edit=medium_to_edit)
     
 @app.route('/delete_medium/<int:id>')
 def delete_medium(id):
