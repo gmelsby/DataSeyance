@@ -1,4 +1,4 @@
-#rams=() Citation for following file
+# Citation for following file
 # Date: 5/19/2022
 # Routing inspired/guided by CS340 Flask Starter App
 # URL: https://github.com/osu-cs340-ecampus/flask-starter-app/blob/master/bsg_people_app/app.py
@@ -257,13 +257,15 @@ def mediums():
         if action == 'tagupdate':
            medium_to_edit = int(content['medium_id'])
 
-        if action == 'update':
+        # only update if replacement name is nonempty
+        if action == 'update' and content.get('full_name').strip():
             #get update query from toml and send it with parameters (see /home/ed/DataSeyance/models/queries.toml)
             db.execute_query(queries['mediums'][action]
-                             , (content['full_name'], int(content['medium_id'])))
+                             , (content['full_name'].strip(), int(content['medium_id'])))
         # get insert query from toml and send it with parameter (see /home/ed/DataSeyance/models/queries.toml)
-        if action == 'insert':
-            db.execute_query(queries['mediums'][action], (content['full_name'],))
+        # only allow insertion if string is nonempty
+        if action == 'insert' and content.get('full_name').strip():
+            db.execute_query(queries['mediums'][action], (content['full_name'].strip(),))
 
         if action == 'delete':
             db.execute_query(queries['mediums'][action], (content['medium_id'],))
@@ -273,12 +275,6 @@ def mediums():
 
     return render_template('mediums.j2', medium_data=medium_data, medium_to_edit=medium_to_edit)
     
-@app.route('/delete_medium/<int:id>')
-def delete_medium(id):
-    # deletes a medium based on id
-    cursor = db.execute_query(queries['mediums']['delete'], (int(id),))
-    return redirect('/mediums')
-
 
 @app.route('/methods', methods=['GET', 'POST'])
 def methods():
@@ -294,14 +290,15 @@ def methods():
         if action == 'tagupdate':
             method_to_edit = int(content['method_id'])
 
-        if action == 'update':
+        if action == 'update' and content.get('name').strip():
             # get update query from toml and send it with parameters (see /home/ed/DataSeyance/models/queries.toml)
             db.execute_query(queries['methods'][action]
-                             , (content['name'], content['description'],int(content['method_id'])))
+                             , (content['name'].strip(), content['description'].strip() ,int(content['method_id'])))
         # get insert query from toml and send it with parameter (see /home/ed/DataSeyance/models/queries.toml)
-        if action == 'insert':
-            db.execute_query(queries['methods'][action], (content['name'], content['description'],))
+        if action == 'insert' and content.get('name').strip():
+            db.execute_query(queries['methods'][action], (content['name'].strip(), content['description'].strip(),))
 
+        # use delete query from toml to delete method of passed-in id
         if action == 'delete':
             db.execute_query(queries['methods'][action], (content['method_id'],))
 
@@ -466,14 +463,15 @@ def spirits():
         if action == 'tagupdate':
            edit_form = int(content['id_input'])
 
-        if action == 'update':
+        if action == 'update' and content.get('new_name').strip():
             #get update query from toml and send it with parameters (see /home/ed/DataSeyance/models/queries.toml)
             print(int(content['id_input']))
             db.execute_query(queries['spirits'][action]
-                             , (content['new_name'], int(content['id_input'])))
+                             , (content['new_name'].strip(), int(content['id_input'])))
         # get insert query from toml and send it with parameter (see /home/ed/DataSeyance/models/queries.toml)
-        if action == 'insert':
-            db.execute_query(queries['spirits'][action], (content['insert_full_name'],))
+        # only allow insertion if name is nonempty
+        if action == 'insert' and content.get('insert_full_name').strip():
+            db.execute_query(queries['spirits'][action], (content['insert_full_name'].strip(),))
 
         if action == 'delete':
             db.execute_query(queries['spirits'][action], (content['spirit_id'],))
@@ -486,4 +484,4 @@ def spirits():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 3023))
-    app.run(port=port)
+    app.run(port=port, debug=True)
