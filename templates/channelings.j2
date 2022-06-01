@@ -1,6 +1,6 @@
-
-<!DOCTYPE html>
-
+{% extends 'baselayout.html' %}
+{% block title %}Channelings{% endblock %}
+{% block content %}
 <style>
 
 /* Button used to open the form - fixed at the bottom of the page */
@@ -72,19 +72,6 @@
 }
 </style>
 
-<h1>Data Seyance</h1>
-
-[ <a href="index">Home</a>
-| <a href="seances">Seances</a> | <a href="locations">Locations</a>  | <a href="channelings">Channelings</a>
-| <a href="spirits">Spirits</a> | <a href="attendees">Attendees</a> | <a href="mediums">Mediums</a>
-| <a href="methods">Methods</a> | <a href="seanceattendees">Seance Attendee Lists</a>
-]
-
-
-
-<div>
-&nbsp;
-</div>
 
 <form id="FilterList">
 <label for="seance-select">Choose a seance to view channelings for:</label>
@@ -96,7 +83,7 @@
     {{seance['date']}} at {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
     {% endfor %}
 </select>
-<input class="btn" type="submit" id="filter" value="Filter">
+<input class="btn btn-dark" type="submit" id="filter" value="Filter">
 </form>
 
 <div>&nbsp;</div>
@@ -127,7 +114,7 @@
   {% for channeling in channeling_data %}
    {%if channeling['channeling_id']==channeling_id_to_edit %}
     <tr>
-            <form id="UpdateChanneling" method="POST">
+    <form id="UpdateChanneling" method="POST">
     <td>{{channeling['channeling_id']}}</td>
     <td>
     <select name="medium_id">
@@ -190,7 +177,7 @@
 
     <td>
 
-        <input class="btn" type="submit" id="UpdateChanneling" value="Save">
+        <input class="btn btn-primary" type="submit" id="UpdateChanneling" value="Save">
         <input type="hidden" name="action" value="update">
         <input type="hidden" name="id_input" value={{channeling['channeling_id']}}
          <input type="hidden" name="channeling_id_to_edit" value={{channeling['channeling_id']}}
@@ -200,7 +187,7 @@
       </form>
     <td>
        <form id="cancel" method="GET">
-      <input class="btn" type="submit" id="cancel" value="Cancel">
+      <input class="btn btn-dark" type="submit" id="cancel" value="Cancel">
      </td>
         </form>
 
@@ -221,14 +208,14 @@
 
     <td>
         <form id="UpdateChanneling" method="POST">
-        <input class="btn" type="submit" id="UpdateChanneling" value="Update Channeling">
+        <input class="btn btn-secondary" type="submit" id="UpdateChanneling" value="Update Channeling">
         <input type="hidden" name="action" value="tagupdate">
         <input type="hidden" name="channeling_id" value={{channeling['channeling_id']}}
          <input type="hidden" name="channeling_id_to_edit" value={{channeling['channeling_id']}}
       </td>  </form>
 
     <td>       <form id="DeleteChanneling" method="POST">
-        <input class="btn" type="submit" id="DeleteChanneling" value="Delete Channeling">
+        <input class="btn btn-danger" type="submit" id="DeleteChanneling" value="Delete Channeling">
         <input type="hidden" name="action" value="delete">
         <input type="hidden" name="channeling_id" value={{channeling['channeling_id']}}
      </td>
@@ -290,7 +277,7 @@
     </td>
     <td><input  type="integer"  name="insert_full_name"></td>
     <td>
-        <input class="btn" type="submit" id="InsertChanneling" value="Insert Channeling">
+        <input class="btn btn-dark" type="submit" id="InsertChanneling" value="Insert Channeling">
         <input type="hidden" name="action" value="insert">
         </form>
     </td>
@@ -341,4 +328,4 @@ function closeForm() {
 }
 </script>
 
-</html>
+{% endblock %}

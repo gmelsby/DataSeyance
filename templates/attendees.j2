@@ -1,14 +1,7 @@
-<h1>Data Seyance</h1>
+{% extends 'baselayout.html' %}
 
-[ <a href="index">Home</a>
-| <a href="seances">Seances</a> | <a href="locations">Locations</a>  | <a href="channelings">Channelings</a>
-| <a href="spirits">Spirits</a> | <a href="attendees">Attendees</a> | <a href="mediums">Mediums</a>
-| <a href="methods">Methods</a> | <a href="seanceattendees">Seance Attendee Lists</a>
-]
-<div>
-&nbsp;
-</div>
-
+{% block title %}Attendees{% endblock %}
+{% block content %}
 <table border="5" cellpadding="10">
   <caption>Attendees</caption>
   <thead>
@@ -74,6 +67,4 @@
 </div>
 
 
-<div>
-&nbsp;
-</div>
+{% endblock %}

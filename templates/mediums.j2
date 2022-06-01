@@ -1,13 +1,7 @@
-<h1>Data Seyance</h1>
+{% extends 'baselayout.html' %}
+{% block title %}Mediums{% endblock %}
 
-[ <a href="index">Home</a>
-| <a href="seances">Seances</a> | <a href="locations">Locations</a>  | <a href="channelings">Channelings</a>
-| <a href="spirits">Spirits</a> | <a href="attendees">Attendees</a> | <a href="mediums">Mediums</a>
-| <a href="methods">Methods</a> | <a href="seanceattendees">Seance Attendee Lists</a>
-]
-<div>
-&nbsp;&nbsp;
-</div>
+{% block content %}
 
 <table border="5" cellpadding="10">
   <caption>Mediums</caption>
@@ -27,14 +21,14 @@
     <td>{{medium['medium_id']}}</td>
     <td><input  type="text"  name="full_name" value='{{medium['full_name']}}'></td>
   <td>
-        <input class="btn" type="submit" id="UpdateMedium" value="Save">
+        <input class="btn btn-primary" type="submit" id="UpdateMedium" value="Save">
         <input type="hidden" name="action" value="update">
         <input type="hidden" name="medium_id" value={{medium['medium_id']}}
          </td>
    </form>
     <td>
        <form id="cancel" method="GET">
-      <input class="btn" type="submit" id="cancel" value="Cancel">
+      <input class="btn btn-dark" type="submit" id="cancel" value="Cancel">
      </td>
         </form>
   </tr>
@@ -46,7 +40,7 @@
     <td>{{medium['full_name']}}</td>
    <td>
       <form id="UpdateMedium" method="POST">
-        <input class="btn" type="submit" id="UpdateMedium" value="Update Medium">
+        <input class="btn btn-secondary" type="submit" id="UpdateMedium" value="Update Medium">
         <input type="hidden" name="action" value="tagupdate">
         <input type="hidden" name="medium_id" value={{medium['medium_id']}}
 
@@ -54,7 +48,7 @@
          </form>
     <td>
            <form id="DeleteMedium" method="POST">
-        <input class="btn" type="submit" id="DeleteMedium" value="Delete Medium">
+        <input class="btn btn-danger" type="submit" id="DeleteMedium" value="Delete Medium">
         <input type="hidden" name="action" value="delete">
         <input type="hidden" name="medium_id" value={{medium['medium_id']}}
 
@@ -68,7 +62,7 @@
     <td>Insert New Medium</td>
     <td> <input  type="text"  name="full_name"></td>
 
- <td colspan=2>   <input class="btn" type="submit" id="InsertMedium" value="Insert Medium">
+ <td colspan=2>   <input class="btn btn-dark" type="submit" id="InsertMedium" value="Insert Medium">
          <input type="hidden" name="action" value="insert">
         </form>
         </tr>
@@ -78,12 +72,4 @@
 </table>
 
 
-
-
-
-
-
-<div>
-&nbsp;&nbsp;
-</div>
-
+{% endblock %}

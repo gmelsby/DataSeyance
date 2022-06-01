@@ -1,14 +1,7 @@
-<h1>Data Seyance</h1>
+{% extends 'baselayout.html' %}
+{% block title %}Seance Attendees{% endblock %}
 
-[ <a href="index">Home</a>
-| <a href="seances">Seances</a> | <a href="locations">Locations</a>  | <a href="channelings">Channelings</a>
-| <a href="spirits">Spirits</a> | <a href="attendees">Attendees</a> | <a href="mediums">Mediums</a>
-| <a href="methods">Methods</a> | <a href="seanceattendees">Seance Attendee Lists</a>
-]
-<div>
-&nbsp;
-</div>
-
+{% block content %}
 <form>
 <label for="seance_id_input">Choose a seance to view attendees for:</label>
 <select name="seance_id_input" id="seance-select">
@@ -19,7 +12,7 @@
     {{seance['date']}} at {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
     {% endfor %}
 </select>
-<input class="btn" type="submit" id="filter" value="Filter">
+<input class="btn btn-dark" type="submit" id="filter" value="Filter">
 </form>
 
 <div>
@@ -113,3 +106,5 @@
 {% else %}
 <p>Choose a Seance in the dropdown menu above to add or update attendees for that seance.</p>
 {% endif %}
+
+{% endblock %}
