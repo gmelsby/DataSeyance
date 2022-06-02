@@ -151,13 +151,13 @@
 
 
   </tr>
-    {% endif %}
+  {% endif %}
   {% endfor %}
 
 
-     <div class="form-group"
-     <form id="InsertChanneling" method="POST">
     <tr>
+     <div class="form-group">
+     <form id="InsertChanneling" method="POST">
     <td>Insert Channeling</td>
     <td><select class="form-control" name="medium_id">
           <option value=""> </option>
@@ -191,23 +191,22 @@
         {% if chosen_seance['seance_id']==seance['seance_id'] %} selected {% endif %}>
         {{seance['date']}} {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
         {% endfor %}
-        <option value='AddSeance'>+ Add Seance</option>
       </select>
     </td>
     <td>
       <select class="form-control" name="is_successful">
-           <option value=0>No</option>
-          <option value=1>Yes</option>
-        </select>
+        <option value=0>No</option>
+        <option value=1>Yes</option>
+       </select>
     </td>
     <td><input class="form-control" type="integer" name="length_in_minutes"></td>
     <td>
         <input class="btn btn-dark" type="submit" id="InsertChanneling" value="Insert Channeling">
     </td>
         <input type="hidden" name="action" value="insert">
-    </tr>
     </form>
     </div>
+    </tr>
   </tbody>
 </table>
 {% endblock %}
