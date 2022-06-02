@@ -2,8 +2,8 @@
 {% block title %}Mediums{% endblock %}
 
 {% block content %}
-
-<table class="table">
+<div class="container-fluid">
+<table class="table table-striped">
   <caption>Mediums</caption>
   <thead>
   <tr>
@@ -17,15 +17,17 @@
   {% for medium in medium_data %}
        {%if medium['medium_id'] == medium_to_edit %}
   <tr>
+      <div class="form-group">
       <form id="UpdateMedium" method="POST">
     <td>{{medium['medium_id']}}</td>
-    <td><input  type="text"  name="full_name" value='{{medium['full_name']}}'></td>
+    <td><input type="text" class="form-control" name="full_name" value='{{medium['full_name']}}'></td>
   <td>
         <input class="btn btn-primary" type="submit" id="UpdateMedium" value="Save">
         <input type="hidden" name="action" value="update">
         <input type="hidden" name="medium_id" value={{medium['medium_id']}}
-         </td>
+  </td>
    </form>
+   </div>
     <td>
        <form id="cancel" method="GET">
       <input class="btn btn-dark" type="submit" id="cancel" value="Cancel">
@@ -55,21 +57,22 @@
     </td>         </form>
   </tr>
 
-    {% endif %}
+  {% endif %}
   {% endfor %}
 
-    <tr>          <form id="InsertMedium" method="POST">
-    <td>Insert New Medium</td>
-    <td> <input  type="text"  name="full_name"></td>
-
- <td colspan=2>   <input class="btn btn-dark" type="submit" id="InsertMedium" value="Insert Medium">
-         <input type="hidden" name="action" value="insert">
-        </form>
-        </tr>
-
+    <tr>
+      <div class="form-group">
+      <form id="InsertMedium" method="POST">
+      <td>Insert New Medium</td>
+      <td> <input type="text" class="form-control" name="full_name"></td>
+      <td colspan=2><input class="btn btn-dark" type="submit" id="InsertMedium" value="Insert Medium">
+         <input type="hidden" name="action" value="insert"></td>
+      </div>
+      </tr>
+      </form>
 
   </tbody>
 </table>
-
+</div>
 
 {% endblock %}

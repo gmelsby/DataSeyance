@@ -102,7 +102,7 @@ def channelings():
              content['method_id'],
              content['seance_date'],
              content['is_successful'],
-             content['insert_full_name']
+             content['length_in_minutes']
             ) )
 
         if action == 'delete':

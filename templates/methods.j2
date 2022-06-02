@@ -4,7 +4,7 @@
 {% block content %}
 
 <div class="container-fluid">
-<table class="table">
+<table class="table table-striped">
   <caption>Methods</caption>
   <thead>
   <tr>
@@ -47,7 +47,7 @@
 
       <form id="UpdateMethod" method="POST">
          <td>
-        <input class="btn btn-secondary" type="submit" id="UpdateMethod" value="Update Method">
+        <input class="btn btn-secondary" type="submit" id="UpdateMethod" value="Update">
         <input type="hidden" name="action" value="tagupdate">
         <input type="hidden" name="method_id" value={{method['method_id']}}
 
@@ -55,7 +55,7 @@
          </form>
          <form id="DeleteMethod" method="POST">
         <td>
-        <input class="btn btn-danger" type="submit" id="DeleteMethod" value="Delete Method">
+        <input class="btn btn-danger" type="submit" id="DeleteMethod" value="Delete">
         <input type="hidden" name="action" value="delete">
         <input type="hidden" name="method_id" value={{method['method_id']}}
 

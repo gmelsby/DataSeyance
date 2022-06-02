@@ -2,7 +2,8 @@
 {% block title %}Locations{% endblock %}
 
 {% block content %}
-<table class="table">
+<div class="container-fluid">
+<table class="table table-striped">
   <caption>Locations</caption>
   <thead>
   <tr>
@@ -73,21 +74,23 @@
   {% endif %}
   {% endfor %}
   <tr>          
+  <div class="form-group">
   <form id="InsertSpirit" method="POST">
     <td>Insert New Location</td>
-    <td> <input  type="text"  name="location_name"></td>
-    <td> <input  type="text"  name="street_address"></td>
-    <td><input  type="text"  name="city"></td>
-    <td><input  type="text"  name="zip"></td>
-    <td><input  type="text"  name="state"></td>
-    <td><input  type="text"  name="country"></td>
+    <td> <input type="text" class="form-control" name="location_name"></td>
+    <td> <input type="text" class="form-control" name="street_address"></td>
+    <td><input type="text" class="form-control" name="city"></td>
+    <td><input type="text" class="form-control" name="zip"></td>
+    <td><input type="text" class="form-control" name="state"></td>
+    <td><input type="text" class="form-control" name="country"></td>
  <td colspan=2>   <input class="btn btn-dark" type="submit" id="InsertLocation" value="Insert Location">
          <input type="hidden" name="action" value="insert">
         </form>
+        </div>
         </tr>
   <tbody>
 </table>
-
+</div>
 {% endblock %}
 
 

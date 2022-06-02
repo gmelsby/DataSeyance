@@ -2,6 +2,7 @@
 {% block title %}Seance Attendees{% endblock %}
 
 {% block content %}
+<div class="container-fluid">
 <form>
 <label for="seance_id_input">Choose a seance to view attendees for:</label>
 <select name="seance_id_input" id="seance-select">
@@ -19,7 +20,7 @@
 &nbsp;
 </div>
 
-<table class="table">
+<table class="table table-striped">
   <caption>Seance Attendees for
   {% if chosen_seance!=None %} Seance that took place on {{chosen_seance['date']}} at {{chosen_seance['name']}} | seance_id:{{chosen_seance['seance_id']}}
   {% else %} all seances{% endif %}</caption>
@@ -106,5 +107,5 @@
 {% else %}
 <p>Choose a Seance in the dropdown menu above to add or update attendees for that seance.</p>
 {% endif %}
-
+</div>
 {% endblock %}
