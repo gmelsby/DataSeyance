@@ -43,8 +43,11 @@ SELECT Channelings.channeling_id, Channelings.medium_id
 , Channelings.method_id
 , Methods.name AS method_name
 , Seances.seance_id
-, Seances.date, Locations.name AS location_name,
-Channelings.is_successful, Channelings.length_in_minutes
+, Seances.date, Locations.name AS location_name
+     , case when Channelings.is_successful = 0 then 'No'
+         when Channelings.is_successful = 1 then 'Yes'
+             end is_successful
+     , Channelings.length_in_minutes
 FROM Channelings
 LEFT JOIN Mediums ON Channelings.medium_id = Mediums.medium_id
 LEFT JOIN Spirits ON Channelings.spirit_id = Spirits.spirit_id
@@ -60,8 +63,11 @@ SELECT Channelings.channeling_id, Channelings.medium_id
 , Channelings.method_id
 , Methods.name AS method_name
 , Seances.seance_id
-, Seances.date, Locations.name AS location_name,
-Channelings.is_successful, Channelings.length_in_minutes
+, Seances.date, Locations.name AS location_name
+ , case when Channelings.is_successful = 0 then 'No'
+ when Channelings.is_successful = 1 then 'Yes'
+     end is_successful
+, Channelings.length_in_minutes
 FROM Channelings
 LEFT JOIN Mediums ON Channelings.medium_id = Mediums.medium_id
 LEFT JOIN Spirits ON Channelings.spirit_id = Spirits.spirit_id

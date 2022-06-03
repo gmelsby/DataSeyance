@@ -9,7 +9,7 @@
   <tr>
     <th>seance_id</th>
     <th>Date</th>
-    <th>Location Name</th>
+    <th  style="min-width:100px"  >Location Name</th>
     <th>Delete</th>
     <th>Edit</th>
     <th>View and Edit Seance Attendees</th>
@@ -21,13 +21,42 @@
   <tr>
     <td>{{seance['seance_id']}}</td>
     <td>{{seance['date']}}</td>
-    <td>{{seance['name']}}</td>
+    <td >{{seance['name']}}</td>
     <td><a href="/delete_seance/{{seance['seance_id']}}">Delete</a></td>
     <td><a href="seances?id={{seance['seance_id']}}">Edit</a></td>
     <td><a href="seanceattendees?seance_id_input={{seance['seance_id']}}">View and Edit Seance Attendees</a></td>
     <td><a href="channelings?chosen_seance_id={{seance['seance_id']}}">View and Edit Channelings at this Seance
   </tr>
   {% endfor %}
+
+  <tr>
+
+  <div class="form-group">
+  <form id="InsertSeance" method="POST">
+
+    <td>Insert New Seance</td>
+
+  <td><input type="date" class="form-control" name="date"></td>
+
+     <td colspan='2'>
+      <select name="location_id" id="newloc">
+        <option value=""></option>
+        {% for location in location_data %}
+        <option value={{location['location_id']}}
+        {% if seance_to_edit['location_id']==location['location_id'] %} selected {% endif %}>
+        {{location['name']}} | location_id {{location['location_id']}}</option>
+        {% endfor %}
+      </select>
+      </td>
+<td>   </td>
+    <td>
+    <input class="btn btn-dark" type="submit" id="InsertSpirit" value="Insert Spirit">
+         <input type="hidden" name="action" value="insert">
+   </td>
+
+  </form>
+  </div>
+</tr>
   </tbody>
 </table>
 
@@ -47,7 +76,12 @@
         {% endfor %}
       </select>
     </fieldset>
+
+
+    <td>
     <input class="btn" type="submit" id="InsertSeance" value="Insert Seance">
+    </td>
+
   </form>
 
 </div>
