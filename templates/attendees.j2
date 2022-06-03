@@ -62,17 +62,7 @@
     {% endif %}
   {% endfor %}
 
-  <tr>
-  <div class="form-group">
-  <form id="InsertAttendee" method="POST">
-    <td>Insert New Attendee</td>
-    <td><input type="text" class="form-control" name="insert_full_name"></td>
-    <td colspan=2>   <input class="btn btn-dark" type="submit" id="InsertAttendee" value="Insert Attendee">
-         <input type="hidden" name="action" value="insert">
-   </td>
-  </form>
-  </div>
-</tr>
+
 
   </tbody>
 </table>
@@ -99,26 +89,7 @@
 &nbsp;
 </div>
 
-<div id="update" style="display: block">
-  <form id="UpdateAttendee" method="POST">
-    <legend><strong>Update Attendee</strong></legend>
-    <label for="id_input">Attendee to Update: </label>
-    <select name="id_input" id="id_input">
-      <option value=""> </option>
-      {% for attendee in attendee_data %}
-      <option value={{attendee['attendee_id']}}
-      {% if attendee_to_edit['attendee_id']==attendee['attendee_id'] %} selected {% endif %}>
-        {{attendee['full_name']}} | id: {{attendee['attendee_id']}}
-      </option>
-      {% endfor %}
-    </select>
-    <fieldset class="fields">
-    <legend>New Information</legend>
-    <label> Full Name: </label> <input  type="text"  name="new_name" value="{{attendee_to_edit['full_name']}}">
-    </fieldset>
-    <input   class="btn btn-dark" type="submit" id="UpdateAttendee" value="Update Attendee">
-  </form>
-</div>
+
 </div>
 
 {% endblock %}
