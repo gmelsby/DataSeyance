@@ -8,8 +8,8 @@
   <thead>
   <tr>
     <th scope="col">spirit_id</th>
-    <th scope="col">full_name</th>
-    <th scope="col">Action</th>
+    <th scope="col">Full Name</th>
+    <th scope="col">Update</th>
     <th scope="col">Delete</th>
   </tr>
   </thead>
@@ -40,7 +40,7 @@
 
     <form id="UpdateSpirit" method="POST">
     <td>
-        <input class="btn btn-secondary" type="submit" id="UpdateSpirit" value="Update Spirit">
+        <input class="btn btn-secondary" type="submit" id="UpdateSpirit" value="Update">
         <input type="hidden" name="action" value="tagupdate">
         <input type="hidden" name="id_input" value={{spirit['spirit_id']}}
         <input type="hidden" name="edit_form" value={{spirit['spirit_id']}}
@@ -49,7 +49,7 @@
 
     <form id="DeleteSpirit" method="POST">
     <td>
-        <input class="btn btn-danger" type="submit" id="DeleteSpirit" value="Delete Spirit">
+        <input class="btn btn-danger" type="submit" id="DeleteSpirit" value="Delete">
         <input type="hidden" name="action" value="delete">
         <input type="hidden" name="spirit_id" value={{spirit['spirit_id']}}
    </td>

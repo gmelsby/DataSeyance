@@ -9,7 +9,7 @@
   <tr>
     <th>attendee_id</th>
     <th>Full Name</th>
-    <th>Action</th>
+    <th>Update</th>
     <th>Delete</th>
   </tr>
   </thead>
@@ -43,7 +43,7 @@
 
     <td>
       <form id="UpdateSpirit" method="POST">
-        <input class="btn btn-secondary" type="submit" id="UpdateAttendee" value="Update Attendee">
+        <input class="btn btn-secondary" type="submit" id="UpdateAttendee" value="Update">
         <input type="hidden" name="action" value="tagupdate">
         <input type="hidden" name="id_input" value={{attendee['attendee_id']}}
         <input type="hidden" name="edit_form" value={{attendee['attendee_id']}}
@@ -53,7 +53,7 @@
 
     <td>
         <form id="DeleteAttendee" method="POST">
-        <input class="btn btn-danger" type="submit" id="DeleteAttendee" value="Delete Attendee">
+        <input class="btn btn-danger" type="submit" id="DeleteAttendee" value="Delete">
         <input type="hidden" name="action" value="delete">
         <input type="hidden" name="attendee_id" value={{attendee['attendee_id']}}
    </td>    </form>

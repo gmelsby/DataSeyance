@@ -28,8 +28,8 @@
   <tr>
     <th>seance_id</th>
     <th>attendee_id</th>
-    <th>Full Name</th>
-        <th>Action</th>
+    <th>Attendee Name</th>
+    <th>Update</th>
     <th>Delete</th>
     {% if chosen_seance!=None %}
 
@@ -92,13 +92,13 @@
     <td>{{attendee['full_name']}}</td>
     <td>
         <form id="UpdateSeanceAttendee" method="POST">
-        <input  class="btn btn-secondary" type="submit" id="UpdateSeanceAttendee" value="Update Seance Attendee">
+        <input  class="btn btn-secondary" type="submit" id="UpdateSeanceAttendee" value="Update">
         <input type="hidden" name="action" value="tagupdate">
          <input type="hidden" name="seanceattendees_id_to_edit" value={{attendee['seanceattendees_id']}}>
       </td>  </form>
 
     <td>       <form id="DeleteSeanceAttendee" method="POST">
-        <input class="btn btn-danger" type="submit" id="DeleteSeanceAttendee" value="Delete Seance Attendee">
+        <input class="btn btn-danger" type="submit" id="DeleteSeanceAttendee" value="Delete">
         <input type="hidden" name="action" value="delete">
         <input type="hidden" name="seanceattendees_id" value= {{attendee['seanceattendees_id']}}
      </td>

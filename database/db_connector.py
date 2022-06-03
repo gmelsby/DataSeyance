@@ -27,16 +27,16 @@ def connect_to_database(host = host, user = user, passwd = passwd, db = db):
     db_connection.ping(True)
     return db_connection
 
-def execute_query(query, query_params=()):
+def execute_query(query, query_params=(), quantity="many"):
     '''
     executes a given SQL query on the given db connection and returns a Cursor object
 
     db_connection: a MySQLdb connection object created by connect_to_database()
     query: string containing SQL query
+    query_params: the parameters that fill in variables in the query
+    quantity: determines if fetchone or fetchall is called on the cursor
 
-    returns: A Cursor object as specified at https://www.python.org/dev/peps/pep-0249/#cursor-objects.
-    You need to run .fetchall() or .fetchone() on that object to actually acccess the results.
-
+    returns: the results of the query
     '''
 
     db_connection = connect_to_database(host, user, passwd, db)
@@ -46,6 +46,11 @@ def execute_query(query, query_params=()):
 
     if query is None or len(query.strip()) == 0:
         print("query is empty! Please pass a SQL query in query")
+        return None
+    
+    # check that quanity is a valid parameter
+    if not (quantity == "many" or quantity == "one"):
+        print("make sure quanity is either 'many' or 'one'")
         return None
 
     print("Executing %s with %s" % (query, query_params));
@@ -58,19 +63,23 @@ def execute_query(query, query_params=()):
     for q in query_params:
         params = params + (q)
     '''
-    #TODO: Sanitize the query before executing it!!!
-
+    
     cursor.execute(query, query_params)
     # this will actually commit any changes to the database. without this no
     # changes will be committed!
     db_connection.commit();
-    records = cursor.fetchall()
+
+    print(f"Fetching quantity {quantity}")
+    # sepecifies which cursor method will be called on the cursor based on quantity parameter
+    fetchdict = {"many" : cursor.fetchall, "one": cursor.fetchone}
+    records = fetchdict[quantity]()
     cursor.close()
     return records
 
 def execute_queries(queries, query_params = ()):
     '''
     Same as execute_query but takes a list of queries and a list of params for each query
+    Does not return any records
     '''
     db_connection = connect_to_database(host, user, passwd, db)
     if db_connection is None:

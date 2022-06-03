@@ -8,13 +8,13 @@
   <thead>
   <tr>
     <th>location_id</th>
-    <th>name</th>
-    <th>street_address</th>
-    <th>city</th>
-    <th>zip</th>
-    <th>state</th>
-    <th>country</th>
-    <th>Action</th>
+    <th>Name</th>
+    <th>Address</th>
+    <th>City</th>
+    <th>Zipe</th>
+    <th>State</th>
+    <th>Country</th>
+    <th>Update</th>
     <th>Delete</th>
   </tr>
   </thead>
@@ -57,7 +57,7 @@
     <td>{{location['country']}}</td>
    <td>
       <form id="UpdateLocation" method="POST">
-        <input class="btn btn-secondary" type="submit" id="UpdateLocation" value="Update Location">
+        <input class="btn btn-secondary" type="submit" id="UpdateLocation" value="Update">
         <input type="hidden" name="action" value="tagupdate">
         <input type="hidden" name="location_id" value={{location['location_id']}}
 
@@ -65,7 +65,7 @@
          </form>
     <td>
            <form id="DeleteLocation" method="POST">
-        <input class="btn btn-danger" type="submit" id="DeleteLocation" value="Delete Location">
+        <input class="btn btn-danger" type="submit" id="DeleteLocation" value="Delete">
         <input type="hidden" name="action" value="delete">
         <input type="hidden" name="location_id" value={{location['location_id']}}
 

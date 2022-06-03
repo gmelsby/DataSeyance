@@ -388,7 +388,7 @@ def seanceattendees():
     chosen_seance = None
     # if a seance_id has been passed in, get info about it
     if chosen_seance_id:
-        chosen_seance = db.execute_query(queries['seances']['select_specific'], (int(chosen_seance_id),))
+        chosen_seance = db.execute_query(queries['seances']['select_specific'], (int(chosen_seance_id),), "one")
 
 
     # query for populating dropdown menu to choose a seance
@@ -423,7 +423,7 @@ def seanceattendees():
     not_attended_list = []
     if chosen_seance_id:
         not_attended_list = db.execute_query(queries['seanceattendees']['select_not_attended'], (int(chosen_seance_id),))
-
+    return json.dumps(chosen_seance)
     # renders the page with prefilled dropdowns
     return render_template('seanceattendees.j2', chosen_seance=chosen_seance, seance_data=seance_data,
                            other_seances=other_seances, chosen_attendee=chosen_attendee,

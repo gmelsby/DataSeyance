@@ -8,9 +8,9 @@
   <thead>
   <tr>
     <th>medium_id</th>
-    <th>full_name</th>
+    <th>Full Name</th>
+    <th>Update</th>
     <th>Delete</th>
-    <th>Edit</th>
   </tr>
   </thead>
   <tbody>
@@ -42,7 +42,7 @@
     <td>{{medium['full_name']}}</td>
    <td>
       <form id="UpdateMedium" method="POST">
-        <input class="btn btn-secondary" type="submit" id="UpdateMedium" value="Update Medium">
+        <input class="btn btn-secondary" type="submit" id="UpdateMedium" value="Update">
         <input type="hidden" name="action" value="tagupdate">
         <input type="hidden" name="medium_id" value={{medium['medium_id']}}
 
@@ -50,7 +50,7 @@
          </form>
     <td>
            <form id="DeleteMedium" method="POST">
-        <input class="btn btn-danger" type="submit" id="DeleteMedium" value="Delete Medium">
+        <input class="btn btn-danger" type="submit" id="DeleteMedium" value="Delete">
         <input type="hidden" name="action" value="delete">
         <input type="hidden" name="medium_id" value={{medium['medium_id']}}
 
