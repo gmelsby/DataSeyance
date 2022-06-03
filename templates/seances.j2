@@ -57,7 +57,7 @@
   <td><input type="date" class="form-control" name="date"></td>
 
      <td colspan='2'>
-      <select name="location_id" id="newloc">
+      <select name="location_id" class="form-control" id="newloc">
         <option value=""></option>
         {% for location in location_data %}
         <option value={{location['location_id']}}
@@ -68,18 +68,16 @@
       </td>
 <td>   </td>
     <td>
-    <input class="btn btn-dark" type="submit" id="InsertSpirit" value="Insert Spirit">
+    <input class="btn btn-dark" type="submit" id="InsertSeance" value="Insert Seance">
          <input type="hidden" name="action" value="insert">
    </td>
 
   </form>
   </div>
   <td></td>
-</tr>
+  </tr>
   </tbody>
 </table>
-
-
 
 </div>
 
