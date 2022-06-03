@@ -310,6 +310,8 @@ def methods():
 
 @app.route('/seanceattendees', methods=['GET', 'POST'])
 def seanceattendees():
+    seanceattendees_id_to_edit = -1
+    seanceattendees_to_edit = None
     if request.method == 'POST':
         # if form contains update_seance_id we are updating a row in SeanceaAttendees
         if request.form.get('update_attendee_id'):
@@ -321,68 +323,121 @@ def seanceattendees():
             cursor = db.execute_query(queries['seanceattendees']['update'], (seance_id, attendee_id, old_seance_id))
             return redirect(f'/seanceattendees?seance_id_input={old_seance_id}')
 
-            
+
+
+        content = request.form.to_dict()
+        action = content['action']
+
+        if content['action'] == 'insert':
+
+            db.execute_query(queries['seanceattendees'][action], (
+
+                int(content['attendee_id']),
+                int(content['seance_id']),
+            ))
+
+
+        if content['action'] == 'delete':
+            db.execute_query(queries['seanceattendees'][action], (
+                int(content['seanceattendees_id']),
+            ))
+
+
+
+        if content['action'] == 'tagupdate':
+            print(content)
+            seanceattendees_id_to_edit = int(content['seanceattendees_id_to_edit'])
+            cursor = db.execute_query(queries['seanceattendees']['inline_tag']
+                                      ,  (seanceattendees_id_to_edit,))
+            seanceattendees_to_edit = cursor.fetchall()
+            print('seanceattendees_to_edit',seanceattendees_to_edit)
+
+
+
+        if content['action'] == 'update':
+            print(content)
+            db.execute_query(queries['seanceattendees']['inline_update'], (
+                int(content['seance_id']),
+                int(content['attendee_id']),
+                int(content['seanceattendees_id']),
+            ))
+
+
+
         # if form contains also_attended_id we are creating a new entry in SeanceAttendees
-        if request.form.get('also_attended_id'):
-            attendee_id = request.form.get('also_attended_id')
-            seance_id = request.form.get('selected_seance_id')
-            
-            # inserts a new row into SeanceAttendees intersection table
-            db.execute_query(queries['seanceattendees']['insert'], (attendee_id, seance_id))
-            return redirect(f'/seanceattendees?seance_id_input={seance_id}')
+        # if request.form.get('also_attended_id'):
+        #     attendee_id = request.form.get('also_attended_id')
+        #     seance_id = request.form.get('selected_seance_id')
+        #
+        #     # inserts a new row into SeanceAttendees intersection table
+        #     db.execute_query(queries['seanceattendees']['insert'], (attendee_id, seance_id))
+        #
+        #
+        #     return redirect(f'/seanceattendees?seance_id_input={seance_id}')
+
+
 
 
     # read functionality
-    if request.method == 'GET':
-        args = request.args
-        # chosen attendee defaults to None unless we have id passed in in GET args
-        chosen_attendee_id = args.get('attendee_id_input')
-        chosen_attendee = None
-        # we are not supporting autofilling when attendee_id is NULL
-        # there are potentially many entries where attendee_id is NULL, and it is hard to tell them apart
-        if chosen_attendee_id is not None and chosen_attendee_id != 'None':
-            cursor = db.execute_query(queries['attendees']['select_specific'], (int(chosen_attendee_id),))
-            chosen_attendee = cursor.fetchone()
+    # if request.method == 'GET':
 
-        # chosen seance defaults to None unless we have id passed in in GET args
-        chosen_seance_id = args.get('seance_id_input')
-        chosen_seance = None
-        # if a seance_id has been passed in, get info about it
-        if chosen_seance_id:
-            cursor = db.execute_query(queries['seances']['select_specific'], (int(chosen_seance_id),))
-            chosen_seance = cursor.fetchone()
-            
-        # query for populating dropdown menu to choose a seance        
-        cursor = db.execute_query(queries['seances']['select'])
-        seance_data = cursor.fetchall()
-        
-        # query for getting all seances that are not the selected seance
-        other_seances = []
-        if chosen_seance_id:
-            cursor = db.execute_query(queries['seances']['select_other'], (int(chosen_seance_id),))
-            other_seances = cursor.fetchall()
+    args = request.args
+    # chosen attendee defaults to None unless we have id passed in in GET args
+    chosen_attendee_id = args.get('attendee_id_input')
+    chosen_attendee = None
+    # we are not supporting autofilling when attendee_id is NULL
+    # there are potentially many entries where attendee_id is NULL, and it is hard to tell them apart
+    if chosen_attendee_id is not None and chosen_attendee_id != 'None':
+        cursor = db.execute_query(queries['attendees']['select_specific'], (int(chosen_attendee_id),))
+        chosen_attendee = cursor.fetchone()
 
-    
-        # query for getting info about all attendees in the SeanceAttendees table for all seances or a particular one
-        attendee_query = queries['seanceattendees']['select']
-        attendee_params = ()
-        if chosen_seance_id:
-             attendee_query = queries['seanceattendees']['select_specific']
-             attendee_params = (int(chosen_seance_id),)
-        
-        cursor = db.execute_query(attendee_query, attendee_params)
-        attendee_data = cursor.fetchall()
-        
-        # query for getting all attendees that did not attend the seance
-        not_attended_list = []
-        if chosen_seance_id:
-            cursor = db.execute_query(queries['seanceattendees']['select_not_attended'], (int(chosen_seance_id),))
-            not_attended_list = cursor.fetchall()
+    # chosen seance defaults to None unless we have id passed in in GET args
+    chosen_seance_id = args.get('seance_id_input')
+    chosen_seance = None
+    # if a seance_id has been passed in, get info about it
+    if chosen_seance_id:
+        cursor = db.execute_query(queries['seances']['select_specific'], (int(chosen_seance_id),))
+        chosen_seance = cursor.fetchone()
 
-        # renders the page with prefilled dropdowns
-        return render_template('seanceattendees.j2', chosen_seance=chosen_seance, seance_data=seance_data,
-                               other_seances=other_seances, chosen_attendee=chosen_attendee,
-                               attendee_data=attendee_data, not_attended_list=not_attended_list)
+    # query for populating dropdown menu to choose a seance
+    cursor = db.execute_query(queries['seances']['select'])
+    seance_data = cursor.fetchall()
+
+    # query for getting all seances that are not the selected seance
+    other_seances = []
+    if chosen_seance_id:
+        cursor = db.execute_query(queries['seances']['select_other'], (int(chosen_seance_id),))
+        other_seances = cursor.fetchall()
+
+    # query for getting info about all attendees in the SeanceAttendees table for all seances or a particular one
+    all_attendees_query = queries['attendees']['select']
+    cursor = db.execute_query(all_attendees_query, ())
+    all_attendees = cursor.fetchall()
+
+
+    attendee_query = queries['seanceattendees']['select']
+
+    attendee_params = ()
+    if chosen_seance_id:
+         attendee_query = queries['seanceattendees']['select_specific']
+         attendee_params = (int(chosen_seance_id),)
+
+    cursor = db.execute_query(attendee_query, attendee_params)
+    attendee_data = cursor.fetchall()
+
+    # query for getting all attendees that did not attend the seance
+    not_attended_list = []
+    if chosen_seance_id:
+        cursor = db.execute_query(queries['seanceattendees']['select_not_attended'], (int(chosen_seance_id),))
+        not_attended_list = cursor.fetchall()
+
+    # renders the page with prefilled dropdowns
+    return render_template('seanceattendees.j2', chosen_seance=chosen_seance, seance_data=seance_data,
+                           other_seances=other_seances, chosen_attendee=chosen_attendee,
+                           attendee_data=attendee_data, not_attended_list=not_attended_list
+                           , all_attendees=all_attendees
+                           , seanceattendees_id_to_edit=seanceattendees_id_to_edit
+                           , seanceattendees_to_edit=seanceattendees_to_edit)
 
 
 @app.route('/delete_seanceattendee/<int:id>')
