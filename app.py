@@ -25,10 +25,30 @@ def index():
 
 @app.route('/attendees', methods=['GET', 'POST'])
 def attendees():
+    edit_form = -1
+
+        # we had a post so we are going to look at a parameter passed from a hidden form value
+        # get form values as dict
+
     if request.method == 'POST':
+
+        content = request.form.to_dict()
+        # this hidden form value will tell us what to do
+        action = content['action']
+
+        if action == 'insert' and content.get('insert_full_name').strip():
+            db.execute_query(queries['attendees']['insert_inline'], (content['insert_full_name'],))
+
+
+        if action == 'delete':
+            db.execute_query(queries['attendees'][action], (content['attendee_id'],))
+
+        if action == 'tagupdate':
+            edit_form = int(content['id_input'])
+
         # if the POST request has id_input the update form has been submitted
         # We only want to update if the name is nonempty
-        if request.form.get('id_input') and request.form.get('new_name'):
+        if request.form.get('id_input') and request.form.get('new_name') and not content.get('action'):
             # prepare entered strings for SQL Query
             full_name_input = request.form['new_name'].strip()
             id_input = request.form['id_input']
@@ -44,37 +64,32 @@ def attendees():
             # we need to call execute_queries to have all modifications executed as one
             # and pass in lists of queries and parameters
             cursor = db.execute_queries(queries['attendees']['insert'], [(request.form.get('name'),), (), (request.form.get('seance_id'),)])
-        return redirect('/attendees')
+
             
             
     # displays the table of all attendees
-    if request.method == 'GET':
-        args = request.args
-        # we could potentially ahve no get query parameters, so attendee_to_edit starts as None
-        attendee_to_edit = None
-        # if we have get query parameter indicating attendee_id we get the info for the dropdown
-        if args.get('id'):
-            cursor = db.execute_query(queries['attendees']['select_specific'], (int(args.get('id')),))
-            attendee_to_edit = cursor.fetchone()
-            
-        # attendee data to be displayed in table and used for update dropdown
-        cursor = db.execute_query(queries['attendees']['select'])
-        attendee_data = cursor.fetchall()
-        
-        # seance data to be used in dropdown for adding an attendee
-        cursor = db.execute_query(queries['seances']['select'])
-        seance_data = cursor.fetchall()
+    # if request.method == 'GET':
+    args = request.args
+    # we could potentially ahve no get query parameters, so attendee_to_edit starts as None
+    attendee_to_edit = None
+    # if we have get query parameter indicating attendee_id we get the info for the dropdown
+    if args.get('id'):
+        cursor = db.execute_query(queries['attendees']['select_specific'], (int(args.get('id')),))
+        attendee_to_edit = cursor.fetchone()
 
-        return render_template('attendees.j2', attendee_data=attendee_data, seance_data=seance_data, attendee_to_edit=attendee_to_edit)
-    
+    # attendee data to be displayed in table and used for update dropdown
+    cursor = db.execute_query(queries['attendees']['select'])
+    attendee_data = cursor.fetchall()
 
-@app.route('/delete_attendee/<int:id>')
-def delete_attendee(id):
-    query = queries['attendees']['delete']
-    cursor = db.execute_query(query, (id,))
+    # seance data to be used in dropdown for adding an attendee
+    cursor = db.execute_query(queries['seances']['select'])
+    seance_data = cursor.fetchall()
 
-    
-    return redirect('/attendees')
+    return render_template('attendees.j2', attendee_data=attendee_data, seance_data=seance_data
+                           , attendee_to_edit=attendee_to_edit, edit_form=edit_form)
+
+
+
 
 
 @app.route('/channelings', methods=['GET', 'POST'])

@@ -3,27 +3,80 @@
 {% block title %}Attendees{% endblock %}
 {% block content %}
 <div class="container-fluid">
-<table class="table">
+<table class="table table-striped">
   <caption>Attendees</caption>
   <thead>
   <tr>
     <th>attendee_id</th>
-    <th>full_name</th>
+    <th>Full Name</th>
+    <th>Action</th>
     <th>Delete</th>
-    <th>Edit</th>
   </tr>
   </thead>
   <tbody>
   {% for attendee in attendee_data %}
+     {%if attendee['attendee_id'] == edit_form %}
+
+  <tr>
+  <form id="UpdateAttendee" method="POST">
+  <td>{{attendee['attendee_id']}}  </td>
+  <td><form id="UpdateSpirit" method="POST">
+  <input  type="text" class="form-control" name="new_name" value='{{attendee['full_name']}}'></td>
+    <td><input class="btn btn-primary" type="submit" id="SaveUpdateAttendee" value="Save">
+     <input type="hidden" name="id_input" value={{attendee['attendee_id']}}>
+   <input type="hidden" name="action" value="update">
+   <input type="hidden" name="edit_form" value=-1>
+    </td>
+   </form>
+    <td>
+       <form id="cancel" method="GET">
+      <input class="btn btn-secondary" type="submit" id="cancel" value="Cancel">
+     </td>
+        </form>
+
+  </tr>
+
+     {% else %}
   <tr>
     <td>{{attendee['attendee_id']}}</td>
     <td>{{attendee['full_name']}}</td>
-    <td><a href="delete_attendee/{{attendee['attendee_id']}}">Delete</a></td>
-    <td><a href="attendees?id={{attendee['attendee_id']}}">Edit</a></td>
+
+    <td>
+      <form id="UpdateSpirit" method="POST">
+        <input class="btn btn-secondary" type="submit" id="UpdateAttendee" value="Update Attendee">
+        <input type="hidden" name="action" value="tagupdate">
+        <input type="hidden" name="id_input" value={{attendee['attendee_id']}}
+        <input type="hidden" name="edit_form" value={{attendee['attendee_id']}}
+    </td>
+    </form>
+
+
+    <td>
+        <form id="DeleteAttendee" method="POST">
+        <input class="btn btn-danger" type="submit" id="DeleteAttendee" value="Delete Attendee">
+        <input type="hidden" name="action" value="delete">
+        <input type="hidden" name="attendee_id" value={{attendee['attendee_id']}}
+   </td>    </form>
   </tr>
+
+    {% endif %}
   {% endfor %}
+
+  <tr>
+  <div class="form-group">
+  <form id="InsertAttendee" method="POST">
+    <td>Insert New Attendee</td>
+    <td><input type="text" class="form-control" name="insert_full_name"></td>
+    <td colspan=2>   <input class="btn btn-dark" type="submit" id="InsertAttendee" value="Insert Attendee">
+         <input type="hidden" name="action" value="insert">
+   </td>
+  </form>
+  </div>
+</tr>
+
   </tbody>
 </table>
+
 
 <div id="insert" style="display: block">
   <form id="InsertAttendee" method="POST">
@@ -38,7 +91,7 @@
     {% endfor %}
   </select>
     </fieldset>
-    <input class="btn" type="submit" id="InsertAttendee" value="Insert Attendee">
+    <input  class="btn btn-dark"  type="submit" id="InsertAttendee" value="Insert Attendee">
   </form>
 </div>
 
@@ -63,7 +116,7 @@
     <legend>New Information</legend>
     <label> Full Name: </label> <input  type="text"  name="new_name" value="{{attendee_to_edit['full_name']}}">
     </fieldset>
-    <input class="btn" type="submit" id="UpdateAttendee" value="Update Attendee">
+    <input   class="btn btn-dark" type="submit" id="UpdateAttendee" value="Update Attendee">
   </form>
 </div>
 </div>

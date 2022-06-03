@@ -10,6 +10,7 @@ delete = "DELETE FROM Attendees WHERE attendee_id = %s;"
 select = "SELECT attendee_id, full_name FROM Attendees;"
 select_specific = "SELECT attendee_id, full_name FROM Attendees WHERE attendee_id = %s;"
 
+insert_inline = "INSERT INTO Attendees (full_name) VALUES (%s);"
 
 [channelings]
 insert = """
