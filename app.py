@@ -137,7 +137,7 @@ def channelings():
     if request.args.get('chosen_seance_id'): 
         channeling_query = queries['channelings']['select_specific']
         channeling_params = (int(request.args['chosen_seance_id']),)
-        chosen_seance = db.execute_query(queries['seances']['select_specific'], channeling_params)
+        chosen_seance = db.execute_query(queries['seances']['select_specific'], channeling_params, quantity="one")
 
 
     # query for getting seance data to populate dropdown
