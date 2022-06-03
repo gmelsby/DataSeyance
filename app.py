@@ -43,19 +43,14 @@ def attendees():
         if action == 'delete':
             db.execute_query(queries['attendees'][action], (content['attendee_id'],))
 
-        if action == 'tagupdate':
-            edit_form = int(content['id_input'])
 
-        # if the POST request has id_input the update form has been submitted
-        # We only want to update if the name is nonempty
-        if request.form.get('id_input') and request.form.get('new_name') and not content.get('action'):
-            # prepare entered strings for SQL Query
+        if action == 'update':
             full_name_input = request.form['new_name'].strip()
             id_input = request.form['id_input']
+            db.execute_query(queries['attendees'][action], (full_name_input, int(id_input)))
 
-            cursor = db.execute_query(queries['attendees']['update'], (full_name_input, int(id_input)))
-
-            return redirect('/attendees')
+        if action == 'tagupdate':
+            edit_form = int(content['id_input'])
 
         # otherwise we are inserting a new Attendee
         # We do not want Attendees with empty names
@@ -63,7 +58,7 @@ def attendees():
             # our one multi-query transaction
             # we need to call execute_queries to have all modifications executed as one
             # and pass in lists of queries and parameters
-            cursor = db.execute_queries(queries['attendees']['insert'], [(request.form.get('name'),), (), (request.form.get('seance_id'),)])
+            db.execute_queries(queries['attendees']['insert'], [(request.form.get('name'),), (), (request.form.get('seance_id'),)])
 
             
             
@@ -74,16 +69,15 @@ def attendees():
     attendee_to_edit = None
     # if we have get query parameter indicating attendee_id we get the info for the dropdown
     if args.get('id'):
-        cursor = db.execute_query(queries['attendees']['select_specific'], (int(args.get('id')),))
-        attendee_to_edit = cursor.fetchone()
+        attendee_to_edit = db.execute_query(queries['attendees']['select_specific'], (int(args.get('id')),))
+
 
     # attendee data to be displayed in table and used for update dropdown
-    cursor = db.execute_query(queries['attendees']['select'])
-    attendee_data = cursor.fetchall()
+    attendee_data = db.execute_query(queries['attendees']['select'])
+
 
     # seance data to be used in dropdown for adding an attendee
-    cursor = db.execute_query(queries['seances']['select'])
-    seance_data = cursor.fetchall()
+    seance_data = db.execute_query(queries['seances']['select'])
 
     return render_template('attendees.j2', attendee_data=attendee_data, seance_data=seance_data
                            , attendee_to_edit=attendee_to_edit, edit_form=edit_form)
@@ -143,32 +137,30 @@ def channelings():
     if request.args.get('chosen_seance_id'): 
         channeling_query = queries['channelings']['select_specific']
         channeling_params = (int(request.args['chosen_seance_id']),)
-        cursor = db.execute_query(queries['seances']['select_specific'], channeling_params)
-        chosen_seance = cursor.fetchone()
+        chosen_seance = db.execute_query(queries['seances']['select_specific'], channeling_params)
+
 
     # query for getting seance data to populate dropdown
-    cursor = db.execute_query(queries['seances']['select'])
-    seance_data = cursor.fetchall()
+    seance_data = db.execute_query(queries['seances']['select'])
+
     
     # queryfor getting location data to populate add seance dropdown
-    cursor = db.execute_query(queries['locations']['select'])
-    location_data = cursor.fetchall()
+    location_data = db.execute_query(queries['locations']['select'])
+
 
     # query for getting medium data to populate dropdown
-    cursor = db.execute_query(queries['mediums']['select'])
-    medium_data = cursor.fetchall()
+    medium_data = db.execute_query(queries['mediums']['select'])
+
 
     # query for getting spirit data to populate dropdown
-    cursor = db.execute_query(queries['spirits']['select'])
-    spirit_data = cursor.fetchall()
+    spirit_data = db.execute_query(queries['spirits']['select'])
+
 
     # query for getting method data to populate dropdown
-    cursor = db.execute_query(queries['methods']['select'])
-    method_data = cursor.fetchall()
+    method_data = db.execute_query(queries['methods']['select'])
 
 
-    cursor = db.execute_query(channeling_query, channeling_params)
-    channeling_data = cursor.fetchall()
+    channeling_data = db.execute_query(channeling_query, channeling_params)
 
     return render_template('channelings.j2', channeling_id_to_edit=channeling_id_to_edit, chosen_seance=chosen_seance, channeling_data=channeling_data,
                             seance_data=seance_data, medium_data=medium_data, spirit_data=spirit_data,
@@ -234,24 +226,9 @@ def locations():
                 int(content['location_id'])
             ))
 
-    # # Read functionality
-    # if request.method == 'GET':
-    #     args = request.args
-    #     # only have a location to edit if id passed in in GET params, othewise it's None
-    #     location_to_edit = None
-    #     if args.get('id'):
-    #         cursor = db.execute_query(queries['locations']['select_specific'], (int(args.get('id')),))
-    #         location_to_edit = cursor.fetchone()
-    #
-    #         # Removes 'None' from prefill--if a value is NULL, we get empty string instead
-    #         for key, value in location_to_edit.items():
-    #             if value is None:
-    #                 location_to_edit[key] = ''
-
-
         # query for displaying all info about Locations in table
-    cursor = db.execute_query(queries['locations']['select'])
-    location_data = cursor.fetchall()
+    location_data = db.execute_query(queries['locations']['select'])
+
 
     return render_template('locations.j2', location_data=location_data, location_to_edit=location_to_edit)
 
@@ -285,8 +262,8 @@ def mediums():
         if action == 'delete':
             db.execute_query(queries['mediums'][action], (content['medium_id'],))
 
-    cursor = db.execute_query(queries['mediums']['select'])
-    medium_data = cursor.fetchall()
+    medium_data = db.execute_query(queries['mediums']['select'])
+
 
     return render_template('mediums.j2', medium_data=medium_data, medium_to_edit=medium_to_edit)
     
@@ -317,8 +294,8 @@ def methods():
         if action == 'delete':
             db.execute_query(queries['methods'][action], (content['method_id'],))
 
-    cursor = db.execute_query(queries['methods']['select_detailed'])
-    method_data = cursor.fetchall()
+    method_data = db.execute_query(queries['methods']['select_detailed'])
+
 
     return render_template('methods.j2', method_data=method_data, method_to_edit=method_to_edit)
 
@@ -335,7 +312,7 @@ def seanceattendees():
             old_seance_id = request.form.get('current_seance_id')
             
             # updates matching entries in SeanceAttendees
-            cursor = db.execute_query(queries['seanceattendees']['update'], (seance_id, attendee_id, old_seance_id))
+            db.execute_query(queries['seanceattendees']['update'], (seance_id, attendee_id, old_seance_id))
             return redirect(f'/seanceattendees?seance_id_input={old_seance_id}')
 
 
@@ -362,9 +339,9 @@ def seanceattendees():
         if content['action'] == 'tagupdate':
             print(content)
             seanceattendees_id_to_edit = int(content['seanceattendees_id_to_edit'])
-            cursor = db.execute_query(queries['seanceattendees']['inline_tag']
+            seanceattendees_to_edit = db.execute_query(queries['seanceattendees']['inline_tag']
                                       ,  (seanceattendees_id_to_edit,))
-            seanceattendees_to_edit = cursor.fetchall()
+
             print('seanceattendees_to_edit',seanceattendees_to_edit)
 
 
@@ -403,31 +380,32 @@ def seanceattendees():
     # we are not supporting autofilling when attendee_id is NULL
     # there are potentially many entries where attendee_id is NULL, and it is hard to tell them apart
     if chosen_attendee_id is not None and chosen_attendee_id != 'None':
-        cursor = db.execute_query(queries['attendees']['select_specific'], (int(chosen_attendee_id),))
-        chosen_attendee = cursor.fetchone()
+        chosen_attendee = db.execute_query(queries['attendees']['select_specific'], (int(chosen_attendee_id),))
+
 
     # chosen seance defaults to None unless we have id passed in in GET args
     chosen_seance_id = args.get('seance_id_input')
     chosen_seance = None
     # if a seance_id has been passed in, get info about it
     if chosen_seance_id:
-        cursor = db.execute_query(queries['seances']['select_specific'], (int(chosen_seance_id),))
-        chosen_seance = cursor.fetchone()
+        chosen_seance = db.execute_query(queries['seances']['select_specific'], (int(chosen_seance_id),))
+
 
     # query for populating dropdown menu to choose a seance
-    cursor = db.execute_query(queries['seances']['select'])
-    seance_data = cursor.fetchall()
+    seance_data = db.execute_query(queries['seances']['select'])
+
 
     # query for getting all seances that are not the selected seance
     other_seances = []
     if chosen_seance_id:
-        cursor = db.execute_query(queries['seances']['select_other'], (int(chosen_seance_id),))
-        other_seances = cursor.fetchall()
+        other_seances = db.execute_query(queries['seances']['select_other'], (int(chosen_seance_id),))
+
 
     # query for getting info about all attendees in the SeanceAttendees table for all seances or a particular one
     all_attendees_query = queries['attendees']['select']
-    cursor = db.execute_query(all_attendees_query, ())
-    all_attendees = cursor.fetchall()
+    all_attendees = db.execute_query(all_attendees_query, ())
+
+
 
 
     attendee_query = queries['seanceattendees']['select']
@@ -437,14 +415,14 @@ def seanceattendees():
          attendee_query = queries['seanceattendees']['select_specific']
          attendee_params = (int(chosen_seance_id),)
 
-    cursor = db.execute_query(attendee_query, attendee_params)
-    attendee_data = cursor.fetchall()
+    attendee_data = db.execute_query(attendee_query, attendee_params)
+
+
 
     # query for getting all attendees that did not attend the seance
     not_attended_list = []
     if chosen_seance_id:
-        cursor = db.execute_query(queries['seanceattendees']['select_not_attended'], (int(chosen_seance_id),))
-        not_attended_list = cursor.fetchall()
+        not_attended_list = db.execute_query(queries['seanceattendees']['select_not_attended'], (int(chosen_seance_id),))
 
     # renders the page with prefilled dropdowns
     return render_template('seanceattendees.j2', chosen_seance=chosen_seance, seance_data=seance_data,
@@ -458,7 +436,7 @@ def seanceattendees():
 @app.route('/delete_seanceattendee/<int:id>')
 def delete_seanceattendee(id):
      # deletes a seance attendence record based on id
-    cursor = db.execute_query(queries['seanceattendees']['delete'], (int(id),))
+    db.execute_query(queries['seanceattendees']['delete'], (int(id),))
 
     # redirects to specific seance view
     args = request.args
@@ -480,7 +458,7 @@ def seances():
             location_id_input = f'{request.form["new_location_id"]}' if request.form.get('new_location_id') else None
 
             # query for updating seance with matching id
-            cursor = db.execute_query(queries['seances']['update'], (date_input, location_id_input, id_input))
+            db.execute_query(queries['seances']['update'], (date_input, location_id_input, id_input))
             return redirect('/seances')
 
         # otherwise we are creating a new seance
@@ -499,22 +477,20 @@ def seances():
         # there may not be a passed-in seance id to edit--default to None and adjusts if needed
         seance_to_edit = None
         if args.get('id'):
-            cursor = db.execute_query(queries['seances']['select_specific'], (int(args.get('id')),))
-            seance_to_edit = cursor.fetchone()
+            seance_to_edit = db.execute_query(queries['seances']['select_specific'], (int(args.get('id')),))
+
 
         # gets list of seances to display in table and populate dropdowns
-        cursor = db.execute_query(queries['seances']['select'])
-        seance_data = cursor.fetchall()
+        seance_data = db.execute_query(queries['seances']['select'])
 
         # gets list of locations to populate dropdowns
-        cursor = db.execute_query(queries['locations']['select_minimal'])
-        location_data = cursor.fetchall()
+        location_data = db.execute_query(queries['locations']['select_minimal'])
         return render_template('seances.j2', seance_data=seance_data, seance_to_edit=seance_to_edit, location_data=location_data)
 
 @app.route('/delete_seance/<int:id>')
 def delete_seance(id):
     # removes a seance by id
-    cursor = db.execute_query(queries['seances']['delete'], (int(id),))
+    db.execute_query(queries['seances']['delete'], (int(id),))
     return redirect('/seances')
 
 

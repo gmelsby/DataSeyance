@@ -64,7 +64,9 @@ def execute_query(query, query_params=()):
     # this will actually commit any changes to the database. without this no
     # changes will be committed!
     db_connection.commit();
-    return cursor
+    records = cursor.fetchall()
+    cursor.close()
+    return records
 
 def execute_queries(queries, query_params = ()):
     '''
