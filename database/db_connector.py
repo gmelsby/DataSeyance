@@ -34,7 +34,8 @@ def execute_query(query, query_params=(), quantity="many"):
     db_connection: a MySQLdb connection object created by connect_to_database()
     query: string containing SQL query
     query_params: the parameters that fill in variables in the query
-    quantity: determines if fetchone or fetchall is called on the cursor
+    quantity: determines if nothing, fetchone or fetchall is called on the cursor
+        accepted values are "none", "one", and "many"
 
     returns: the results of the query
     '''
@@ -49,7 +50,7 @@ def execute_query(query, query_params=(), quantity="many"):
         return None
     
     # check that quanity is a valid parameter
-    if not (quantity == "many" or quantity == "one"):
+    if not (quantity == "none" or quantity == "many" or quantity == "one"):
         print("make sure quanity is either 'many' or 'one'")
         return None
 
@@ -68,6 +69,10 @@ def execute_query(query, query_params=(), quantity="many"):
     # this will actually commit any changes to the database. without this no
     # changes will be committed!
     db_connection.commit();
+
+    if quantity == "none":
+        cursor.close()
+        return
 
     print(f"Fetching quantity {quantity}")
     # sepecifies which cursor method will be called on the cursor based on quantity parameter
@@ -96,13 +101,3 @@ def execute_queries(queries, query_params = ()):
         
     db_connection.commit();
     return cursor
-
-if __name__ == '__main__':
-    print("Executing a sample query on the database using the credentials from db_credentials.py")
-    db = connect_to_database()
-    query = "SELECT * from bsg_people;"
-    results = execute_query(db, query);
-    print("Printing results of %s" % query)
-
-    for r in results.fetchall():
-        print(r)

@@ -68,13 +68,14 @@
 </table>
 
 
-<div id="insert" style="display: block">
+<div class="form-group" id="insert">
   <form id="InsertAttendee" method="POST">
      <legend><strong>Insert Attendee</strong></legend>
      <fieldset class="fields">
-     <label> Full Name: </label> <input type="text"  name="name">
-     <label for="seance_id">Has this attendee already attended a seance? If not, have them attend one to be inducted.</label>
-     <select name="seance_id" id="seance_id_select">
+     <label> Full Name: </label> <input type="text" class="form-control" name="insert_full_name">
+     <label for="seance_id">Has this attendee already attended a seance? If so, choose one.</label>
+     <select name="seance_id" class="form-control" id="seance_id_select">
+    <option value="">No</option>
     {% for seance in seance_data %}
     <option value={{seance['seance_id']}}>
     {{seance['date']}} at {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
@@ -82,6 +83,7 @@
   </select>
     </fieldset>
     <input  class="btn btn-dark"  type="submit" id="InsertAttendee" value="Insert Attendee">
+    <input type="hidden" name="action" value="insert">
   </form>
 </div>
 

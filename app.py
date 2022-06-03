@@ -27,8 +27,8 @@ def index():
 def attendees():
     edit_form = -1
 
-        # we had a post so we are going to look at a parameter passed from a hidden form value
-        # get form values as dict
+    # we had a post so we are going to look at a parameter passed from a hidden form value
+    # get form values as dict
 
     if request.method == 'POST':
 
@@ -37,7 +37,11 @@ def attendees():
         action = content['action']
 
         if action == 'insert' and content.get('insert_full_name').strip():
-            db.execute_query(queries['attendees']['insert_inline'], (content['insert_full_name'],))
+            if content.get('seance_id'):
+                db.execute_queries(queries['attendees']['insert'], [(content['insert_full_name'],), (), content['seance_id']])
+            # insert attendee who has not attended a seance yet
+            else:
+                db.execute_query(queries['attendees']['insert_inline'], (content['insert_full_name'],))
 
 
         if action == 'delete':
