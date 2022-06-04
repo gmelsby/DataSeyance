@@ -183,17 +183,6 @@ LEFT JOIN Locations ON Seances.location_id = Locations.location_id
 WHERE SeanceAttendees.seance_id = %s;
 """
 
-select_not_attended = """
-SELECT Attendees.attendee_id, Attendees.full_name
-FROM Attendees
-WHERE attendee_id NOT IN (
-SELECT Attendees.attendee_id
-FROM Attendees
-NNER JOIN SeanceAttendees ON Attendees.attendee_id = SeanceAttendees.attendee_id
-WHERE SeanceAttendees.seance_id = %s);
-"""
-
-
 [seances]
 insert = "INSERT INTO Seances (date, location_id) VALUES (%s, %s);"
 

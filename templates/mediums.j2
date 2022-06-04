@@ -2,78 +2,75 @@
 {% block title %}Mediums{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-<h2 align="center">Mediums</h2>
-<div>&nbsp;</div>
-<table class="table table-striped">
-  <thead>
-  <tr>
-    <th>medium_id</th>
-    <th>Full Name</th>
-    <th>Update</th>
-    <th>Delete</th>
-  </tr>
-  </thead>
-  <tbody>
-  {% for medium in medium_data %}
-       {%if medium['medium_id'] == medium_to_edit %}
-  <tr>
-      <div class="form-group">
-      <form id="UpdateMedium" method="POST">
-    <td>{{medium['medium_id']}}</td>
-    <td><input type="text" class="form-control" name="full_name" value='{{medium['full_name']}}'></td>
-  <td>
-        <input class="btn btn-primary" type="submit" id="UpdateMedium" value="Save">
-        <input type="hidden" name="action" value="update">
-        <input type="hidden" name="medium_id" value={{medium['medium_id']}}
-  </td>
-   </form>
-   </div>
-    <td>
-       <form id="cancel" method="GET">
-      <input class="btn btn-dark" type="submit" id="cancel" value="Cancel">
-     </td>
-        </form>
-  </tr>
-  {% else %}
+    <div class="container-fluid">
+        <h2 align="center">Mediums</h2>
+        <div>&nbsp;</div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>medium_id</th>
+                    <th>Full Name</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for medium in medium_data %}
+                    {%if medium['medium_id'] == medium_to_edit %}
+                        <tr>
+                            <div class="form-group">
+                                <form id="UpdateMedium" method="POST">
+                                    <td>{{medium['medium_id']}}</td>
+                                    <td><input type="text" class="form-control" name="full_name" value='{{medium['full_name']}}'></td>
+                                    <td>
+                                        <input class="btn btn-primary" type="submit" id="UpdateMedium" value="Save">
+                                        <input type="hidden" name="action" value="update">
+                                        <input type="hidden" name="medium_id" value={{medium['medium_id']}} </td>
+                                </form>
+                            </div>
+                            <td>
+                                <form id="cancel" method="GET">
+                                    <input class="btn btn-dark" type="submit" id="cancel" value="Cancel">
+                            </td>
+                            </form>
+                        </tr>
+                    {% else %}
 
-    <tr>
+                        <tr>
 
-     <td>{{medium['medium_id']}}</td>
-    <td>{{medium['full_name']}}</td>
-   <td>
-      <form id="UpdateMedium" method="POST">
-        <input class="btn btn-secondary" type="submit" id="UpdateMedium" value="Update">
-        <input type="hidden" name="action" value="tagupdate">
-        <input type="hidden" name="medium_id" value={{medium['medium_id']}}
+                            <td>{{medium['medium_id']}}</td>
+                            <td>{{medium['full_name']}}</td>
+                            <td>
+                                <form id="UpdateMedium" method="POST">
+                                    <input class="btn btn-secondary" type="submit" id="UpdateMedium" value="Update">
+                                    <input type="hidden" name="action" value="tagupdate">
+                                    <input type="hidden" name="medium_id" value={{medium['medium_id']}} </td>
+                                </form>
+                            <td>
+                                <form id="DeleteMedium" method="POST">
+                                    <input class="btn btn-danger" type="submit" id="DeleteMedium" value="Delete">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="medium_id" value={{medium['medium_id']}} </td>
+                                </form>
+                        </tr>
 
-         </td>
-         </form>
-    <td>
-           <form id="DeleteMedium" method="POST">
-        <input class="btn btn-danger" type="submit" id="DeleteMedium" value="Delete">
-        <input type="hidden" name="action" value="delete">
-        <input type="hidden" name="medium_id" value={{medium['medium_id']}}
+                    {% endif %}
+                {% endfor %}
 
-    </td>         </form>
-  </tr>
+                <tr>
+                    <div class="form-group">
+                        <form id="InsertMedium" method="POST">
+                            <td>Insert New Medium</td>
+                            <td> <input type="text" required class="form-control" name="full_name"></td>
+                            <td colspan=2><input class="btn btn-dark" type="submit" id="InsertMedium" value="Insert Medium">
+                                <input type="hidden" name="action" value="insert">
+                            </td>
+                    </div>
+                </tr>
+                </form>
 
-  {% endif %}
-  {% endfor %}
-
-    <tr>
-      <div class="form-group">
-      <form id="InsertMedium" method="POST">
-      <td>Insert New Medium</td>
-      <td> <input type="text" required class="form-control" name="full_name"></td>
-      <td colspan=2><input class="btn btn-dark" type="submit" id="InsertMedium" value="Insert Medium">
-         <input type="hidden" name="action" value="insert"></td>
-      </div>
-      </tr>
-      </form>
-
-  </tbody>
-</table>
-</div>
+            </tbody>
+        </table>
+    </div>
 
 {% endblock %}

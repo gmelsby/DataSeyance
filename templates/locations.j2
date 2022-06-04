@@ -2,115 +2,96 @@
 {% block title %}Locations{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-<h2 align="center">Locations</h2>
-<div>&nbsp;</div>
-<table class="table table-striped">
-  <thead>
-  <tr>
-    <th>location_id</th>
-    <th>Name</th>
-    <th>Address</th>
-    <th>City</th>
-    <th>Zip</th>
-    <th>State</th>
-    <th>Country</th>
-    <th>Update</th>
-    <th>Delete</th>
-  </tr>
-  </thead>
-  <tbody>
-  {% for location in location_data %}
-     {%if location['location_id'] == location_to_edit %}
+    <div class="container-fluid">
+        <h2 align="center">Locations</h2>
+        <div>&nbsp;</div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>location_id</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>Zip</th>
+                    <th>State</th>
+                    <th>Country</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for location in location_data %}
+                    {%if location['location_id'] == location_to_edit %}
 
-    <tr>
-    <td>{{location['location_id']}}</td>
-    <div class="form-group">
-    <form id="UpdateLocation" method="POST">
-      <td><input type="text" name="location_name" 
-        value={% if location['name']==None %}''{% else %}"{{location['name']}}"{% endif %}
-        class="form-control">
-      </td>
-      <td><input type="text" name="street_address" 
-        value={% if location['street_address']==None %}''{% else %}"{{location['street_address']}}"{% endif %}
-        class="form-control">
-      </td>
-      <td><input type="text" name="city" 
-        value={% if location['city']==None %}''{% else %}"{{location['city']}}"{% endif %}
-        class="form-control">
-      </td>
-      <td><input type="text" name="zip" 
-        value={% if location['zip']==None %}''{% else %}"{{location['zip']}}"{% endif %}
-        class="form-control">
-      </td>
-      <td><input type="text" name="state" 
-        value={% if location['state']==None %}''{% else %}"{{location['state']}}"{% endif %}
-        class="form-control">
-      </td>
-      <td><input type="text" name="country" 
-        value={% if location['country']==None %}''{% else %}"{{location['country']}}"{% endif %}
-        class="form-control">
-      </td>
-      <td>
-        <input class="btn btn-primary" type="submit" id="UpdateLocation" value="Save">
-        <input type="hidden" name="action" value="update">
-        <input type="hidden" name="location_id" value={{location['location_id']}}
-      </td>
-   </form>
-   </div>
-    <td>
-       <form id="cancel" method="GET">
-      <input class="btn btn-dark" type="submit" id="cancel" value="Cancel">
-     </td>
-        </form>
-  </tr>
-       {% else %}
-  <tr>
+                        <tr>
+                            <td>{{location['location_id']}}</td>
+                            <div class="form-group">
+                                <form id="UpdateLocation" method="POST">
+                                    <td><input type="text" name="location_name" value={% if location['name']==None %}''{% else %}"{{location['name']}}"{% endif %} class="form-control">
+                                    </td>
+                                    <td><input type="text" name="street_address" value={% if location['street_address']==None %}''{% else %}"{{location['street_address']}}"{% endif %} class="form-control">
+                                    </td>
+                                    <td><input type="text" name="city" value={% if location['city']==None %}''{% else %}"{{location['city']}}"{% endif %} class="form-control">
+                                    </td>
+                                    <td><input type="text" name="zip" value={% if location['zip']==None %}''{% else %}"{{location['zip']}}"{% endif %} class="form-control">
+                                    </td>
+                                    <td><input type="text" name="state" value={% if location['state']==None %}''{% else %}"{{location['state']}}"{% endif %} class="form-control">
+                                    </td>
+                                    <td><input type="text" name="country" value={% if location['country']==None %}''{% else %}"{{location['country']}}"{% endif %} class="form-control">
+                                    </td>
+                                    <td>
+                                        <input class="btn btn-primary" type="submit" id="UpdateLocation" value="Save">
+                                        <input type="hidden" name="action" value="update">
+                                        <input type="hidden" name="location_id" value={{location['location_id']}} </td>
+                                </form>
+                            </div>
+                            <td>
+                                <form id="cancel" method="GET">
+                                    <input class="btn btn-dark" type="submit" id="cancel" value="Cancel">
+                            </td>
+                            </form>
+                        </tr>
+                    {% else %}
+                        <tr>
 
-    <td>{{location['location_id']}}</td>
-    <td>{{location['name']}}</td>
-    <td>{{location['street_address']}}</td>
-    <td>{{location['city']}}</td>
-    <td>{{location['zip']}}</td>
-    <td>{{location['state']}}</td>
-    <td>{{location['country']}}</td>
-   <td>
-      <form id="UpdateLocation" method="POST">
-        <input class="btn btn-secondary" type="submit" id="UpdateLocation" value="Update">
-        <input type="hidden" name="action" value="tagupdate">
-        <input type="hidden" name="location_id" value={{location['location_id']}}
-
-         </td>
-         </form>
-    <td>
-           <form id="DeleteLocation" method="POST">
-        <input class="btn btn-danger" type="submit" id="DeleteLocation" value="Delete">
-        <input type="hidden" name="action" value="delete">
-        <input type="hidden" name="location_id" value={{location['location_id']}}
-
-    </td>         </form>
-  </tr>
-  {% endif %}
-  {% endfor %}
-  <tr>          
-  <div class="form-group">
-  <form id="InsertLocation" method="POST">
-    <td>Insert New Location</td>
-    <td><input type="text" class="form-control" required name="location_name" placeholder="Name"></td>
-    <td><input type="text" class="form-control" required name="street_address" placeholder="Address"></td>
-    <td><input type="text" class="form-control" required name="city" placeholder="City"></td>
-    <td><input type="text" class="form-control" name="zip" placeholder="Zip (12345)" pattern="[0-9]{5}"></td>
-    <td><input type="text" class="form-control" name="state" placeholder="State (AB)" pattern="[A-Z]{2}"></td>
-    <td><input type="text" class="form-control" required name="country" placeholder="Country"></td>
- <td colspan=2>   <input class="btn btn-dark" type="submit" id="InsertLocation" value="Insert Location">
-         <input type="hidden" name="action" value="insert">
-        </form>
-        </div>
-        </tr>
-  <tbody>
-</table>
-</div>
+                            <td>{{location['location_id']}}</td>
+                            <td>{{location['name']}}</td>
+                            <td>{{location['street_address']}}</td>
+                            <td>{{location['city']}}</td>
+                            <td>{{location['zip']}}</td>
+                            <td>{{location['state']}}</td>
+                            <td>{{location['country']}}</td>
+                            <td>
+                                <form id="UpdateLocation" method="POST">
+                                    <input class="btn btn-secondary" type="submit" id="UpdateLocation" value="Update">
+                                    <input type="hidden" name="action" value="tagupdate">
+                                    <input type="hidden" name="location_id" value={{location['location_id']}} </td>
+                                </form>
+                            <td>
+                                <form id="DeleteLocation" method="POST">
+                                    <input class="btn btn-danger" type="submit" id="DeleteLocation" value="Delete">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="location_id" value={{location['location_id']}} </td>
+                                </form>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                <tr>
+                    <div class="form-group">
+                        <form id="InsertLocation" method="POST">
+                            <td>Insert New Location</td>
+                            <td><input type="text" class="form-control" required name="location_name" placeholder="Name"></td>
+                            <td><input type="text" class="form-control" required name="street_address" placeholder="Address"></td>
+                            <td><input type="text" class="form-control" required name="city" placeholder="City"></td>
+                            <td><input type="text" class="form-control" name="zip" placeholder="Zip (12345)" pattern="[0-9]{5}"></td>
+                            <td><input type="text" class="form-control" name="state" placeholder="State (AB)" pattern="[A-Z]{2}"></td>
+                            <td><input type="text" class="form-control" required name="country" placeholder="Country"></td>
+                            <td colspan=2> <input class="btn btn-dark" type="submit" id="InsertLocation" value="Insert Location">
+                                <input type="hidden" name="action" value="insert">
+                        </form>
+                    </div>
+                </tr>
+            <tbody>
+        </table>
+    </div>
 {% endblock %}
-
-
-

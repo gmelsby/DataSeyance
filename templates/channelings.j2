@@ -1,220 +1,220 @@
 {% extends 'baselayout.html' %}
 {% block title %}Channelings{% endblock %}
 {% block content %}
-<div class="container-fluid">
+    <div class="container-fluid">
 
-<form id="FilterList">
-<div class="row">
-<div class="col">
-<select name="chosen_seance_id" class="form-control" id="seance-select">
-    <option value="">Show me channelings from all seances</option>
-    {% for seance in seance_data %}
-    <option value={{seance['seance_id']}}
-    {% if chosen_seance['seance_id']==seance['seance_id'] %} selected {% endif %}>
-    {{seance['date']}} at {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
-    {% endfor %}
-</select>
-<label for="seance-select">Choose a seance to view channelings for:</label>
-</div>
-<div class="col-sm-4">
-<input class="btn btn-dark" type="submit" id="filter" value="Filter">
-</div>
-</div>
-</form>
+        <form id="FilterList">
+            <div class="row">
+                <div class="col">
+                    <select name="chosen_seance_id" class="form-control" id="seance-select">
+                        <option value="">Show me channelings from all seances</option>
+                        {% for seance in seance_data %}
+                            <option value={{seance['seance_id']}} {% if chosen_seance['seance_id']==seance['seance_id'] %} selected {% endif %}>
+                                {{seance['date']}} at {{seance['name']}} | seance_id: {{seance['seance_id']}}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <label for="seance-select">Choose a seance to view channelings for:</label>
+                </div>
+                <div class="col-sm-4">
+                    <input class="btn btn-dark" type="submit" id="filter" value="Filter">
+                </div>
+            </div>
+        </form>
 
-<div>&nbsp;</div>
-<h3 align="center">Channelings from 
-  {% if chosen_seance==None %}All Seances
-  {% else %}{{chosen_seance['date']}} at {{chosen_seance['name']}} | seance_id: {{chosen_seance['seance_id']}}{% endif %}
-</h3>
-<div>&nbsp</div>
-<table class="table table-striped">
-  <thead>
-  <tr>
-    <th>channeling_id</th>
-    <th>Medium</th>
-    <th>Spirit</th>
-    <th>Method</th>
-    <th>Date</th>
-    <th>Location</th>
-    <th>Successful</th>
-    <th>Length (Minutes)</th>
-    <th>Update</th>
-    <th>Delete</th>
-  </tr>
-  </thead>
-  <tbody>
-
-
-  {% for channeling in channeling_data %}
-   {%if channeling['channeling_id']==channeling_id_to_edit %}
-    <tr>
-    <div class="form-group">
-    <form id="UpdateChanneling" method="POST">
-    <td>{{channeling['channeling_id']}}</td>
-    <td>
-    <select class="form-control" name="medium_id">
-          <option value=""> </option>
-          {% for medium in medium_data %}
-           <option value={{channeling['medium_id']}}
-           {% if medium['medium_id']==channeling['medium_id'] %} selected {% endif %}>
-          {{medium['full_name']}} | medium_id: {{medium['medium_id']}}</option>
-          {% endfor %}
-        </select>
-    </td>
-    <td>
-    <select class="form-control" name="spirit_id">
-          <option value=""> </option>
-          {% for spirit in spirit_data %}
-          <option value={{spirit['spirit_id']}}
-           {% if spirit['spirit_id']==channeling['spirit_id'] %} selected {% endif %}>
-              {{spirit['full_name']}} | spirit_id: {{spirit['spirit_id']}}</option>
-          {% endfor %}
-        </select></td>
-    <td>
-
-        <select class="form-control" name="method_id">
-          <option value=""> </option>
-          {% for method in method_data %}
-          <option value={{method['method_id']}} 
-          {% if method['method_id']==channeling['method_id'] %} selected {% endif %}>
-              {{method['name']}} | method_id: {{method['method_id']}}</option>
-          {% endfor %}
-        </select></td>
+        <div>&nbsp;</div>
+        <h3 align="center">Channelings from
+            {% if chosen_seance==None %}All Seances
+            {% else %}{{chosen_seance['date']}} at {{chosen_seance['name']}} | seance_id: {{chosen_seance['seance_id']}}{% endif %}
+        </h3>
+        <div>&nbsp</div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>channeling_id</th>
+                    <th>Medium</th>
+                    <th>Spirit</th>
+                    <th>Method</th>
+                    <th>Date</th>
+                    <th>Location</th>
+                    <th>Successful</th>
+                    <th>Length (Minutes)</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
 
 
-    <td colspan="2">
-        <select class="form-control" name="seance_id">
-          <option value=""> </option>
-          {% for seance in seance_data %}
-          <option value={{seance['seance_id']}} 
-          {% if seance['seance_id'] == channeling['seance_id'] %} selected {% endif %}>
-          {{seance['date']}} at {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
-          {% endfor %}
-        </select></td>
+                {% for channeling in channeling_data %}
+                    {%if channeling['channeling_id']==channeling_id_to_edit %}
+                        <tr>
+                            <div class="form-group">
+                                <form id="UpdateChanneling" method="POST">
+                                    <td>{{channeling['channeling_id']}}</td>
+                                    <td>
+                                        <select class="form-control" name="medium_id">
+                                            <option value=""> </option>
+                                            {% for medium in medium_data %}
+                                                <option value={{channeling['medium_id']}} {% if medium['medium_id']==channeling['medium_id'] %} selected {% endif %}>
+                                                    {{medium['full_name']}} | medium_id: {{medium['medium_id']}}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" name="spirit_id">
+                                            <option value=""> </option>
+                                            {% for spirit in spirit_data %}
+                                                <option value={{spirit['spirit_id']}} {% if spirit['spirit_id']==channeling['spirit_id'] %} selected {% endif %}>
+                                                    {{spirit['full_name']}} | spirit_id: {{spirit['spirit_id']}}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                    <td>
+
+                                        <select class="form-control" name="method_id">
+                                            <option value=""> </option>
+                                            {% for method in method_data %}
+                                                <option value={{method['method_id']}} {% if method['method_id']==channeling['method_id'] %} selected {% endif %}>
+                                                    {{method['name']}} | method_id: {{method['method_id']}}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
 
 
-    <td>
-        <select class="form-control" name="is_successful">
-       {% for item in[ {'string':'Yes', 'value':1}  , {'string':'No', 'value':0}  ] %}
-          <option value={{item['value']}} 
-           {% if item['value'] == channeling['is_successful'] %} selected {% endif %}>
-          {{item['string']}}</option>
-          {% endfor %}
-        </select>
+                                    <td colspan="2">
+                                        <select class="form-control" name="seance_id">
+                                            <option value=""> </option>
+                                            {% for seance in seance_data %}
+                                                <option value={{seance['seance_id']}} {% if seance['seance_id'] == channeling['seance_id'] %} selected {% endif %}>
+                                                    {{seance['date']}} at {{seance['name']}} | seance_id: {{seance['seance_id']}}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
 
 
-    </td>
-   <td><input class="form-control" type="integer" name="length_in_minutes" 
-   {% if channeling['length_in_minutes']!=None %}value ={{channeling['length_in_minutes']}}{% endif %} ></td>
-
-    <td>
-
-        <input class="btn btn-primary" type="submit" id="UpdateChanneling" value="Save">
-        <input type="hidden" name="action" value="update">
-        <input type="hidden" name="id_input" value={{channeling['channeling_id']}}
-         <input type="hidden" name="channeling_id_to_edit" value={{channeling['channeling_id']}}
+                                    <td>
+                                        <select class="form-control" name="is_successful">
+                                            {% for item in[ {'string':'Yes', 'value':1}  , {'string':'No', 'value':0}  ] %}
+                                                <option value={{item['value']}} {% if item['value'] == channeling['is_successful'] %} selected {% endif %}>
+                                                    {{item['string']}}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
 
 
-      </td>
-      </form>
-      </div>
-    <td>
-     <form id="cancel" method="GET">
-      <input class="btn btn-dark" type="submit" id="cancel" value="Cancel">
-      {% if chosen_seance!=None %}
-      <input type="hidden" name="chosen_seance_id" value={{chosen_seance['seance_id']}}>
-      {% endif %}
-     </td>
+                                    </td>
+                                    <td><input class="form-control" type="integer" name="length_in_minutes" {% if channeling['length_in_minutes']!=None %}value={{channeling['length_in_minutes']}}{% endif %}></td>
+
+                                    <td>
+
+                                        <input class="btn btn-primary" type="submit" id="UpdateChanneling" value="Save">
+                                        <input type="hidden" name="action" value="update">
+                                        <input type="hidden" name="id_input" value={{channeling['channeling_id']}} <input type="hidden" name="channeling_id_to_edit" value={{channeling['channeling_id']}} </td>
+                                </form>
+                            </div>
+                            <td>
+                                <form id="cancel" method="GET">
+                                    <input class="btn btn-dark" type="submit" id="cancel" value="Cancel">
+                                    {% if chosen_seance!=None %}
+                                        <input type="hidden" name="chosen_seance_id" value={{chosen_seance['seance_id']}}>
+                                    {% endif %}
+                            </td>
 
 
-  </tr>
+                        </tr>
 
 
-     {% else %}
-  <tr>
-    <td>{{channeling['channeling_id']}}</td>
-    <td>{{channeling['medium_name']}}</td>
-    <td>{{channeling['spirit_name']}}</td>
-    <td>{{channeling['method_name']}}</td>
-    <td>{{channeling['date']}}</td>
-    <td>{{channeling['location_name']}}</td>
-    <td>{{channeling['is_successful']}}</td>
-    <td>{{channeling['length_in_minutes']}}</td>
+                    {% else %}
+                        <tr>
+                            <td>{{channeling['channeling_id']}}</td>
+                            <td>{{channeling['medium_name']}}</td>
+                            <td>{{channeling['spirit_name']}}</td>
+                            <td>{{channeling['method_name']}}</td>
+                            <td>{{channeling['date']}}</td>
+                            <td>{{channeling['location_name']}}</td>
+                            <td>{{channeling['is_successful']}}</td>
+                            <td>{{channeling['length_in_minutes']}}</td>
 
-    <td>
-        <form id="UpdateChanneling" method="POST">
-        <input class="btn btn-secondary" type="submit" id="UpdateChanneling" value="Update">
-        <input type="hidden" name="action" value="tagupdate">
-        <input type="hidden" name="channeling_id" value={{channeling['channeling_id']}}
-         <input type="hidden" name="channeling_id_to_edit" value={{channeling['channeling_id']}}
-      </td>  </form>
+                            <td>
+                                <form id="UpdateChanneling" method="POST">
+                                    <input class="btn btn-secondary" type="submit" id="UpdateChanneling" value="Update">
+                                    <input type="hidden" name="action" value="tagupdate">
+                                    <input type="hidden" name="channeling_id" value={{channeling['channeling_id']}} <input type="hidden" name="channeling_id_to_edit" value={{channeling['channeling_id']}} </td>
+                                </form>
 
-    <td>       <form id="DeleteChanneling" method="POST">
-        <input class="btn btn-danger" type="submit" id="DeleteChanneling" value="Delete">
-        <input type="hidden" name="action" value="delete">
-        <input type="hidden" name="channeling_id" value={{channeling['channeling_id']}}
-     </td>
-          </form>
-
-
-  </tr>
-  {% endif %}
-  {% endfor %}
+                            <td>
+                                <form id="DeleteChanneling" method="POST">
+                                    <input class="btn btn-danger" type="submit" id="DeleteChanneling" value="Delete">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="channeling_id" value={{channeling['channeling_id']}} </td>
+                                </form>
 
 
-    <tr>
-     <div class="form-group">
-     <form id="InsertChanneling" method="POST">
-    <td>Insert Channeling</td>
-    <td><select class="form-control" required name="medium_id">
-          <option value=""> </option>
-          {% for medium in medium_data %}
-          <option value={{medium['medium_id']}}>
-          {{medium['full_name']}} | medium_id: {{medium['medium_id']}}</option>
-          {% endfor %}
-        </select> 
-    </td>
-    <td><select class="form-control" required name="spirit_id">
-          <option value=""> </option>
-          {% for spirit in spirit_data %}
-          <option value={{spirit['spirit_id']}}>
-          {{spirit['full_name']}} | spirit_id: {{spirit['spirit_id']}}</option>
-          {% endfor %}
-        </select> 
-    </td>
-    <td><select class="form-control" name="method_id">
-          <option value=""></option>
-          {% for method in method_data %}
-          <option value={{method['method_id']}}>
-          {{method['name']}} | method_id: {{method['method_id']}}</option>
-          {% endfor %}
-        </select> 
-    </td>
-    <td colspan="2">
-      <select name="seance_date" class="form-control">
-        <option value=""></option>
-        {% for seance in seance_data %}
-        <option value={{seance['seance_id']}}
-        {% if chosen_seance['seance_id']==seance['seance_id'] %} selected {% endif %}>
-        {{seance['date']}} {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
-        {% endfor %}
-      </select>
-    </td>
-    <td>
-      <select class="form-control" name="is_successful">
-        <option value=0>No</option>
-        <option value=1>Yes</option>
-       </select>
-    </td>
-    <td><input class="form-control" type="integer" name="length_in_minutes"></td>
-    <td colspan="2">
-        <input class="btn btn-dark" type="submit" id="InsertChanneling" value="Insert Channeling">
-    </td>
-        <input type="hidden" name="action" value="insert">
-    </form>
-    </div>
-    </tr>
-  </tbody>
-</table>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+
+
+                <tr>
+                    <div class="form-group">
+                        <form id="InsertChanneling" method="POST">
+                            <td>Insert Channeling</td>
+                            <td><select class="form-control" required name="medium_id">
+                                    <option value=""> </option>
+                                    {% for medium in medium_data %}
+                                        <option value={{medium['medium_id']}}>
+                                            {{medium['full_name']}} | medium_id: {{medium['medium_id']}}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td><select class="form-control" required name="spirit_id">
+                                    <option value=""> </option>
+                                    {% for spirit in spirit_data %}
+                                        <option value={{spirit['spirit_id']}}>
+                                            {{spirit['full_name']}} | spirit_id: {{spirit['spirit_id']}}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td><select class="form-control" name="method_id">
+                                    <option value=""></option>
+                                    {% for method in method_data %}
+                                        <option value={{method['method_id']}}>
+                                            {{method['name']}} | method_id: {{method['method_id']}}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td colspan="2">
+                                <select name="seance_date" class="form-control">
+                                    <option value=""></option>
+                                    {% for seance in seance_data %}
+                                        <option value={{seance['seance_id']}} {% if chosen_seance['seance_id']==seance['seance_id'] %} selected {% endif %}>
+                                            {{seance['date']}} {{seance['name']}} | seance_id: {{seance['seance_id']}}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control" name="is_successful">
+                                    <option value=0>No</option>
+                                    <option value=1>Yes</option>
+                                </select>
+                            </td>
+                            <td><input class="form-control" type="integer" name="length_in_minutes"></td>
+                            <td colspan="2">
+                                <input class="btn btn-dark" type="submit" id="InsertChanneling" value="Insert Channeling">
+                            </td>
+                            <input type="hidden" name="action" value="insert">
+                        </form>
+                    </div>
+                </tr>
+            </tbody>
+        </table>
 {% endblock %}

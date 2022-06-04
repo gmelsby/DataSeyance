@@ -2,81 +2,79 @@
 {% block title %}Spirits{% endblock %}
 
 {% block content %}
-<h2 align="center">Spirits</h2>
-<div>&nbsp;</div>
-<div class="container-fluid">
-<table class="table table-striped">
-  <thead>
-  <tr>
-    <th scope="col">spirit_id</th>
-    <th scope="col">Full Name</th>
-    <th scope="col">Update</th>
-    <th scope="col">Delete</th>
-  </tr>
-  </thead>
-  <tbody>
+    <h2 align="center">Spirits</h2>
+    <div>&nbsp;</div>
+    <div class="container-fluid">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">spirit_id</th>
+                    <th scope="col">Full Name</th>
+                    <th scope="col">Update</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
 
-  {% for spirit in spirit_data %}
-   {%if spirit['spirit_id'] == edit_form %}
+                {% for spirit in spirit_data %}
+                    {%if spirit['spirit_id'] == edit_form %}
 
-  <tr>
-  <form id="UpdateSpirit" method="POST">
-  <td>{{spirit['spirit_id']}}  </td>
-  <td><form id="UpdateSpirit" method="POST">
-  <input  type="text" class="form-control" name="new_name" value='{{spirit['full_name']}}'></td>
-    <td><input class="btn btn-primary" type="submit" id="SaveUpdateSpirit" value="Save">
-     <input type="hidden" name="id_input" value={{spirit['spirit_id']}}>
-   <input type="hidden" name="action" value="update">  <input type="hidden" name="edit_form" value=-1
-    </td>
-   </form>
-    <td>
-       <form id="cancel" method="GET">
-      <input class="btn btn-secondary" type="submit" id="cancel" value="Cancel">
-     </td>
-        </form>
+                        <tr>
+                            <form id="UpdateSpirit" method="POST">
+                                <td>{{spirit['spirit_id']}} </td>
+                                <td>
+                                    <form id="UpdateSpirit" method="POST">
+                                        <input type="text" class="form-control" name="new_name" value='{{spirit['full_name']}}'>
+                                </td>
+                                <td><input class="btn btn-primary" type="submit" id="SaveUpdateSpirit" value="Save">
+                                    <input type="hidden" name="id_input" value={{spirit['spirit_id']}}>
+                                    <input type="hidden" name="action" value="update"> <input type="hidden" name="edit_form" value=-1 </td>
+                            </form>
+                            <td>
+                                <form id="cancel" method="GET">
+                                    <input class="btn btn-secondary" type="submit" id="cancel" value="Cancel">
+                            </td>
+                            </form>
 
-  </tr>
-  {% else %}
-    <tr> <td>{{spirit['spirit_id']}}  </td> <td>{{spirit['full_name']}}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td>{{spirit['spirit_id']}} </td>
+                            <td>{{spirit['full_name']}}</td>
 
-    <form id="UpdateSpirit" method="POST">
-    <td>
-        <input class="btn btn-secondary" type="submit" id="UpdateSpirit" value="Update">
-        <input type="hidden" name="action" value="tagupdate">
-        <input type="hidden" name="id_input" value={{spirit['spirit_id']}}
-        <input type="hidden" name="edit_form" value={{spirit['spirit_id']}}
-    </td>
-    </form>
+                            <form id="UpdateSpirit" method="POST">
+                                <td>
+                                    <input class="btn btn-secondary" type="submit" id="UpdateSpirit" value="Update">
+                                    <input type="hidden" name="action" value="tagupdate">
+                                    <input type="hidden" name="id_input" value={{spirit['spirit_id']}} <input type="hidden" name="edit_form" value={{spirit['spirit_id']}} </td>
+                            </form>
 
-    <form id="DeleteSpirit" method="POST">
-    <td>
-        <input class="btn btn-danger" type="submit" id="DeleteSpirit" value="Delete">
-        <input type="hidden" name="action" value="delete">
-        <input type="hidden" name="spirit_id" value={{spirit['spirit_id']}}
-   </td>
-  </form>
-  </tr>
+                            <form id="DeleteSpirit" method="POST">
+                                <td>
+                                    <input class="btn btn-danger" type="submit" id="DeleteSpirit" value="Delete">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="spirit_id" value={{spirit['spirit_id']}} </td>
+                            </form>
+                        </tr>
 
 
-  {% endif %}
-  {% endfor %}
+                    {% endif %}
+                {% endfor %}
 
-<tr>          
-  <div class="form-group">
-  <form id="InsertSpirit" method="POST">
-    <td>Insert New Spirit</td>  
-    <td><input type="text" required class="form-control" name="insert_full_name"></td>
-    <td colspan=2>   <input class="btn btn-dark" type="submit" id="InsertSpirit" value="Insert Spirit">
-         <input type="hidden" name="action" value="insert">
-   </td>
-  </form>
-  </div>
-</tr>
+                <tr>
+                    <div class="form-group">
+                        <form id="InsertSpirit" method="POST">
+                            <td>Insert New Spirit</td>
+                            <td><input type="text" required class="form-control" name="insert_full_name"></td>
+                            <td colspan=2> <input class="btn btn-dark" type="submit" id="InsertSpirit" value="Insert Spirit">
+                                <input type="hidden" name="action" value="insert">
+                            </td>
+                        </form>
+                    </div>
+                </tr>
 
-</tbody>
-</table>
+            </tbody>
+        </table>
 
-</div>
+    </div>
 {% endblock %}
-
-

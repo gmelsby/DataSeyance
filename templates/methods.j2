@@ -3,86 +3,81 @@
 
 {% block content %}
 
-<div class="container-fluid">
-<h2 align="center">Methods</h2>
-<div>&nbsp;</div>
-<table class="table table-striped">
-  <thead>
-  <tr>
-    <th>method_id</th>
-    <th>Name</th>
-    <th>Description</th>
-    <th>Update</th>
-    <th>Delete</th>
-  </tr>
-  </thead>
-  <tbody>
-  {% for method in method_data %}
-         {%if method['method_id'] == method_to_edit %}
-  <tr>
-    <form id="SaveUpdateMethod" method="POST">
-    <div class="form-group">
-    <td>{{method['method_id']}}</td>
-        <td><input type="text" class="form-control" name="name" value='{{method['name']}}'></td>
-        <td><input type="text" class="form-control" name="description" value='{{method['description']}}'></td>
-   <td>
-        <input class="btn btn-primary" type="submit" id="SaveUpdate" value="Save">
-        <input type="hidden" name="action" value="update">
-        <input type="hidden" name="method_id" value={{method['method_id']}}
-   </td>
-   </div>
-   </form>
-     <form id="cancel" method="GET">
-    <td>
-      <input class="btn btn-secondary" type="submit" id="cancel" value="Cancel">
-     </td>
-    </form>
-  </tr>
+    <div class="container-fluid">
+        <h2 align="center">Methods</h2>
+        <div>&nbsp;</div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>method_id</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for method in method_data %}
+                    {%if method['method_id'] == method_to_edit %}
+                        <tr>
+                            <form id="SaveUpdateMethod" method="POST">
+                                <div class="form-group">
+                                    <td>{{method['method_id']}}</td>
+                                    <td><input type="text" class="form-control" name="name" value='{{method['name']}}'></td>
+                                    <td><input type="text" class="form-control" name="description" value='{{method['description']}}'></td>
+                                    <td>
+                                        <input class="btn btn-primary" type="submit" id="SaveUpdate" value="Save">
+                                        <input type="hidden" name="action" value="update">
+                                        <input type="hidden" name="method_id" value={{method['method_id']}} </td>
+                                </div>
+                            </form>
+                            <form id="cancel" method="GET">
+                                <td>
+                                    <input class="btn btn-secondary" type="submit" id="cancel" value="Cancel">
+                                </td>
+                            </form>
+                        </tr>
 
-    {% else %}
-      <tr>
+                    {% else %}
+                        <tr>
 
-     <td>{{method['method_id']}}</td>
-    <td>{{method['name']}}</td>
-        <td>{{method['description']}}</td>
+                            <td>{{method['method_id']}}</td>
+                            <td>{{method['name']}}</td>
+                            <td>{{method['description']}}</td>
 
-      <form id="UpdateMethod" method="POST">
-         <td>
-        <input class="btn btn-secondary" type="submit" id="UpdateMethod" value="Update">
-        <input type="hidden" name="action" value="tagupdate">
-        <input type="hidden" name="method_id" value={{method['method_id']}}
-
-         </td>
-         </form>
-         <form id="DeleteMethod" method="POST">
-        <td>
-        <input class="btn btn-danger" type="submit" id="DeleteMethod" value="Delete">
-        <input type="hidden" name="action" value="delete">
-        <input type="hidden" name="method_id" value={{method['method_id']}}
-
-    </td>         </form>
-  </tr>
-        {% endif %}
-  {% endfor %}
+                            <form id="UpdateMethod" method="POST">
+                                <td>
+                                    <input class="btn btn-secondary" type="submit" id="UpdateMethod" value="Update">
+                                    <input type="hidden" name="action" value="tagupdate">
+                                    <input type="hidden" name="method_id" value={{method['method_id']}} </td>
+                            </form>
+                            <form id="DeleteMethod" method="POST">
+                                <td>
+                                    <input class="btn btn-danger" type="submit" id="DeleteMethod" value="Delete">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="method_id" value={{method['method_id']}} </td>
+                            </form>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
 
 
-    <tr>
-    <form id="InsertMethod" method="POST">
-    <div class="form-group">
-    <td>Insert New Method</td>
-    <td> <input type="text" required class="form-control" name="name"></td>
-    <td> <textarea rows="3" required class="form-control" cols="100" name="description" form="InsertMethod"></textarea></td>
-    <td colspan=2> 
-      <input class="btn btn-dark" type="submit" id="InsertMethod" value="Insert Method">
-      <input type="hidden" name="action" value="insert">
-    </tr>
+                <tr>
+                    <form id="InsertMethod" method="POST">
+                        <div class="form-group">
+                            <td>Insert New Method</td>
+                            <td> <input type="text" required class="form-control" name="name"></td>
+                            <td> <textarea rows="3" required class="form-control" cols="100" name="description" form="InsertMethod"></textarea></td>
+                            <td colspan=2>
+                                <input class="btn btn-dark" type="submit" id="InsertMethod" value="Insert Method">
+                                <input type="hidden" name="action" value="insert">
+                </tr>
     </div>
     </form>
 
-  </tbody>
-</table>
+    </tbody>
+    </table>
 
-</div>
+    </div>
 
 {% endblock %}
-

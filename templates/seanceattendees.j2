@@ -2,170 +2,167 @@
 {% block title %}Seance Attendees{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-<form>
-<div class="row">
-<div class="col">
-<select name="seance_id_input" class="form-control" id="seance-select">
-    <option value=''>View all attendees for all seances</option>
-    {% for seance in seance_data %}
-    <option value={{seance['seance_id']}} 
-    {% if chosen_seance['seance_id']==seance['seance_id'] %} selected {% endif %}>
-    {{seance['date']}} at {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
-    {% endfor %}
-</select>
-<label for="seance_id_input">Choose a seance to view its attendees</label>
-</div>
-<div class="col-sm-4">
-<input class="btn btn-dark" type="submit" id="filter" value="Filter">
-</div>
-</div>
-</form>
-
-<div>&nbsp;</div>
-
-<h4 align="center">Seance Attendees for
-  {% if chosen_seance!=None %}{{chosen_seance['date']}} at {{chosen_seance['name']}} | seance_id: {{chosen_seance['seance_id']}}
-  {% else %} all seances{% endif %}
-</h4>
-
-<div>&nbsp;</div>
-
-
-<table class="table table-striped">
-  <thead>
-  <tr>
-    <th>seance_id</th>
-    <th>Date</th>
-    <th>Location</th>
-    <th>attendee_id</th>
-    <th>Attendee</th>
-    <th>Update</th>
-    <th>Delete</th>
-  </tr>
-  </thead>
-  <tbody>
-  {% for attendee in attendee_data %}
-    {%if attendee['seanceattendees_id']==seanceattendees_id_to_edit %}
-  <tr>
-    <div class="form-group">
-    <form id="UpdateSeanceAttendee" method="POST">
-
-     <td colspan="3">
-     <select name="seance_id" class="form-control">
-
-    <option value=""></option>
-    {% for seance in seance_data %}
-    <option value={{seance['seance_id']}}
-    {% if seance['seance_id']==attendee['seance_id'] %} selected {% endif %}>
-    {{seance['date']}} {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
-    {% endfor %}
-    </select>
-
-    <td colspan="2">
-    <select name="attendee_id" class="form-control">
-         Select Attendee
-    <option value=""></option>
-    {% for attendees in all_attendees %}
-    <option value={{attendees['attendee_id']}}
-    {% if attendees['attendee_id']==attendee['attendee_id'] %} selected {% endif %}>
-    {{attendees['full_name']}} | attendee_id: {{attendees['attendee_id']}}</option>
-    {% endfor %}
-    </select>
-
-    </td>
-
-       <td>
-
-        <input  class="btn btn-primary" type="submit" id="UpdateSeanceAttendeeg" value="Save">
-        <input type="hidden" name="action" value="update">
-        <input type="hidden" name="seanceattendees_id" value={{attendee['seanceattendees_id']}}>
-
-
-      </td>
-      </form>
-    <td>
-      <form id="cancel" method="GET">
-      <input class="btn btn-secondary" type="submit" id="cancel" value="Cancel">
-      {% if chosen_seance!=None %}
-      <input type="hidden" name="seance_id_input" value={{chosen_seance['seance_id']}}>
-      {% endif %}
-     </td>
+    <div class="container-fluid">
+        <form>
+            <div class="row">
+                <div class="col">
+                    <select name="seance_id_input" class="form-control" id="seance-select">
+                        <option value=''>View all attendees for all seances</option>
+                        {% for seance in seance_data %}
+                            <option value={{seance['seance_id']}} {% if chosen_seance['seance_id']==seance['seance_id'] %} selected {% endif %}>
+                                {{seance['date']}} at {{seance['name']}} | seance_id: {{seance['seance_id']}}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <label for="seance_id_input">Choose a seance to view its attendees</label>
+                </div>
+                <div class="col-sm-4">
+                    <input class="btn btn-dark" type="submit" id="filter" value="Filter">
+                </div>
+            </div>
         </form>
 
-  </tr>
+        <div>&nbsp;</div>
 
-  {% else %}
-    <tr>
-    <td>{{attendee['seance_id']}}</td>
-    <td>{{attendee['date']}}</td>
-    <td>{{attendee['name']}}</td>
-    <td>{{attendee['attendee_id']}}</td>
-    <td>{{attendee['full_name']}}</td>
+        <h4 align="center">Seance Attendees for
+            {% if chosen_seance!=None %}{{chosen_seance['date']}} at {{chosen_seance['name']}} | seance_id: {{chosen_seance['seance_id']}}
+            {% else %} all seances{% endif %}
+        </h4>
+
+        <div>&nbsp;</div>
+
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>seance_id</th>
+                    <th>Date</th>
+                    <th>Location</th>
+                    <th>attendee_id</th>
+                    <th>Attendee</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attendee in attendee_data %}
+                    {%if attendee['seanceattendees_id']==seanceattendees_id_to_edit %}
+                        <tr>
+                            <div class="form-group">
+                                <form id="UpdateSeanceAttendee" method="POST">
+
+                                    <td colspan="3">
+                                        <select name="seance_id" class="form-control">
+
+                                            <option value=""></option>
+                                            {% for seance in seance_data %}
+                                                <option value={{seance['seance_id']}} {% if seance['seance_id']==attendee['seance_id'] %} selected {% endif %}>
+                                                    {{seance['date']}} {{seance['name']}} | seance_id: {{seance['seance_id']}}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+
+                                    <td colspan="2">
+                                        <select name="attendee_id" class="form-control">
+                                            Select Attendee
+                                            <option value=""></option>
+                                            {% for attendees in all_attendees %}
+                                                <option value={{attendees['attendee_id']}} {% if attendees['attendee_id']==attendee['attendee_id'] %} selected {% endif %}>
+                                                    {{attendees['full_name']}} | attendee_id: {{attendees['attendee_id']}}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+
+                                    </td>
+
+                                    <td>
+
+                                        <input class="btn btn-primary" type="submit" id="UpdateSeanceAttendeeg" value="Save">
+                                        <input type="hidden" name="action" value="update">
+                                        <input type="hidden" name="seanceattendees_id" value={{attendee['seanceattendees_id']}}>
+
+
+                                    </td>
+                                </form>
+                                <td>
+                                    <form id="cancel" method="GET">
+                                        <input class="btn btn-secondary" type="submit" id="cancel" value="Cancel">
+                                        {% if chosen_seance!=None %}
+                                            <input type="hidden" name="seance_id_input" value={{chosen_seance['seance_id']}}>
+                                        {% endif %}
+                                </td>
+                                </form>
+
+                        </tr>
+
+                    {% else %}
+                        <tr>
+                            <td>{{attendee['seance_id']}}</td>
+                            <td>{{attendee['date']}}</td>
+                            <td>{{attendee['name']}}</td>
+                            <td>{{attendee['attendee_id']}}</td>
+                            <td>{{attendee['full_name']}}</td>
+                            <td>
+                                <form id="UpdateSeanceAttendee" method="POST">
+                                    <input class="btn btn-secondary" type="submit" id="UpdateSeanceAttendee" value="Update">
+                                    <input type="hidden" name="action" value="tagupdate">
+                                    <input type="hidden" name="seanceattendees_id_to_edit" value={{attendee['seanceattendees_id']}}>
+                            </td>
+                            </form>
+    </div>
+
     <td>
-        <form id="UpdateSeanceAttendee" method="POST">
-        <input  class="btn btn-secondary" type="submit" id="UpdateSeanceAttendee" value="Update">
-        <input type="hidden" name="action" value="tagupdate">
-         <input type="hidden" name="seanceattendees_id_to_edit" value={{attendee['seanceattendees_id']}}>
-      </td>  
-      </form>
-      </div>
+        <form id="DeleteSeanceAttendee" method="POST">
+            <input class="btn btn-danger" type="submit" id="DeleteSeanceAttendee" value="Delete">
+            <input type="hidden" name="action" value="delete">
+            <input type="hidden" name="seanceattendees_id" value={{attendee['seanceattendees_id']}} </td>
+        </form>
 
-    <td>       <form id="DeleteSeanceAttendee" method="POST">
-        <input class="btn btn-danger" type="submit" id="DeleteSeanceAttendee" value="Delete">
-        <input type="hidden" name="action" value="delete">
-        <input type="hidden" name="seanceattendees_id" value= {{attendee['seanceattendees_id']}}
-     </td>
-          </form>
-
-  </tr>
-      {% endif %}
-  {% endfor %}
-{% if seanceattendees_id_to_edit ==28 %}
-<p>  WWWWWW</p>
+        </tr>
 {% endif %}
-    <tr>
-      <div class="form-group">
-       <form id="InsertSeanceAttendee" method="POST">
-    <td>Insert Record</td>
-    <td colspan="2">
-     <select name="seance_id" required class="form-control">
+{% endfor %}
+<tr>
+    <div class="form-group">
+        <form id="InsertSeanceAttendee" method="POST">
+            <td>Insert Record</td>
+            <td colspan="2">
+                <select name="seance_id" required class="form-control">
 
-    <option value="">Select Seance</option>
-    {% for seance in seance_data %}
-    <option value={{seance['seance_id']}}
-    {% if chosen_seance['seance_id']==seance['seance_id'] %} selected {% endif %}>
-    {{seance['date']}} {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
-    {% endfor %}
-    </select>
-    </td>
+                    <option value="">Select Seance</option>
+                    {% for seance in seance_data %}
+                        <option value={{seance['seance_id']}} {% if chosen_seance['seance_id']==seance['seance_id'] %} selected {% endif %}>
+                            {{seance['date']}} {{seance['name']}} | seance_id: {{seance['seance_id']}}
+                        </option>
+                    {% endfor %}
+                </select>
+            </td>
 
-    <td colspan="2">
-   <select name="attendee_id" required class="form-control">
-    <option value="">Select Attendee</option>
-    {% for attendee in all_attendees %}
-    <option value={{attendee['attendee_id']}}
-    {% if chosen_attendee['attendee_id']==attendee['attendee_id'] %} selected {% endif %}>
-    {{attendee['full_name']}} | attendee_id: {{attendee['attendee_id']}}</option>
-    {% endfor %}
-    </select>
+            <td colspan="2">
+                <select name="attendee_id" required class="form-control">
+                    <option value="">Select Attendee</option>
+                    {% for attendee in all_attendees %}
+                        <option value={{attendee['attendee_id']}} {% if chosen_attendee['attendee_id']==attendee['attendee_id'] %} selected {% endif %}>
+                            {{attendee['full_name']}} | attendee_id: {{attendee['attendee_id']}}
+                        </option>
+                    {% endfor %}
+                </select>
 
-    <td>
-        <input class="btn btn-dark" type="submit" id="InsertSeanceAttendee" value="Insert Attendance">
-        <input type="hidden" name="action" value="insert">
+            <td colspan="2">
+                <input class="btn btn-dark" type="submit" id="InsertSeanceAttendee" value="Insert Attendance">
+                <input type="hidden" name="action" value="insert">
+            </td>
         </form>
-        </div>
-    </td>
-  </tr>
+    </div>
+</tr>
 
-  </tbody>
+</tbody>
 </table>
 
 {% if duplicate_event %}
-<div align=middle>
-<p style="color:red;" >That seance attendee record already exists and was not added again! Please take care when entering data.
- - <img><img src="{{ url_for('static', filename = '/ghost.png') }}" width="32" height="32" alt="previous" title="Previous" border="0">
-</img> </p>
-</div>
+    <div align=middle>
+        <p style="color:red;">That seance attendee record already exists and was not added again! Please take care when entering data.
+            - <img><img src="{{ url_for('static', filename = '/ghost.png') }}" width="32" height="32" alt="previous" title="Previous" border="0">
+            </img> </p>
+    </div>
 {% endif %}
 {% endblock %}
