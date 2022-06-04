@@ -1,5 +1,5 @@
 # Citation for the following file
-# Date: 5/19/2022
+# Date:  6\4\20225/19/2022
 # Mostly Copied from CS340 Flask Starter App
 # source URL: https://github.com/osu-cs340-ecampus/flask-starter-app/blob/master/database/db_connector.py
 # Added db_connection.ping(True) and execute_queries function ourselves

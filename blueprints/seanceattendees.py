@@ -1,17 +1,20 @@
-# Author: Ed Wise
-# Date: 
-# Description:
+# Author: Ed Wise and Greg Melsby
+# Date:  6\4\2022
+
 from flask import Blueprint, render_template, request, flash
 import database.db_connector as db
 import toml
 
+# our queries are read from here
 queries = toml.load("models/queries.toml")
 seanceattendees = Blueprint("seanceattendees", __name__, static_folder="static", template_folder="templates")
 
 
 @seanceattendees.route('/seanceattendees', methods=['GET', 'POST'])
 def seanceattendees_func():
+    # get this query early becasue we want to look at existing records in our insert and not insert duplicate records
     attendee_query = queries['seanceattendees']['select']
+    # initialize variable to tag record on row being updated
     seanceattendees_id_to_edit = -1
     seanceattendees_to_edit = None
     duplicate_event = False
@@ -19,6 +22,7 @@ def seanceattendees_func():
 
         content = request.form.to_dict()
 
+        # we do not get an action tag if we nav from seance button to attendees here so we handle that here.
         if 'action' in content.keys():
             action = content['action']
         else:
@@ -26,9 +30,13 @@ def seanceattendees_func():
 
         if content['action'] == 'insert':
 
+            # get existing records
             attendee_data = db.execute_query(query=attendee_query)
             attendee_records = [(record['attendee_id'], record['seance_id']) for record in attendee_data]
+
+            # see if requested insert already exists
             if (int(content['attendee_id']),int(content['seance_id'])) in attendee_records:
+                # if so this variable will alert user that the record exists and not insert dupe
                 duplicate_event = True
             else:
                 db.execute_query(queries['seanceattendees'][action], (
