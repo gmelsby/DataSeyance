@@ -1,10 +1,11 @@
+<!--Content for attendees page-->
 {% extends 'baselayout.html' %}
 
-{% block title %}Attendees{% endblock %}
 {% block content %}
     <div class="container-fluid">
         <h2 align="center">Attendees</h2>
         <div>&nbsp;</div>
+        <!--Main table-->
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -14,10 +15,11 @@
                     <th>Delete</th>
                 </tr>
             </thead>
+            <!--Populate table with passed-in attendee_data-->
             <tbody>
                 {% for attendee in attendee_data %}
+                    <!--If edit_form matches attendee_id, display form for editing the entry in the matching row-->
                     {%if attendee['attendee_id'] == edit_form %}
-
                         <tr>
                             <form id="UpdateAttendee" method="POST">
                                 <td>{{attendee['attendee_id']}} </td>
@@ -39,11 +41,13 @@
 
                         </tr>
 
+                    <!--Otherwise just display data for the row-->
                     {% else %}
                         <tr>
                             <td>{{attendee['attendee_id']}}</td>
                             <td>{{attendee['full_name']}}</td>
 
+                            <!--Button for Updating-->
                             <td>
                                 <form id="UpdateSpirit" method="POST">
                                     <input class="btn btn-secondary" type="submit" id="UpdateAttendee" value="Update">
@@ -52,6 +56,7 @@
                                 </form>
 
 
+                            <!--Button for Deleting-->
                             <td>
                                 <form id="DeleteAttendee" method="POST">
                                     <input class="btn btn-danger" type="submit" id="DeleteAttendee" value="Delete">
@@ -63,12 +68,11 @@
                     {% endif %}
                 {% endfor %}
 
-
-
             </tbody>
         </table>
 
 
+        <!--Form for Inserting an Attendee-->
         <div class="form-group" id="insert">
             <form id="InsertAttendee" method="POST">
                 <div class="row">
@@ -79,6 +83,8 @@
                         <input type="text" required placeholder="Full Name" class="form-control" name="insert_full_name">
                     </div>
                     <div class="col-sm">
+                        <!--Give the opportunity for users to insert a record of new attendee attending a seance when inserting new attendee-->
+                        <!--Could be useful if new attendee is currently attending their first seance-->
                         <select name="seance_id" class="form-control" id="seance_id_select">
                             <option value="">No</option>
                             {% for seance in seance_data %}
@@ -96,12 +102,6 @@
                     </div>
             </form>
         </div>
-
-        <div>
-            &nbsp;
-        </div>
-
-
     </div>
 
 {% endblock %}
