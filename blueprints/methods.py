@@ -26,11 +26,13 @@ def methods_func():
 
         if action == 'update' and content.get('name').strip():
             # get update query from toml and send it with parameters (see models/queries.toml)
+            content['description'] = None if not content['description'] else content['description'].strip()
             db.execute_query(queries['methods'][action]
-                             , (content['name'].strip(), content['description'].strip() ,int(content['method_id'])), quantity="zero")
+                             , (content['name'].strip(), content['description'] ,int(content['method_id'])), quantity="zero")
         # get insert query from toml and send it with parameter (see models/queries.toml)
         if action == 'insert' and content.get('name').strip():
-            db.execute_query(queries['methods'][action], (content['name'].strip(), content['description'].strip(),), quantity="zero")
+            content['description'] = None if not content['description'] else content['description'].strip()
+            db.execute_query(queries['methods'][action], (content['name'].strip(), content['description'],), quantity="zero")
 
         # use delete query from toml to delete method of passed-in id
         if action == 'delete':

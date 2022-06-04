@@ -27,12 +27,14 @@
                                 <div class="form-group">
                                     <td>{{method['method_id']}}</td>
                                     <td><input type="text" class="form-control" name="name" value='{{method['name']}}'></td>
-                                    <td><input type="text" class="form-control" name="description" value='{{method['description']}}'></td>
+                                    <td><input type="text" class="form-control" name="description" 
+                                        value={% if method['description']!=None%}"{{method['description']}}"{% else %}''{% endif %}></td>
                                     <td>
                                         <!--Save button-->
                                         <input class="btn btn-primary" type="submit" id="SaveUpdate" value="Save">
                                         <input type="hidden" name="action" value="update">
-                                        <input type="hidden" name="method_id" value={{method['method_id']}} </td>
+                                        <input type="hidden" name="method_id" value={{method['method_id']}} 
+                                    </td>
                                 </div>
                             </form>
                             <!--Cancel button-->
@@ -77,7 +79,7 @@
                             <td>Insert New Method</td>
                             <td> <input type="text" required class="form-control" name="name"></td>
                             <!--Use textarea because there can be a lot of content-->
-                            <td> <textarea rows="3" required class="form-control" cols="100" name="description" form="InsertMethod"></textarea></td>
+                            <td> <textarea rows="3" class="form-control" cols="100" name="description" form="InsertMethod"></textarea></td>
                             <td colspan=2>
                                 <input class="btn btn-dark" type="submit" id="InsertMethod" value="Insert Method">
                                 <input type="hidden" name="action" value="insert">

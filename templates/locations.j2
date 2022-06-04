@@ -1,6 +1,5 @@
 <!--Page to display Locations content-->
 {% extends 'baselayout.html' %}
-{% block title %}Locations{% endblock %}
 
 {% block content %}
     <div class="container-fluid">
@@ -89,13 +88,13 @@
                         <form id="InsertLocation" method="POST">
                             <td>Insert New Location</td>
                             <td><input type="text" class="form-control" required name="location_name" placeholder="Name"></td>
-                            <td><input type="text" class="form-control" required name="street_address" placeholder="Address"></td>
-                            <td><input type="text" class="form-control" required name="city" placeholder="City"></td>
+                            <td><input type="text" class="form-control" name="street_address" placeholder="Address"></td>
+                            <td><input type="text" class="form-control" name="city" placeholder="City"></td>
                             <td><input type="text" class="form-control" name="zip" placeholder="Zip (12345)" pattern="[0-9]{5}"></td>
                             <td><input type="text" class="form-control" name="state" placeholder="State (AB)" pattern="[A-Z]{2}"></td>
-                            <td><input type="text" class="form-control" required name="country" placeholder="Country"></td>
+                            <td><input type="text" class="form-control" name="country" placeholder="Country"></td>
                             <td colspan=2> <input class="btn btn-dark" type="submit" id="InsertLocation" value="Insert Location">
-                                <input type="hidden" name="action" value="insert">
+                            <input type="hidden" name="action" value="insert">
                         </form>
                     </div>
                 </tr>
