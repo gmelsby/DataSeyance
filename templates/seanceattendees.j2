@@ -122,7 +122,7 @@
        <form id="InsertSeanceAttendee" method="POST">
 
     <td colspan="3">
-     <select name="seance_id" class="form-control">
+     <select name="seance_id" required class="form-control">
 
     <option value="">Select Seance</option>
     {% for seance in seance_data %}
@@ -134,7 +134,7 @@
     </td>
 
     <td colspan="2">
-   <select name="attendee_id" class="form-control">
+   <select name="attendee_id" required class="form-control">
     <option value="">Select Attendee</option>
     {% for attendee in all_attendees %}
     <option value={{attendee['attendee_id']}}

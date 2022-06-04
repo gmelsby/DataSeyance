@@ -14,6 +14,7 @@ mysql = MySQL(app)
 
 queries = toml.load("models/queries.toml")
 
+
 @app.route('/')
 def root():
     return redirect("/index", code=302)
@@ -22,6 +23,7 @@ def root():
 @app.route('/index')
 def index():
     return render_template('index.j2')
+
 
 @app.route('/attendees', methods=['GET', 'POST'])
 def attendees():
@@ -79,9 +81,6 @@ def attendees():
 
     return render_template('attendees.j2', attendee_data=attendee_data, seance_data=seance_data
                            , attendee_to_edit=attendee_to_edit, edit_form=edit_form)
-
-
-
 
 
 @app.route('/channelings', methods=['GET', 'POST'])
@@ -170,7 +169,6 @@ def channelings():
                             method_data=method_data, location_data=location_data)
 
 
-
 @app.route('/locations', methods=['GET', 'POST'])
 def locations():
     channeling_params = ()
@@ -221,7 +219,6 @@ def locations():
 
 
     return render_template('locations.j2', location_data=location_data, location_to_edit=location_to_edit)
-
 
 
 @app.route('/mediums', methods=['GET', 'POST'])
@@ -305,11 +302,10 @@ def seanceattendees():
             content['action'] = None
 
         if content['action'] == 'insert':
-            content['attendee_id'] = None if not content['attendee_id'] else int(content['attendee_id'])
-            content['seance_id'] = None if not content['seance_id'] else int(content['seance_id'])
+
             db.execute_query(queries['seanceattendees'][action], (
-                content['attendee_id'],
-                content['seance_id'],
+                int(content['attendee_id']),
+                int(content['seance_id']),
             ), quantity="zero")
 
 
@@ -328,11 +324,9 @@ def seanceattendees():
 
 
         if content['action'] == 'update':
-            content['attendee_id'] = None if not content['attendee_id'] else int(content['attendee_id'])
-            content['seance_id'] = None if not content['seance_id'] else int(content['seance_id'])
             db.execute_query(queries['seanceattendees']['inline_update'], (
-                content['seance_id'],
-                content['attendee_id'],
+                int(content['seance_id']),
+                int(content['attendee_id']),
                 int(content['seanceattendees_id']),
             ), quantity="zero")
 
@@ -383,46 +377,47 @@ def seanceattendees():
                            seanceattendees_to_edit=seanceattendees_to_edit)
 
 
-
 @app.route('/seances', methods=['GET', 'POST'])
 def seances():
+    seance_to_edit = -1
     if request.method == 'POST':
-        # if form has id_input we are updating
-        if request.form.get('id_input'):
-            # if any input is empty string we want it to be NULL instead
-            id_input = request.form['id_input']
-            date_input = f'{request.form["new_date"]}' if request.form.get('new_date') else None
-            location_id_input = f'{request.form["new_location_id"]}' if request.form.get('new_location_id') else None
+        # we had a post so we are going to look at a parameter passed from a hidden form value
+        # get form values as dict
+        content = request.form.to_dict()
+        print(content)
+        # this hidden form value will tell us what to do
+        action = content['action']
+        # hidden value says upddate
+        if action == 'tagupdate':
+            seance_to_edit = int(content['edit_form'])
+            print('seance_to_edit', seance_to_edit)
 
-            # query for updating seance with matching id
-            db.execute_query(queries['seances']['update'], (date_input, location_id_input, id_input), quantity="zero")
-            return redirect('/seances')
+        if action == 'update':
+            # get update query from toml and send it with parameters (see /home/ed/DataSeyance/models/queries.toml)
+            db.execute_query(queries['seances'][action]
+                             , (content['date'].strip(), content['name'].strip(), content['seance_id'] ),
+                             quantity="zero")
+        # get insert query from toml and send it with parameter (see /home/ed/DataSeyance/models/queries.toml)
+        if action == 'insert':
+            db.execute_query(queries['seances'][action], (content['date'].strip(), content['location_id'],),
+                             quantity="zero")
 
-        # otherwise we are creating a new seance
-        else:
-            # process out empty strings and turn them into NULLs
-            date_input = f'{request.form["date"]}' if request.form.get('date') else None
-            location_id_input = f'{request.form["location_id"]}' if request.form.get('location_id') else None
+        # use delete query from toml to delete method of passed-in id
+        if action == 'delete':
+            db.execute_query(queries['seances'][action], (content['seance_id'],), quantity="zero")
 
-            # query for creating a new Seance
-            db.execute_query(queries['seances']['insert'], (date_input, location_id_input), quantity="zero")
-            return redirect('/seances')
-
-    # Read functionality
-    if request.method == 'GET':
-        args = request.args
-        # there may not be a passed-in seance id to edit--default to None and adjusts if needed
-        seance_to_edit = None
-        if args.get('id'):
-            seance_to_edit = db.execute_query(queries['seances']['select_specific'], (int(args.get('id')),))
-
+            # # query for updating seance with matching id
+            # db.execute_query(queries['seances']['update'], (date_input, location_id_input, id_input), quantity="zero")
+            #
 
         # gets list of seances to display in table and populate dropdowns
-        seance_data = db.execute_query(queries['seances']['select'])
+    seance_data = db.execute_query(queries['seances']['select'])
 
         # gets list of locations to populate dropdowns
-        location_data = db.execute_query(queries['locations']['select_minimal'])
-        return render_template('seances.j2', seance_data=seance_data, seance_to_edit=seance_to_edit, location_data=location_data)
+    location_data = db.execute_query(queries['locations']['select_minimal'])
+    print(location_data)
+    return render_template('seances.j2', seance_data=seance_data, seance_to_edit=seance_to_edit
+                               , location_data=location_data)
 
 @app.route('/delete_seance/<int:id>')
 def delete_seance(id):
@@ -462,7 +457,6 @@ def spirits():
     spirit_data = db.execute_query(queries['spirits']['select'])
 
     return render_template('spirits.j2', spirit_data=spirit_data,  edit_form=edit_form)
-
 
 
 if __name__ == '__main__':

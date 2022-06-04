@@ -161,7 +161,7 @@
      <div class="form-group">
      <form id="InsertChanneling" method="POST">
     <td>Insert Channeling</td>
-    <td><select class="form-control" name="medium_id">
+    <td><select class="form-control" required name="medium_id">
           <option value=""> </option>
           {% for medium in medium_data %}
           <option value={{medium['medium_id']}}>
@@ -169,7 +169,7 @@
           {% endfor %}
         </select> 
     </td>
-    <td><select class="form-control" name="spirit_id">
+    <td><select class="form-control" required name="spirit_id">
           <option value=""> </option>
           {% for spirit in spirit_data %}
           <option value={{spirit['spirit_id']}}>

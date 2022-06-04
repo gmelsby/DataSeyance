@@ -5,6 +5,7 @@
 <div class="container-fluid">
 <h2 align="center">Seances</h2>
 <div>&nbsp;</div>
+
 <table class="table table-striped">
   <thead>
   <tr>
@@ -19,6 +20,41 @@
   </thead>
   <tbody>
   {% for seance in seance_data %}
+  {%if seance['seance_id']==seance_to_edit %}
+    <tr>
+        <form id="UpdateSeanceAttendee" method="POST">
+<td>{{seance['seance_id']}}</td>
+
+    <td><input type="date" class="form-control" name="date"  value="{{seance['date']}}" ></td>
+
+
+     <td>
+     <select name="name" class="form-control">
+
+    <option value=""></option>
+    {% for location in location_data %}
+    <option value={{location['location_id']}}
+    {% if seance['name']==location['name'] %} selected {% endif %}>
+    {{location['name'] }}</option>
+    {% endfor %}
+    </select>
+      </td>
+
+     <td>
+        <input  class="btn btn-primary" type="submit" id="UpdateSeance" value="Save">
+        <input type="hidden" name="action" value="update">
+        <input type="hidden" name="seance_id" value={{seance['seance_id']}}>
+      </td>
+      </form>
+  <td>
+      <form id="cancel" method="GET">
+      <input class="btn btn-secondary" type="submit" id="cancel" value="Cancel">
+
+     </td>
+        </form>
+
+    </tr>
+    {% else %}
   <tr>
     <td>{{seance['seance_id']}}</td>
     <td>{{seance['date']}}</td>
@@ -29,8 +65,8 @@
     <td>
         <input class="btn btn-secondary" type="submit" id="UpdateSeance" value="Update">
         <input type="hidden" name="action" value="tagupdate">
-        <input type="hidden" name="id_input" value={{seance['seance_id']}}
         <input type="hidden" name="edit_form" value={{seance['seance_id']}}
+
     </td>
     </form>
 
@@ -60,6 +96,7 @@
 
 
   </tr>
+  {% endif %}
   {% endfor %}
 
   <tr>
@@ -69,10 +106,10 @@
 
     <td>Insert New Seance</td>
 
-  <td><input type="date" class="form-control" name="date"></td>
+  <td> <input required type="date" class="form-control" name="date" ></td>
 
-     <td colspan="3">
-      <select name="location_id" class="form-control" id="newloc">
+     <td colspan="2">
+      <select name="location_id" required class="form-control" id="newloc"  >
         <option value="">Select Location</option>
         {% for location in location_data %}
         <option value={{location['location_id']}}
@@ -85,7 +122,7 @@
     <input class="btn btn-dark" type="submit" id="InsertSeance" value="Insert Seance">
          <input type="hidden" name="action" value="insert">
    </td>
-
+  <td> </td>
   </form>
   </div>
   </tr>
