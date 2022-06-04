@@ -90,10 +90,16 @@ def channelings():
     channeling_params = ()
     channeling_id_to_edit = -1
     chosen_seance = None
+
     if request.method == 'POST':
         content = request.form.to_dict()
-        print(content)
-        action = content['action']
+
+        if 'action' in content.keys():
+            action = content['action']
+        else:
+            # content['action'] = None
+            action = None
+
         for key, value in content.items():
             if key == 'action':
                 continue
@@ -289,8 +295,14 @@ def seanceattendees():
     seanceattendees_id_to_edit = -1
     seanceattendees_to_edit = None
     if request.method == 'POST':
+
         content = request.form.to_dict()
-        action = content['action']
+
+
+        if 'action' in content.keys():
+            action = content['action']
+        else:
+            content['action'] = None
 
         if content['action'] == 'insert':
 

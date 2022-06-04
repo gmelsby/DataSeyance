@@ -12,8 +12,8 @@
     <th>Location Name</th>
     <th>Update</th>
     <th>Delete</th>
-    <th>View and Edit Seance Attendees</th>
-    <th>View and Edit Channelings at this Seance</th>
+    <th>Attendees</th>
+    <th>Channelings</th>
   </tr>
   </thead>
   <tbody>
@@ -40,10 +40,24 @@
         <input type="hidden" name="seance_id" value={{seance['seance_id']}}
    </td>
   </form>
+    <form action = "/seanceattendees?seance_id_input={{seance['seance_id']}}" id="GoToSeanceAttendees" method="POST">
+  <td>
+
+        <input class="btn btn-dark" type="submit" id="InsertSeance" value="Attendees">
+    </td>
+
+  </form>
 
 
-    <td><a href="seanceattendees?seance_id_input={{seance['seance_id']}}">View and Edit Seance Attendees</a></td>
-    <td><a href="channelings?chosen_seance_id={{seance['seance_id']}}">View and Edit Channelings at this Seance
+  <td>
+  <form action ="/channelings?chosen_seance_id={{seance['seance_id']}}" id="GoToChannelings" method="POST">
+
+        <input class="btn btn-dark" type="submit" id="InsertSeance" value="Channelings">
+    </td>
+
+  </form>
+
+
   </tr>
   {% endfor %}
 
