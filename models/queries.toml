@@ -1,3 +1,7 @@
+
+# the values from this file are read by the routes and passed to db to complete crud operations
+#  For more commentary on statements themselves see queries/DML.sql
+
 [attendees]
 insert = ["INSERT INTO Attendees (full_name) VALUES (%s);",
 "SET @new_attendee_id = LAST_INSERT_ID();",
@@ -35,6 +39,9 @@ medium_id = (%s)
 WHERE channeling_id = (%s);"""
 
 delete = "DELETE FROM Channelings  WHERE channeling_id = (%s);"
+
+# Query for displaying all Channelings with Medium name, Spirit name, Method name, date, and stats
+# Colon denotes variable that will be obtained through form submission or specific table row
 
 select = """ 
 SELECT Channelings.channeling_id, Channelings.medium_id
@@ -175,7 +182,13 @@ LEFT JOIN Locations ON Seances.location_id = Locations.location_id;
 """
 
 select_specific = """
-SELECT SeanceAttendees.seance_id, Seances.date, Locations.name, Attendees.attendee_id, Attendees.full_name, SeanceAttendees.seanceattendees_id
+SELECT
+SeanceAttendees.seance_id
+, Seances.date
+, Locations.name
+, Attendees.attendee_id
+, Attendees.full_name
+, SeanceAttendees.seanceattendees_id
 FROM SeanceAttendees
 LEFT JOIN Attendees ON SeanceAttendees.attendee_id = Attendees.attendee_id
 LEFT JOIN Seances ON SeanceAttendees.seance_id = Seances.seance_id
@@ -208,17 +221,10 @@ LEFT JOIN Locations ON Seances.location_id = Locations.location_id
 WHERE Seances.seance_id = %s
 """
 
-select_other = """
-SELECT Seances.date, Locations.name, Seances.seance_id
-FROM Seances
-INNER JOIN Locations ON Seances.location_id = Locations.location_id
-WHERE seance_id <> %s;
-"""
-
 
 [spirits]
 insert = "INSERT INTO Spirits (full_name) VALUES (%s);"
 update = "UPDATE Spirits SET full_name = (%s) WHERE spirit_id = (%s);"
 delete = "DELETE FROM Spirits  WHERE spirit_id = %s;"
 select = "SELECT spirit_id, full_name FROM Spirits;"
-
+select_specific = "SELECT spirit_id, full_name FROM Spirits WHERE spirit_id = (%s);"
