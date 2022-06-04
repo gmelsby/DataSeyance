@@ -40,19 +40,19 @@
         <input type="hidden" name="seance_id" value={{seance['seance_id']}}
    </td>
   </form>
-    <form action = "/seanceattendees?seance_id_input={{seance['seance_id']}}" id="GoToSeanceAttendees" method="POST">
+    <form action = "/seanceattendees" id="GoToSeanceAttendees">
   <td>
-
-        <input class="btn btn-dark" type="submit" id="InsertSeance" value="Attendees">
-    </td>
+    <input type="hidden" value="{{seance['seance_id']}}" name="seance_id_input"> 
+    <input class="btn btn-outline-dark" type="submit" value="Attendees">
+   </td>
 
   </form>
 
 
   <td>
-  <form action ="/channelings?chosen_seance_id={{seance['seance_id']}}" id="GoToChannelings" method="POST">
-
-        <input class="btn btn-dark" type="submit" id="InsertSeance" value="Channelings">
+  <form action ="/channelings" id="GoToChannelings">
+    <input type="hidden" value="{{seance['seance_id']}}" name="chosen_seance_id">
+    <input class="btn btn-outline-dark" type="submit" value="Channelings">
     </td>
 
   </form>

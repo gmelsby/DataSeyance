@@ -305,10 +305,11 @@ def seanceattendees():
             content['action'] = None
 
         if content['action'] == 'insert':
-
+            content['attendee_id'] = None if not content['attendee_id'] else int(content['attendee_id'])
+            content['seance_id'] = None if not content['seance_id'] else int(content['seance_id'])
             db.execute_query(queries['seanceattendees'][action], (
-                int(content['attendee_id']),
-                int(content['seance_id']),
+                content['attendee_id'],
+                content['seance_id'],
             ), quantity="zero")
 
 
@@ -327,9 +328,11 @@ def seanceattendees():
 
 
         if content['action'] == 'update':
+            content['attendee_id'] = None if not content['attendee_id'] else int(content['attendee_id'])
+            content['seance_id'] = None if not content['seance_id'] else int(content['seance_id'])
             db.execute_query(queries['seanceattendees']['inline_update'], (
-                int(content['seance_id']),
-                int(content['attendee_id']),
+                content['seance_id'],
+                content['attendee_id'],
                 int(content['seanceattendees_id']),
             ), quantity="zero")
 
