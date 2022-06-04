@@ -154,7 +154,8 @@
                                 <form id="UpdateChanneling" method="POST">
                                     <input class="btn btn-secondary" type="submit" id="UpdateChanneling" value="Update">
                                     <input type="hidden" name="action" value="tagupdate">
-                                    <input type="hidden" name="channeling_id" value={{channeling['channeling_id']}} <input type="hidden" name="channeling_id_to_edit" value={{channeling['channeling_id']}}
+                                    <input type="hidden" name="channeling_id" value={{channeling['channeling_id']}}> 
+                                    <input type="hidden" name="channeling_id_to_edit" value={{channeling['channeling_id']}}>
                                 </form>
                             </td>
 
@@ -164,7 +165,7 @@
                                 <form id="DeleteChanneling" method="POST">
                                     <input class="btn btn-danger" type="submit" id="DeleteChanneling" value="Delete">
                                     <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="channeling_id" value={{channeling['channeling_id']}}
+                                    <input type="hidden" name="channeling_id" value={{channeling['channeling_id']}}>
                                 </form>
                              </td>
                         </tr>
@@ -177,7 +178,7 @@
                     <div class="form-group">
                         <form id="InsertChanneling" method="POST">
                             <td>Insert Channeling</td>
-                            <td><select class="form-control" required name="medium_id">
+                            <td><select class="form-control" name="medium_id">
                                     <option value=""> </option>
                                     {% for medium in medium_data %}
                                         <option value={{medium['medium_id']}}>
@@ -186,7 +187,7 @@
                                     {% endfor %}
                                 </select>
                             </td>
-                            <td><select class="form-control" required name="spirit_id">
+                            <td><select class="form-control" name="spirit_id">
                                     <option value=""> </option>
                                     {% for spirit in spirit_data %}
                                         <option value={{spirit['spirit_id']}}>
