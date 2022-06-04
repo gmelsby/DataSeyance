@@ -10,7 +10,7 @@ VALUES (:full_name_input);
 INSERT INTO Attendees (full_name)
 VALUES (:full_name_input);
 SET @new_attendee_id = LAST_INSERT_ID();
--- Perform the following query for all seances the attendee has atttended (probably to be implemented using a checkbox)
+-- Perform the following query for all seances the attendee has attended (probably to be implemented using a checkbox)
 INSERT INTO SeanceAttendees (attendee_id, seance_id)
 VALUES (new_attendee_id, :seance_id_input);
 
@@ -19,7 +19,7 @@ VALUES (new_attendee_id, :seance_id_input);
 SELECT attendee_id, full_name
 FROM Attendees;
 
--- Query for prepopulating text box for Update Attendee
+-- Query for pre-populating text box for Update Attendee
 -- Colon denotes variable that will be obtained through get query parameters
 SELECT attendee_id, full_name
 FROM Attendees
@@ -147,15 +147,19 @@ VALUES (
 
 -- Query for getting the full list of Seances with location name
 -- To be displayed on the Seances page
--- Used to populate dropdown and text boxes for Update Seances, Insert Attendee, add and filter Channeings
+-- Used to populate dropdown and text boxes for Update Seances, Insert Attendee, add and filter Channelings
 SELECT Seances.seance_id, Locations.name, Seances.date
 FROM Seances
 LEFT JOIN Locations ON Seances.location_id = Locations.location_id;
 
 
 -- Query for prefill inputs for Update Seance and View Channelings
+SELECT seance_id, Locations.name, Seances.date
+FROM Seances
+LEFT JOIN Locations ON Seances.location_id = Locations.location_id;
+
 -- Colon denotes variable obtained through get request parameters
-SELECT Seances.seance_id, Locations.name, Seances.date, Locations.location_id
+SELECT seance_id, Locations.name, Seances.date
 FROM Seances
 LEFT JOIN Locations ON Seances.location_id = Locations.location_id
 WHERE Seances.seance_id = :id_input;
@@ -200,7 +204,7 @@ SET name = :name_input,
 description = :description_input
 WHERE method_id = :id_input;
 
--- Query for deleteing a method based on id
+-- Query for deleting a method based on id
 -- Colon denotes variable that will be obtained through form submission or specific table row
 DELETE FROM Methods
 WHERE method_id = :id_input;
@@ -217,6 +221,15 @@ VALUES
 :is_successful_input,
 :length_in_minutes_input
 );
+
+UPDATE Channelings SET
+medium_id = :medium_id_from_dropdown_with_medium_names
+, spirit_id = :spirit_id_from_dropdown_with_spirit_names
+, method_id = :method_id_from_dropdown_with_method_names
+, seance_id =  :seance_id_from_dropdown_with_seance_locations_and_dates
+, is_successful =  :is_successful_input
+, length_in_minutes =  :length_in_minutes_input
+WHERE channeling_id =id_input
 
 -- Query for filtering Channelings based on Seance
 -- Colon denotes variable that will be obtained through form submission or specific table row
@@ -254,6 +267,25 @@ LEFT JOIN Methods ON Channelings.method_id = Methods.method_id
 LEFT JOIN Seances ON Channelings.seance_id = Seances.seance_id
 LEFT JOIN Locations ON Seances.location_id = Locations.location_id;
 
+SELECT Channelings.channeling_id, Channelings.medium_id
+, Mediums.full_name AS medium_name
+, Spirits.spirit_id, Spirits.full_name AS spirit_name
+, Channelings.method_id
+, Methods.name AS method_name
+, Seances.seance_id
+, Seances.date, Locations.name AS location_name
+ , case when Channelings.is_successful = 0 then 'No'
+ when Channelings.is_successful = 1 then 'Yes'
+     end is_successful
+, Channelings.length_in_minutes
+FROM Channelings
+LEFT JOIN Mediums ON Channelings.medium_id = Mediums.medium_id
+LEFT JOIN Spirits ON Channelings.spirit_id = Spirits.spirit_id
+LEFT JOIN Methods ON Channelings.method_id = Methods.method_id
+LEFT JOIN Seances ON Channelings.seance_id = Seances.seance_id
+LEFT JOIN Locations ON Seances.location_id = Locations.location_id
+WHERE Seances.seance_id = id_input;
+
 -- Query for deleting a Channeling based on id
 -- Colon denotes variable that will be obtained through form submission or specific table row
 DELETE FROM Channelings
@@ -262,7 +294,7 @@ WHERE channeling_id = id_input;
 
 -- Query for inserting a record of an Attendee attending a Seance
 -- attendee_id obtained through dropdown menu populated with Attendees ids and names
--- seance_id obtaine by SeanceAttendee page, which displays the attendees for a specific attendee
+-- seance_id obtained by SeanceAttendee page, which displays the attendees for a specific attendee
 -- Colon denotes variable that will be obtained through form submission or specific table row
 INSERT INTO SeanceAttendees (attendee_id, seance_id)
 VALUES (:attendee_id_input, :seance_id_input);
@@ -272,23 +304,33 @@ VALUES (:attendee_id_input, :seance_id_input);
 -- To be used in displaying table on SeanceAttendee page
 -- To be used in dropdown for updating SeanceAttendee entry
 -- Colon denotes variable that will be obtained through form submission or specific table row
-SELECT SeanceAttendees.seance_id, Attendees.attendee_id, Attendees.full_name, SeanceAttendees.seanceattendees_id
-FROM SeanceAttendees
-INNER JOIN Attendees ON SeanceAttendees.attendee_id = Attendees.attendee_id
-WHERE SeanceAttendees.seance_id = :seance_id_input;
 
--- Query for getting a list of names and ids of all Attendees who did NOT attend a certain Seance
--- seance_id_input is determined by the dropdown menu on the SeanceAttendee page
--- To be used in the dropdown for adding an Attendee to a Seance
--- Colon denotes variable that will be obtained through form submission or specific table row
-SELECT Attendees.attendee_id, Attendees.full_name 
-FROM Attendees
-WHERE attendee_id NOT IN (
-                          SELECT Attendees.attendee_id 
-                          FROM Attendees 
-                          INNER JOIN SeanceAttendees ON Attendees.attendee_id = SeanceAttendees.attendee_id 
-                          WHERE SeanceAttendees.seance_id = {chosen_seance_id}
-                        );
+SELECT
+SeanceAttendees.seance_id
+, Seances.date
+, Locations.name
+, Attendees.attendee_id
+, Attendees.full_name
+, SeanceAttendees.seanceattendees_id
+FROM SeanceAttendees
+LEFT JOIN Attendees ON SeanceAttendees.attendee_id = Attendees.attendee_id
+LEFT JOIN Seances ON SeanceAttendees.seance_id = Seances.seance_id
+LEFT JOIN Locations ON Seances.location_id = Locations.location_id
+WHERE SeanceAttendees.seance_id =  :seance_id_input;
+
+-- same as above but use when filtering records
+SELECT
+SeanceAttendees.seance_id
+, Seances.date
+, Locations.name
+, Attendees.attendee_id
+, Attendees.full_name
+, SeanceAttendees.seanceattendees_id
+FROM SeanceAttendees
+LEFT JOIN Attendees ON SeanceAttendees.attendee_id = Attendees.attendee_id
+LEFT JOIN Seances ON SeanceAttendees.seance_id = Seances.seance_id
+LEFT JOIN Locations ON Seances.location_id = Locations.location_id
+WHERE SeanceAttendees.seance_id =  :seance_id_input;
 
 -- Query for getting the date, location name, and id of all Seances NOT the one currently displayed on the SeanceAttendee page
 -- To be used for generating dropdown for Seance Attendee Actually Attended (UPDATE on SeanceAttendees)
