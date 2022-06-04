@@ -1,2 +1,10 @@
 {% extends 'baselayout.html' %}
-{% block title %}Data Seyance{% endblock %}
+{% block title %}Data Seyance {% endblock %}
+
+
+{% block content %}
+
+<h1> Welocme to Data Seyance</h1>
+<p>Please use the menu at the top to Create, Read, Update or Delete our records.</p>
+<img src="{{ url_for('static', filename = '/A_seance.png') }}" width="800" height="1000" alt="previous" title="Previous" border="0">
+{% endblock %}
