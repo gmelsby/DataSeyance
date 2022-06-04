@@ -122,10 +122,9 @@
        <form id="InsertSeanceAttendee" method="POST">
 
     <td colspan="3">
-     <label for="seance_id">Select Seance</label>
      <select name="seance_id" class="form-control">
 
-    <option value=""></option>
+    <option value="">Select Seance</option>
     {% for seance in seance_data %}
     <option value={{seance['seance_id']}}
     {% if chosen_seance['seance_id']==seance['seance_id'] %} selected {% endif %}>
@@ -135,9 +134,8 @@
     </td>
 
     <td colspan="2">
-   <label for="attendee_id">Select Attendee</label>
    <select name="attendee_id" class="form-control">
-    <option value=""></option>
+    <option value="">Select Attendee</option>
     {% for attendee in all_attendees %}
     <option value={{attendee['attendee_id']}}
     {% if chosen_attendee['attendee_id']==attendee['attendee_id'] %} selected {% endif %}>
@@ -145,13 +143,12 @@
     {% endfor %}
     </select>
 
-    <td>
-        <input class="btn btn-dark" type="submit" id="InsertSeanceAttendee" value="Insert Record of Attendance">
+    <td colspan="2">
+        <input class="btn btn-dark" type="submit" id="InsertSeanceAttendee" value="Insert Attendance">
         <input type="hidden" name="action" value="insert">
         </form>
         </div>
     </td>
-<td></td>
   </tr>
 
   </tbody>

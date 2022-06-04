@@ -71,9 +71,9 @@
 
   <td><input type="date" class="form-control" name="date"></td>
 
-     <td colspan='2'>
+     <td colspan="3">
       <select name="location_id" class="form-control" id="newloc">
-        <option value=""></option>
+        <option value="">Select Location</option>
         {% for location in location_data %}
         <option value={{location['location_id']}}
         {% if seance_to_edit['location_id']==location['location_id'] %} selected {% endif %}>
@@ -81,15 +81,13 @@
         {% endfor %}
       </select>
       </td>
-<td>   </td>
-    <td>
+    <td colspan="2">
     <input class="btn btn-dark" type="submit" id="InsertSeance" value="Insert Seance">
          <input type="hidden" name="action" value="insert">
    </td>
 
   </form>
   </div>
-  <td></td>
   </tr>
   </tbody>
 </table>

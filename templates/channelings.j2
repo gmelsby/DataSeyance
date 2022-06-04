@@ -62,7 +62,7 @@
           {% for spirit in spirit_data %}
           <option value={{spirit['spirit_id']}}
            {% if spirit['spirit_id']==channeling['spirit_id'] %} selected {% endif %}>
-              {{spirit['full_name']}} | medium_id: {{spirit['spirit_id']}}</option>
+              {{spirit['full_name']}} | spirit_id: {{spirit['spirit_id']}}</option>
           {% endfor %}
         </select></td>
     <td>
@@ -72,7 +72,7 @@
           {% for method in method_data %}
           <option value={{method['method_id']}} 
           {% if method['method_id']==channeling['method_id'] %} selected {% endif %}>
-              {{method['name']}} | medium_id: {{method['method_id']}}</option>
+              {{method['name']}} | method_id: {{method['method_id']}}</option>
           {% endfor %}
         </select></td>
 
@@ -83,7 +83,7 @@
           {% for seance in seance_data %}
           <option value={{seance['seance_id']}} 
           {% if seance['seance_id'] == channeling['seance_id'] %} selected {% endif %}>
-          {{seance['date']}} |   {{seance['name']}} | seance: {{seance['seance_id']}}</option>
+          {{seance['date']}} at {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
           {% endfor %}
         </select></td>
 
@@ -186,7 +186,7 @@
         </select> 
     </td>
     <td colspan="2">
-      <select name="seance_date" class="form-control" onclick="openForm(this.value)">
+      <select name="seance_date" class="form-control">
         <option value=""></option>
         {% for seance in seance_data %}
         <option value={{seance['seance_id']}}
@@ -202,7 +202,7 @@
        </select>
     </td>
     <td><input class="form-control" type="integer" name="length_in_minutes"></td>
-    <td>
+    <td colspan="2">
         <input class="btn btn-dark" type="submit" id="InsertChanneling" value="Insert Channeling">
     </td>
         <input type="hidden" name="action" value="insert">
