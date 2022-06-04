@@ -1,5 +1,5 @@
 # Citation for following file
-# Date:  6\4\20225/19/2022
+# Date:  6/4/2022
 # Routing inspired/guided by CS340 Flask Starter App
 # URL: https://github.com/osu-cs340-ecampus/flask-starter-app/blob/master/bsg_people_app/app.py
 

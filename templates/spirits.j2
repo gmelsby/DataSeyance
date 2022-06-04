@@ -1,10 +1,12 @@
+<!--Page for displaying and interacting with Spirit data-->
 {% extends 'baselayout.html' %}
-{% block title %}Spirits{% endblock %}
 
 {% block content %}
+    <!--Title-->
     <h2 align="center">Spirits</h2>
     <div>&nbsp;</div>
     <div class="container-fluid">
+        <!--Main table on page-->
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -17,6 +19,7 @@
             <tbody>
 
                 {% for spirit in spirit_data %}
+                    <!--Edit form if spirit_id is the passed-in one to edit-->
                     {%if spirit['spirit_id'] == edit_form %}
 
                         <tr>
@@ -37,6 +40,7 @@
                             </form>
 
                         </tr>
+                    <!--Otherwise display the information about the spirit in the row-->
                     {% else %}
                         <tr>
                             <td>{{spirit['spirit_id']}} </td>
@@ -46,14 +50,17 @@
                                 <td>
                                     <input class="btn btn-secondary" type="submit" id="UpdateSpirit" value="Update">
                                     <input type="hidden" name="action" value="tagupdate">
-                                    <input type="hidden" name="id_input" value={{spirit['spirit_id']}} <input type="hidden" name="edit_form" value={{spirit['spirit_id']}} </td>
+                                    <input type="hidden" name="id_input" value={{spirit['spirit_id']}}> 
+                                    <input type="hidden" name="edit_form" value={{spirit['spirit_id']}}> 
+                                </td>
                             </form>
 
                             <form id="DeleteSpirit" method="POST">
                                 <td>
                                     <input class="btn btn-danger" type="submit" id="DeleteSpirit" value="Delete">
                                     <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="spirit_id" value={{spirit['spirit_id']}} </td>
+                                    <input type="hidden" name="spirit_id" value={{spirit['spirit_id']}}> 
+                                </td>
                             </form>
                         </tr>
 
@@ -61,6 +68,7 @@
                     {% endif %}
                 {% endfor %}
 
+                <!--Last row in the table to insert a new Spirit-->
                 <tr>
                     <div class="form-group">
                         <form id="InsertSpirit" method="POST">

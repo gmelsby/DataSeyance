@@ -1,11 +1,13 @@
+<!--Page for displaing and interactng with Seances-->
 {% extends 'baselayout.html' %}
-{% block title %}Seances{% endblock %}
 
 {% block content %}
     <div class="container-fluid">
+        <!--Title for page-->
         <h2 align="center">Seances</h2>
         <div>&nbsp;</div>
 
+        <!--Table to display Seance content-->
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -20,6 +22,7 @@
             </thead>
             <tbody>
                 {% for seance in seance_data %}
+                    <!--If seance_id is the one passed-in to edit then row is the edit form-->
                     {%if seance['seance_id']==seance_to_edit %}
                         <tr>
                             <form id="UpdateSeanceAttendee" method="POST">
@@ -28,23 +31,25 @@
                                 <td><input type="date" class="form-control" name="date" value="{{seance['date']}}"></td>
 
 
-                                <td colspan="2">
+                                <td colspan="3">
                                     <select name="name" class="form-control">
                                         <option value=""></option>
                                         {% for location in location_data %}
                                             <option value={{location['location_id']}} {% if seance['name']==location['name'] %} selected {% endif %}>
-                                                {{location['name'] }}
+                                                {{location['name']}} | location_id: {{location['location_id']}}
                                             </option>
                                         {% endfor %}
                                     </select>
                                 </td>
 
+                                <!--Save button-->
                                 <td>
                                     <input class="btn btn-primary" type="submit" id="UpdateSeance" value="Save">
                                     <input type="hidden" name="action" value="update">
                                     <input type="hidden" name="seance_id" value={{seance['seance_id']}}>
                                 </td>
                             </form>
+                            <!--Cancel button-->
                             <td>
                                 <form id="cancel" method="GET">
                                     <input class="btn btn-secondary" type="submit" id="cancel" value="Cancel">
@@ -53,6 +58,7 @@
                             </form>
 
                         </tr>
+                    <!--Otherwise the row displays the information of the Seance-->
                     {% else %}
                         <tr>
                             <td>{{seance['seance_id']}}</td>
@@ -60,19 +66,25 @@
                             <td>{{seance['name']}}</td>
 
 
+                            <!--Update button-->
                             <form id="UpdateSeance" method="POST">
                                 <td>
                                     <input class="btn btn-secondary" type="submit" id="UpdateSeance" value="Update">
                                     <input type="hidden" name="action" value="tagupdate">
-                                    <input type="hidden" name="edit_form" value={{seance['seance_id']}} </td>
+                                    <input type="hidden" name="edit_form" value={{seance['seance_id']}}>
+                                 </td>
                             </form>
 
+                            <!--Delete button-->
                             <form id="DeleteSeance" method="POST">
                                 <td>
                                     <input class="btn btn-danger" type="submit" id="DeleteSeance" value="Delete">
                                     <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="seance_id" value={{seance['seance_id']}} </td>
+                                    <input type="hidden" name="seance_id" value={{seance['seance_id']}}> 
+                                </td>
                             </form>
+
+                            <!--Link to Seance Attendees table for the Seance in the row-->
                             <form action="/seanceattendees" id="GoToSeanceAttendees">
                                 <td>
                                     <input type="hidden" value="{{seance['seance_id']}}" name="seance_id_input">
@@ -82,21 +94,19 @@
                             </form>
 
 
+                            <!--Link to Channelings table for the Seance in the row-->
                             <td>
                                 <form action="/channelings" id="GoToChannelings">
                                     <input type="hidden" value="{{seance['seance_id']}}" name="chosen_seance_id">
                                     <input class="btn btn-outline-dark" type="submit" value="Channelings">
+                                </form>
                             </td>
-
-                            </form>
-
-
                         </tr>
                     {% endif %}
                 {% endfor %}
 
+                <!--Last row in the table is a form to insert a new Seance-->
                 <tr>
-
                     <div class="form-group">
                         <form id="InsertSeance" method="POST">
 
