@@ -30,7 +30,7 @@ def attendees_func():
             # and pass in lists of queries and parameters
             if content.get('seance_id'):
                 db.execute_queries(queries['attendees']['insert'],
-                                   [(content['insert_full_name'],), (), content['seance_id']])
+                                   [(content['insert_full_name'],), (), (int(content['seance_id']),)])
             # insert attendee who has not attended a seance yet
             else:
                 db.execute_query(queries['attendees']['insert_inline'], (content['insert_full_name'],), quantity="zero")
