@@ -45,17 +45,17 @@ def attendees():
                 db.execute_queries(queries['attendees']['insert'], [(content['insert_full_name'],), (), content['seance_id']])
             # insert attendee who has not attended a seance yet
             else:
-                db.execute_query(queries['attendees']['insert_inline'], (content['insert_full_name'],), quantity="none")
+                db.execute_query(queries['attendees']['insert_inline'], (content['insert_full_name'],), quantity="zero")
 
 
         if action == 'delete':
-            db.execute_query(queries['attendees'][action], (content['attendee_id'],), quantity="none")
+            db.execute_query(queries['attendees'][action], (content['attendee_id'],), quantity="zero")
 
 
         if action == 'update':
             full_name_input = request.form['new_name'].strip()
             id_input = request.form['id_input']
-            db.execute_query(queries['attendees'][action], (full_name_input, int(id_input)), quantity="none")
+            db.execute_query(queries['attendees'][action], (full_name_input, int(id_input)), quantity="zero")
 
         if action == 'tagupdate':
             edit_form = int(content['id_input'])
@@ -110,11 +110,11 @@ def channelings():
              content['seance_date'],
              content['is_successful'],
              content['length_in_minutes']
-            ), quantity="none")
+            ), quantity="zero")
 
         if action == 'delete':
             db.execute_query(queries['channelings'][action], 
-            (int(content['channeling_id']),), quantity="none")
+            (int(content['channeling_id']),), quantity="zero")
 
         if action == 'tagupdate':
             channeling_id_to_edit = int(content['channeling_id'])
@@ -128,7 +128,7 @@ def channelings():
              content['is_successful'],
              content['length_in_minutes'],
              content['id_input']
-            ), quantity="none")
+            ), quantity="zero")
 
     # use args if request.method is "POST" OR "GET"--useful for linking from other pages
     if request.args.get('chosen_seance_id'): 
@@ -190,11 +190,11 @@ def locations():
                 content['zip'],
                 content['state'],
                 content['country']
-            ), quantity="none")
+            ), quantity="zero")
 
         if action == 'delete':
             db.execute_query(queries['locations'][action], (
-                int(content['location_id']),), quantity="none")
+                int(content['location_id']),), quantity="zero")
 
         if action == 'tagupdate':
             location_to_edit = int(content['location_id'])
@@ -208,7 +208,7 @@ def locations():
                 content['state'],
                 content['country'],
                 int(content['location_id'])
-            ), quantity="none")
+            ), quantity="zero")
 
         # query for displaying all info about Locations in table
     location_data = db.execute_query(queries['locations']['select'])
@@ -237,14 +237,14 @@ def mediums():
         if action == 'update' and content.get('full_name').strip():
             #get update query from toml and send it with parameters (see /home/ed/DataSeyance/models/queries.toml)
             db.execute_query(queries['mediums'][action]
-                             , (content['full_name'].strip(), int(content['medium_id'])), quantity="none")
+                             , (content['full_name'].strip(), int(content['medium_id'])), quantity="zero")
         # get insert query from toml and send it with parameter (see /home/ed/DataSeyance/models/queries.toml)
         # only allow insertion if string is nonempty
         if action == 'insert' and content.get('full_name').strip():
-            db.execute_query(queries['mediums'][action], (content['full_name'].strip(),), quantity="none")
+            db.execute_query(queries['mediums'][action], (content['full_name'].strip(),), quantity="zero")
 
         if action == 'delete':
-            db.execute_query(queries['mediums'][action], (content['medium_id'],), quantity="none")
+            db.execute_query(queries['mediums'][action], (content['medium_id'],), quantity="zero")
 
     medium_data = db.execute_query(queries['mediums']['select'])
 
@@ -269,14 +269,14 @@ def methods():
         if action == 'update' and content.get('name').strip():
             # get update query from toml and send it with parameters (see /home/ed/DataSeyance/models/queries.toml)
             db.execute_query(queries['methods'][action]
-                             , (content['name'].strip(), content['description'].strip() ,int(content['method_id'])), quantity="none")
+                             , (content['name'].strip(), content['description'].strip() ,int(content['method_id'])), quantity="zero")
         # get insert query from toml and send it with parameter (see /home/ed/DataSeyance/models/queries.toml)
         if action == 'insert' and content.get('name').strip():
-            db.execute_query(queries['methods'][action], (content['name'].strip(), content['description'].strip(),), quantity="none")
+            db.execute_query(queries['methods'][action], (content['name'].strip(), content['description'].strip(),), quantity="zero")
 
         # use delete query from toml to delete method of passed-in id
         if action == 'delete':
-            db.execute_query(queries['methods'][action], (content['method_id'],), quantity="none")
+            db.execute_query(queries['methods'][action], (content['method_id'],), quantity="zero")
 
     method_data = db.execute_query(queries['methods']['select_detailed'])
 
@@ -297,13 +297,13 @@ def seanceattendees():
             db.execute_query(queries['seanceattendees'][action], (
                 int(content['attendee_id']),
                 int(content['seance_id']),
-            ), quantity="none")
+            ), quantity="zero")
 
 
         if content['action'] == 'delete':
             db.execute_query(queries['seanceattendees'][action], (
                 int(content['seanceattendees_id']),
-            ), quantity="none")
+            ), quantity="zero")
 
 
 
@@ -319,7 +319,7 @@ def seanceattendees():
                 int(content['seance_id']),
                 int(content['attendee_id']),
                 int(content['seanceattendees_id']),
-            ), quantity="none")
+            ), quantity="zero")
 
 
 
@@ -380,7 +380,7 @@ def seances():
             location_id_input = f'{request.form["new_location_id"]}' if request.form.get('new_location_id') else None
 
             # query for updating seance with matching id
-            db.execute_query(queries['seances']['update'], (date_input, location_id_input, id_input), quantity="none")
+            db.execute_query(queries['seances']['update'], (date_input, location_id_input, id_input), quantity="zero")
             return redirect('/seances')
 
         # otherwise we are creating a new seance
@@ -390,7 +390,7 @@ def seances():
             location_id_input = f'{request.form["location_id"]}' if request.form.get('location_id') else None
 
             # query for creating a new Seance
-            db.execute_query(queries['seances']['insert'], (date_input, location_id_input), quantity="none")
+            db.execute_query(queries['seances']['insert'], (date_input, location_id_input), quantity="zero")
             return redirect('/seances')
 
     # Read functionality
@@ -412,7 +412,7 @@ def seances():
 @app.route('/delete_seance/<int:id>')
 def delete_seance(id):
     # removes a seance by id
-    db.execute_query(queries['seances']['delete'], (int(id),), quantity="none")
+    db.execute_query(queries['seances']['delete'], (int(id),), quantity="zero")
     return redirect('/seances')
 
 
@@ -435,14 +435,14 @@ def spirits():
             #get update query from toml and send it with parameters (see /home/ed/DataSeyance/models/queries.toml)
             print(int(content['id_input']))
             db.execute_query(queries['spirits'][action]
-                             , (content['new_name'].strip(), int(content['id_input'])), quantity="none")
+                             , (content['new_name'].strip(), int(content['id_input'])), quantity="zero")
         # get insert query from toml and send it with parameter (see /home/ed/DataSeyance/models/queries.toml)
         # only allow insertion if name is nonempty
         if action == 'insert' and content.get('insert_full_name').strip():
-            db.execute_query(queries['spirits'][action], (content['insert_full_name'].strip(),), quantity="none")
+            db.execute_query(queries['spirits'][action], (content['insert_full_name'].strip(),), quantity="zero")
 
         if action == 'delete':
-            db.execute_query(queries['spirits'][action], (content['spirit_id'],), quantity="none")
+            db.execute_query(queries['spirits'][action], (content['spirit_id'],), quantity="zero")
 
     spirit_data = db.execute_query(queries['spirits']['select'])
 
