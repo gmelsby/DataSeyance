@@ -17,12 +17,12 @@
 </form>
 
 <div>&nbsp;</div>
-<table class="table table-striped">
-  <caption>
-  Channelings from 
+<h3 align="center">Channelings from 
   {% if chosen_seance==None %}All Seances
   {% else %}{{chosen_seance['date']}} at {{chosen_seance['name']}} | seance_id: {{chosen_seance['seance_id']}}{% endif %}
-  </caption>
+</h3>
+<div>&nbsp</div>
+<table class="table table-striped">
   <thead>
   <tr>
     <th>channeling_id</th>

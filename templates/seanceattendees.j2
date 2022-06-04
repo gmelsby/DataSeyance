@@ -16,14 +16,17 @@
 <input class="btn btn-dark" type="submit" id="filter" value="Filter">
 </form>
 
-<div>
-&nbsp;
-</div>
+<div>&nbsp;</div>
+
+<h4 align="center">Seance Attendees for
+  {% if chosen_seance!=None %}{{chosen_seance['date']}} at {{chosen_seance['name']}} | seance_id: {{chosen_seance['seance_id']}}
+  {% else %} all seances{% endif %}
+</h4>
+
+<div>&nbsp;</div>
+
 
 <table class="table table-striped">
-  <caption>Seance Attendees for
-  {% if chosen_seance!=None %} Seance that took place on {{chosen_seance['date']}} at {{chosen_seance['name']}} | seance_id:{{chosen_seance['seance_id']}}
-  {% else %} all seances{% endif %}</caption>
   <thead>
   <tr>
     <th>seance_id</th>
