@@ -35,7 +35,7 @@ def execute_query(query, query_params=(), quantity="many"):
     query: string containing SQL query
     query_params: the parameters that fill in variables in the query
     quantity: determines if nothing, fetchone or fetchall is called on the cursor
-        accepted values are "none", "one", and "many"
+        accepted values are "zero", "one", and "many"
 
     returns: the results of the query
     '''
@@ -50,8 +50,8 @@ def execute_query(query, query_params=(), quantity="many"):
         return None
     
     # check that quanity is a valid parameter
-    if not (quantity == "none" or quantity == "many" or quantity == "one"):
-        print("make sure quanity is either 'many' or 'one'")
+    if not (quantity == "zero" or quantity == "many" or quantity == "one"):
+        print("make sure quanity is either 'zero', 'many' or 'one'")
         return None
 
     print("Executing %s with %s" % (query, query_params));
@@ -68,9 +68,9 @@ def execute_query(query, query_params=(), quantity="many"):
     cursor.execute(query, query_params)
     # this will actually commit any changes to the database. without this no
     # changes will be committed!
-    db_connection.commit();
+    db_connection.commit()
 
-    if quantity == "none":
+    if quantity == "zero":
         cursor.close()
         return
 

@@ -36,35 +36,29 @@ def attendees():
         # this hidden form value will tell us what to do
         action = content['action']
 
+        # We do not want Attendees with empty names
         if action == 'insert' and content.get('insert_full_name').strip():
+            # our one multi-query transaction
+            # we need to call execute_queries to have all modifications executed as one
+            # and pass in lists of queries and parameters
             if content.get('seance_id'):
                 db.execute_queries(queries['attendees']['insert'], [(content['insert_full_name'],), (), content['seance_id']])
             # insert attendee who has not attended a seance yet
             else:
-                db.execute_query(queries['attendees']['insert_inline'], (content['insert_full_name'],))
+                db.execute_query(queries['attendees']['insert_inline'], (content['insert_full_name'],), quantity="none")
 
 
         if action == 'delete':
-            db.execute_query(queries['attendees'][action], (content['attendee_id'],))
+            db.execute_query(queries['attendees'][action], (content['attendee_id'],), quantity="none")
 
 
         if action == 'update':
             full_name_input = request.form['new_name'].strip()
             id_input = request.form['id_input']
-            db.execute_query(queries['attendees'][action], (full_name_input, int(id_input)))
+            db.execute_query(queries['attendees'][action], (full_name_input, int(id_input)), quantity="none")
 
         if action == 'tagupdate':
             edit_form = int(content['id_input'])
-
-        # otherwise we are inserting a new Attendee
-        # We do not want Attendees with empty names
-        if request.form.get('name'):
-            # our one multi-query transaction
-            # we need to call execute_queries to have all modifications executed as one
-            # and pass in lists of queries and parameters
-            db.execute_queries(queries['attendees']['insert'], [(request.form.get('name'),), (), (request.form.get('seance_id'),)])
-
-            
             
     # displays the table of all attendees
     # if request.method == 'GET':
@@ -73,10 +67,10 @@ def attendees():
     attendee_to_edit = None
     # if we have get query parameter indicating attendee_id we get the info for the dropdown
     if args.get('id'):
-        attendee_to_edit = db.execute_query(queries['attendees']['select_specific'], (int(args.get('id')),))
+        attendee_to_edit = db.execute_query(queries['attendees']['select_specific'], (int(args.get('id')),), quantity="one")
 
 
-    # attendee data to be displayed in table and used for update dropdown
+    # attendee data to be displayed in table and used for insert and update dropdown dropdown
     attendee_data = db.execute_query(queries['attendees']['select'])
 
 
@@ -116,12 +110,11 @@ def channelings():
              content['seance_date'],
              content['is_successful'],
              content['length_in_minutes']
-            ) )
+            ), quantity="none")
 
         if action == 'delete':
-            db.execute_query(queries['channelings'][action], (
-            int( content['channeling_id']),)
-            )
+            db.execute_query(queries['channelings'][action], 
+            (int(content['channeling_id']),), quantity="none")
 
         if action == 'tagupdate':
             channeling_id_to_edit = int(content['channeling_id'])
@@ -135,7 +128,7 @@ def channelings():
              content['is_successful'],
              content['length_in_minutes'],
              content['id_input']
-            ))
+            ), quantity="none")
 
     # use args if request.method is "POST" OR "GET"--useful for linking from other pages
     if request.args.get('chosen_seance_id'): 
@@ -172,17 +165,6 @@ def channelings():
 
 
 
-@app.route('/add_seance', methods=['POST'])
-def add_seance():
-    """
-    used to add a seance using a pop up while on the channleings page
-    :return:
-    """
-    content = request.form.to_dict()
-    db.execute_query(queries['seances']['insert'], (content['date'], content['location_id']))
-    return redirect('/channelings')
-
-
 @app.route('/locations', methods=['GET', 'POST'])
 def locations():
     channeling_params = ()
@@ -208,18 +190,16 @@ def locations():
                 content['zip'],
                 content['state'],
                 content['country']
-            ))
+            ), quantity="none")
 
         if action == 'delete':
             db.execute_query(queries['locations'][action], (
-                int(content['location_id']),)
-                             )
+                int(content['location_id']),), quantity="none")
 
         if action == 'tagupdate':
             location_to_edit = int(content['location_id'])
 
         if action == 'update':
-            print('inserting...')
             db.execute_query(queries['locations'][action], (
                 content['location_name'],
                 content['street_address'],
@@ -228,7 +208,7 @@ def locations():
                 content['state'],
                 content['country'],
                 int(content['location_id'])
-            ))
+            ), quantity="none")
 
         # query for displaying all info about Locations in table
     location_data = db.execute_query(queries['locations']['select'])
@@ -257,14 +237,14 @@ def mediums():
         if action == 'update' and content.get('full_name').strip():
             #get update query from toml and send it with parameters (see /home/ed/DataSeyance/models/queries.toml)
             db.execute_query(queries['mediums'][action]
-                             , (content['full_name'].strip(), int(content['medium_id'])))
+                             , (content['full_name'].strip(), int(content['medium_id'])), quantity="none")
         # get insert query from toml and send it with parameter (see /home/ed/DataSeyance/models/queries.toml)
         # only allow insertion if string is nonempty
         if action == 'insert' and content.get('full_name').strip():
-            db.execute_query(queries['mediums'][action], (content['full_name'].strip(),))
+            db.execute_query(queries['mediums'][action], (content['full_name'].strip(),), quantity="none")
 
         if action == 'delete':
-            db.execute_query(queries['mediums'][action], (content['medium_id'],))
+            db.execute_query(queries['mediums'][action], (content['medium_id'],), quantity="none")
 
     medium_data = db.execute_query(queries['mediums']['select'])
 
@@ -289,14 +269,14 @@ def methods():
         if action == 'update' and content.get('name').strip():
             # get update query from toml and send it with parameters (see /home/ed/DataSeyance/models/queries.toml)
             db.execute_query(queries['methods'][action]
-                             , (content['name'].strip(), content['description'].strip() ,int(content['method_id'])))
+                             , (content['name'].strip(), content['description'].strip() ,int(content['method_id'])), quantity="none")
         # get insert query from toml and send it with parameter (see /home/ed/DataSeyance/models/queries.toml)
         if action == 'insert' and content.get('name').strip():
-            db.execute_query(queries['methods'][action], (content['name'].strip(), content['description'].strip(),))
+            db.execute_query(queries['methods'][action], (content['name'].strip(), content['description'].strip(),), quantity="none")
 
         # use delete query from toml to delete method of passed-in id
         if action == 'delete':
-            db.execute_query(queries['methods'][action], (content['method_id'],))
+            db.execute_query(queries['methods'][action], (content['method_id'],), quantity="none")
 
     method_data = db.execute_query(queries['methods']['select_detailed'])
 
@@ -309,73 +289,39 @@ def seanceattendees():
     seanceattendees_id_to_edit = -1
     seanceattendees_to_edit = None
     if request.method == 'POST':
-        # if form contains update_seance_id we are updating a row in SeanceaAttendees
-        if request.form.get('update_attendee_id'):
-            attendee_id = request.form.get('update_attendee_id')
-            seance_id = request.form.get('update_seance_id')
-            old_seance_id = request.form.get('current_seance_id')
-            
-            # updates matching entries in SeanceAttendees
-            db.execute_query(queries['seanceattendees']['update'], (seance_id, attendee_id, old_seance_id))
-            return redirect(f'/seanceattendees?seance_id_input={old_seance_id}')
-
-
-
         content = request.form.to_dict()
         action = content['action']
 
         if content['action'] == 'insert':
 
             db.execute_query(queries['seanceattendees'][action], (
-
                 int(content['attendee_id']),
                 int(content['seance_id']),
-            ))
+            ), quantity="none")
 
 
         if content['action'] == 'delete':
             db.execute_query(queries['seanceattendees'][action], (
                 int(content['seanceattendees_id']),
-            ))
+            ), quantity="none")
 
 
 
         if content['action'] == 'tagupdate':
-            print(content)
             seanceattendees_id_to_edit = int(content['seanceattendees_id_to_edit'])
             seanceattendees_to_edit = db.execute_query(queries['seanceattendees']['inline_tag']
-                                      ,  (seanceattendees_id_to_edit,))
-
-            print('seanceattendees_to_edit',seanceattendees_to_edit)
+                                      ,  (seanceattendees_id_to_edit,), quantity="one")
 
 
 
         if content['action'] == 'update':
-            print(content)
             db.execute_query(queries['seanceattendees']['inline_update'], (
                 int(content['seance_id']),
                 int(content['attendee_id']),
                 int(content['seanceattendees_id']),
-            ))
+            ), quantity="none")
 
 
-
-        # if form contains also_attended_id we are creating a new entry in SeanceAttendees
-        # if request.form.get('also_attended_id'):
-        #     attendee_id = request.form.get('also_attended_id')
-        #     seance_id = request.form.get('selected_seance_id')
-        #
-        #     # inserts a new row into SeanceAttendees intersection table
-        #     db.execute_query(queries['seanceattendees']['insert'], (attendee_id, seance_id))
-        #
-        #
-        #     return redirect(f'/seanceattendees?seance_id_input={seance_id}')
-
-
-
-
-    # read functionality
-    # if request.method == 'GET':
 
     args = request.args
     # chosen attendee defaults to None unless we have id passed in in GET args
@@ -383,8 +329,8 @@ def seanceattendees():
     chosen_attendee = None
     # we are not supporting autofilling when attendee_id is NULL
     # there are potentially many entries where attendee_id is NULL, and it is hard to tell them apart
-    if chosen_attendee_id is not None and chosen_attendee_id != 'None':
-        chosen_attendee = db.execute_query(queries['attendees']['select_specific'], (int(chosen_attendee_id),))
+    if chosen_attendee_id is not None:
+        chosen_attendee = db.execute_query(queries['attendees']['select_specific'], (int(chosen_attendee_id),), quantity="one")
 
 
     # chosen seance defaults to None unless we have id passed in in GET args
@@ -399,55 +345,28 @@ def seanceattendees():
     seance_data = db.execute_query(queries['seances']['select'])
 
 
-    # query for getting all seances that are not the selected seance
-    other_seances = []
-    if chosen_seance_id:
-        other_seances = db.execute_query(queries['seances']['select_other'], (int(chosen_seance_id),))
-
-
-    # query for getting info about all attendees in the SeanceAttendees table for all seances or a particular one
+    # query for getting info about all attendees in our database
     all_attendees_query = queries['attendees']['select']
-    all_attendees = db.execute_query(all_attendees_query, ())
-
-
+    all_attendees = db.execute_query(all_attendees_query)
 
 
     attendee_query = queries['seanceattendees']['select']
-
+    
     attendee_params = ()
     if chosen_seance_id:
          attendee_query = queries['seanceattendees']['select_specific']
          attendee_params = (int(chosen_seance_id),)
 
-    attendee_data = db.execute_query(attendee_query, attendee_params)
+    attendee_data = db.execute_query(query=attendee_query, query_params=attendee_params)
 
-
-
-    # query for getting all attendees that did not attend the seance
-    not_attended_list = []
-    if chosen_seance_id:
-        not_attended_list = db.execute_query(queries['seanceattendees']['select_not_attended'], (int(chosen_seance_id),))
     # renders the page with prefilled dropdowns
     return render_template('seanceattendees.j2', chosen_seance=chosen_seance, seance_data=seance_data,
-                           other_seances=other_seances, chosen_attendee=chosen_attendee,
-                           attendee_data=attendee_data, not_attended_list=not_attended_list
-                           , all_attendees=all_attendees
-                           , seanceattendees_id_to_edit=seanceattendees_id_to_edit
-                           , seanceattendees_to_edit=seanceattendees_to_edit)
+                           chosen_attendee=chosen_attendee,
+                           attendee_data=attendee_data,
+                           all_attendees=all_attendees,
+                           seanceattendees_id_to_edit=seanceattendees_id_to_edit,
+                           seanceattendees_to_edit=seanceattendees_to_edit)
 
-
-@app.route('/delete_seanceattendee/<int:id>')
-def delete_seanceattendee(id):
-     # deletes a seance attendence record based on id
-    db.execute_query(queries['seanceattendees']['delete'], (int(id),))
-
-    # redirects to specific seance view
-    args = request.args
-    if args.get('seance_id_input') is not None:
-        return redirect(f'/seanceattendees?seance_id_input={args.get("seance_id_input")}')
-
-    # otherwise redirect to all seanceattendees page
-    return redirect('/seanceattendees')
 
 
 @app.route('/seances', methods=['GET', 'POST'])

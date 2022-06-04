@@ -27,14 +27,12 @@
   <thead>
   <tr>
     <th>seance_id</th>
+    <th>Date</th>
+    <th>Location</th>
     <th>attendee_id</th>
-    <th>Attendee Name</th>
+    <th>Attendee</th>
     <th>Update</th>
     <th>Delete</th>
-    {% if chosen_seance!=None %}
-
-
-    {% endif %}
   </tr>
   </thead>
   <tbody>
@@ -43,7 +41,7 @@
   <tr>
     <form id="InsertSeanceAttendee" method="POST">
 
-     <td colspan="2">
+     <td colspan="3">
      <select name="seance_id" >
 
     <option value=""></option>
@@ -52,11 +50,10 @@
     {% if seance['seance_id']==attendee['seance_id'] %} selected {% endif %}>
     {{seance['date']}} {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
     {% endfor %}
-    <option value='AddSeance'>+ Add Seance</option>
     </select>
 
-    <td>
-    <select name="attendee_id" onclick="openForm(this.value)">
+    <td colspan="2">
+    <select name="attendee_id"">
          Select Attendee
     <option value=""></option>
     {% for attendees in all_attendees %}
@@ -72,14 +69,17 @@
 
         <input  class="btn btn-primary" type="submit" id="UpdateSeanceAttendeeg" value="Save">
         <input type="hidden" name="action" value="update">
-        <input type="hidden" name="seanceattendees_id" value={{attendee['seanceattendees_id']}}
+        <input type="hidden" name="seanceattendees_id" value={{attendee['seanceattendees_id']}}>
 
 
       </td>
       </form>
     <td>
-       <form id="cancel" method="GET">
+      <form id="cancel" method="GET">
       <input class="btn btn-secondary" type="submit" id="cancel" value="Cancel">
+      {% if chosen_seance!=None %}
+      <input type="hidden" name="seance_id_input" value={{chosen_seance['seance_id']}}>
+      {% endif %}
      </td>
         </form>
 
@@ -88,6 +88,8 @@
   {% else %}
     <tr>
     <td>{{attendee['seance_id']}}</td>
+    <td>{{attendee['date']}}</td>
+    <td>{{attendee['name']}}</td>
     <td>{{attendee['attendee_id']}}</td>
     <td>{{attendee['full_name']}}</td>
     <td>
@@ -112,8 +114,8 @@
     <tr>
        <form id="InsertSeanceAttendee" method="POST">
 
-    <td colspan="2">
-     Select Seance to Enter Seance Attendee
+    <td colspan="3">
+     <label for="seance_id">Select Seance to Enter Seance Attendee</label>
      <select name="seance_id" >
 
     <option value=""></option>
@@ -126,7 +128,7 @@
     </select>
     </td>
 
-    <td >
+    <td colspan="2">
              Select Attendee
          <select name="attendee_id" >
 

@@ -116,7 +116,9 @@
     <td>
      <form id="cancel" method="GET">
       <input class="btn btn-dark" type="submit" id="cancel" value="Cancel">
-      </form>
+      {% if chosen_seance!=None %}
+      <input type="hidden" name="chosen_seance_id" value={{chosen_seance['seance_id']}}>
+      {% endif %}
      </td>
 
 

@@ -157,10 +157,8 @@ WHERE seanceattendees_id = %s;
 """
 
 inline_tag = """
-select
-seance_id
-, attendee_id
-from SeanceAttendees
+SELECT seance_id, attendee_id
+FROM SeanceAttendees
 WHERE seanceattendees_id = %s;
 """
 
@@ -169,15 +167,19 @@ insert = "INSERT INTO SeanceAttendees (attendee_id, seance_id) VALUES (%s, %s)"
 delete = "DELETE FROM SeanceAttendees WHERE seanceattendees_id = %s;"
 
 select = """
-SELECT SeanceAttendees.seance_id, Attendees.attendee_id, Attendees.full_name, SeanceAttendees.seanceattendees_id
+SELECT SeanceAttendees.seance_id, Seances.date, Locations.name, Attendees.attendee_id, Attendees.full_name, SeanceAttendees.seanceattendees_id
 FROM SeanceAttendees
-LEFT JOIN Attendees ON SeanceAttendees.attendee_id = Attendees.attendee_id;
+LEFT JOIN Attendees ON SeanceAttendees.attendee_id = Attendees.attendee_id
+LEFT JOIN Seances ON SeanceAttendees.seance_id = Seances.seance_id
+LEFT JOIN Locations ON Seances.location_id = Locations.location_id;
 """
 
 select_specific = """
-SELECT SeanceAttendees.seance_id, Attendees.attendee_id, Attendees.full_name, SeanceAttendees.seanceattendees_id
+SELECT SeanceAttendees.seance_id, Seances.date, Locations.name, Attendees.attendee_id, Attendees.full_name, SeanceAttendees.seanceattendees_id
 FROM SeanceAttendees
 LEFT JOIN Attendees ON SeanceAttendees.attendee_id = Attendees.attendee_id
+LEFT JOIN Seances ON SeanceAttendees.seance_id = Seances.seance_id
+LEFT JOIN Locations ON Seances.location_id = Locations.location_id
 WHERE SeanceAttendees.seance_id = %s;
 """
 
