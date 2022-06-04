@@ -7,6 +7,7 @@ from flask import Flask
 from flask_mysqldb import MySQL
 import os
 
+# all of our routes are in here
 from blueprints.index import index
 from blueprints.seances import seances
 from blueprints.locations import locations
@@ -19,7 +20,7 @@ from blueprints.seanceattendees import seanceattendees
 
 app = Flask(__name__)
 mysql = MySQL(app)
-
+# all of our routes are blueprints in the blueprints directory.
 app.register_blueprint(index)
 app.register_blueprint(seances)
 app.register_blueprint(locations)
