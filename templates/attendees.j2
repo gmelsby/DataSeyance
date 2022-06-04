@@ -72,9 +72,11 @@
 <div class="form-group" id="insert">
   <form id="InsertAttendee" method="POST">
      <legend><strong>Insert Attendee</strong></legend>
-       <label for="insert_full_name"> Full Name: </label> 
-       <input type="text" required class="form-control" name="insert_full_name">
-       <label for="seance_id">Has this attendee already attended a seance? If so, choose one.</label>
+       <div class="row">
+       <div class="col-sm">
+       <input type="text" placeholder="Full Name" class="form-control" name="insert_full_name">
+       </div>
+       <div class="col-sm">
        <select name="seance_id" class="form-control" id="seance_id_select">
         <option value="">No</option>
         {% for seance in seance_data %}
@@ -82,8 +84,12 @@
         {{seance['date']}} at {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
         {% endfor %}
       </select>
-    <input  class="btn btn-dark"  type="submit" id="InsertAttendee" value="Insert Attendee">
-    <input type="hidden" name="action" value="insert">
+      <label for="seance_id">Has this attendee already attended a seance? If so, select it.</label>
+      </div>
+      <div class="col-sm-2">
+      <input  class="btn btn-dark"  type="submit" id="InsertAttendee" value="Insert Attendee">
+      <input type="hidden" name="action" value="insert">
+      </div>
   </form>
 </div>
 
