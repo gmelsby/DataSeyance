@@ -25,13 +25,20 @@ def seances_func():
             print('seance_to_edit', seance_to_edit)
 
         if action == 'update':
+            # Change value to None if empty string passed in
+            content['date'] = None if not content['date'] else content['date']
+            content['name'] = None if not content['name'] else content['name']
             # get update query from toml and send it with parameters (see /home/ed/DataSeyance/models/queries.toml)
             db.execute_query(queries['seances'][action]
-                             , (content['date'].strip(), content['name'].strip(), content['seance_id'] ),
+                             , (content['date'], content['name'], content['seance_id'] ),
                              quantity="zero")
         # get insert query from toml and send it with parameter (see /home/ed/DataSeyance/models/queries.toml)
         if action == 'insert':
-            db.execute_query(queries['seances'][action], (content['date'].strip(), content['location_id'],),
+            # Change value to None if empty string passed in
+            content['date'] = None if not content['date'] else content['date']
+            content['location_id'] = None if not content['location_id'] else content['location_id']
+
+            db.execute_query(queries['seances'][action], (content['date'], content['location_id'],),
                              quantity="zero")
 
         # use delete query from toml to delete method of passed-in id

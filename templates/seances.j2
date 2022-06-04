@@ -23,14 +23,13 @@
   {%if seance['seance_id']==seance_to_edit %}
     <tr>
         <form id="UpdateSeanceAttendee" method="POST">
-<td>{{seance['seance_id']}}</td>
+    <td>{{seance['seance_id']}}</td>
 
     <td><input type="date" class="form-control" name="date"  value="{{seance['date']}}" ></td>
 
 
-     <td>
+     <td colspan="2">
      <select name="name" class="form-control">
-
     <option value=""></option>
     {% for location in location_data %}
     <option value={{location['location_id']}}
@@ -106,10 +105,10 @@
 
     <td>Insert New Seance</td>
 
-  <td> <input required type="date" class="form-control" name="date" ></td>
+  <td> <input type="date" class="form-control" name="date" ></td>
 
      <td colspan="2">
-      <select name="location_id" required class="form-control" id="newloc"  >
+      <select name="location_id" class="form-control" id="newloc">
         <option value="">Select Location</option>
         {% for location in location_data %}
         <option value={{location['location_id']}}
