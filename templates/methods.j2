@@ -1,11 +1,13 @@
+<!--Page for Methods-->
 {% extends 'baselayout.html' %}
-{% block title %}Methods{% endblock %}
 
 {% block content %}
 
     <div class="container-fluid">
+        <!--Title-->
         <h2 align="center">Methods</h2>
         <div>&nbsp;</div>
+        <!--Main table for displaying Methods-->
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -18,6 +20,7 @@
             </thead>
             <tbody>
                 {% for method in method_data %}
+                    <!--Row is an update form if method_id is the passed-in method to edit-->
                     {%if method['method_id'] == method_to_edit %}
                         <tr>
                             <form id="SaveUpdateMethod" method="POST">
@@ -26,11 +29,13 @@
                                     <td><input type="text" class="form-control" name="name" value='{{method['name']}}'></td>
                                     <td><input type="text" class="form-control" name="description" value='{{method['description']}}'></td>
                                     <td>
+                                        <!--Save button-->
                                         <input class="btn btn-primary" type="submit" id="SaveUpdate" value="Save">
                                         <input type="hidden" name="action" value="update">
                                         <input type="hidden" name="method_id" value={{method['method_id']}} </td>
                                 </div>
                             </form>
+                            <!--Cancel button-->
                             <form id="cancel" method="GET">
                                 <td>
                                     <input class="btn btn-secondary" type="submit" id="cancel" value="Cancel">
@@ -38,6 +43,7 @@
                             </form>
                         </tr>
 
+                    <!--Otherwise display method information in the row-->
                     {% else %}
                         <tr>
 
@@ -45,12 +51,14 @@
                             <td>{{method['name']}}</td>
                             <td>{{method['description']}}</td>
 
+                            <!--Button for update-->
                             <form id="UpdateMethod" method="POST">
                                 <td>
                                     <input class="btn btn-secondary" type="submit" id="UpdateMethod" value="Update">
                                     <input type="hidden" name="action" value="tagupdate">
                                     <input type="hidden" name="method_id" value={{method['method_id']}} </td>
                             </form>
+                            <!--Button for delete-->
                             <form id="DeleteMethod" method="POST">
                                 <td>
                                     <input class="btn btn-danger" type="submit" id="DeleteMethod" value="Delete">
@@ -62,20 +70,22 @@
                 {% endfor %}
 
 
+                <!--Last row in table for inserting new method-->
                 <tr>
                     <form id="InsertMethod" method="POST">
                         <div class="form-group">
                             <td>Insert New Method</td>
                             <td> <input type="text" required class="form-control" name="name"></td>
+                            <!--Use textarea because there can be a lot of content-->
                             <td> <textarea rows="3" required class="form-control" cols="100" name="description" form="InsertMethod"></textarea></td>
                             <td colspan=2>
                                 <input class="btn btn-dark" type="submit" id="InsertMethod" value="Insert Method">
                                 <input type="hidden" name="action" value="insert">
+                            </td>
+                        </div>
+                    </form>
                 </tr>
-    </div>
-    </form>
-
-    </tbody>
+        </tbody>
     </table>
 
     </div>

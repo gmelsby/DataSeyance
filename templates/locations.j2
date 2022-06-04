@@ -1,10 +1,13 @@
+<!--Page to display Locations content-->
 {% extends 'baselayout.html' %}
 {% block title %}Locations{% endblock %}
 
 {% block content %}
     <div class="container-fluid">
+        <!--Title-->
         <h2 align="center">Locations</h2>
         <div>&nbsp;</div>
+        <!--Main display table-->
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -21,6 +24,7 @@
             </thead>
             <tbody>
                 {% for location in location_data %}
+                    <!--If location_to_edit matches the location_id the row will be an edit form-->
                     {%if location['location_id'] == location_to_edit %}
 
                         <tr>
@@ -39,18 +43,21 @@
                                     </td>
                                     <td><input type="text" name="country" value={% if location['country']==None %}''{% else %}"{{location['country']}}"{% endif %} class="form-control">
                                     </td>
+                                    <!--Save button-->
                                     <td>
                                         <input class="btn btn-primary" type="submit" id="UpdateLocation" value="Save">
                                         <input type="hidden" name="action" value="update">
                                         <input type="hidden" name="location_id" value={{location['location_id']}} </td>
                                 </form>
                             </div>
+                            <!--Cancel button-->
                             <td>
                                 <form id="cancel" method="GET">
                                     <input class="btn btn-dark" type="submit" id="cancel" value="Cancel">
                             </td>
                             </form>
                         </tr>
+                    <!--Otherwise just display location information in table row-->
                     {% else %}
                         <tr>
 
@@ -76,6 +83,7 @@
                         </tr>
                     {% endif %}
                 {% endfor %}
+                <!--Form for inserting new location is last row in table-->
                 <tr>
                     <div class="form-group">
                         <form id="InsertLocation" method="POST">

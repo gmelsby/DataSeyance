@@ -1,10 +1,12 @@
+<!--Content for Medium page-->
 {% extends 'baselayout.html' %}
-{% block title %}Mediums{% endblock %}
 
 {% block content %}
     <div class="container-fluid">
+        <!--Title-->
         <h2 align="center">Mediums</h2>
         <div>&nbsp;</div>
+        <!--Table to display Medium information-->
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -16,6 +18,7 @@
             </thead>
             <tbody>
                 {% for medium in medium_data %}
+                    <!--Row is an edit form if medium_id matches passed-in medium_to_edit-->
                     {%if medium['medium_id'] == medium_to_edit %}
                         <tr>
                             <div class="form-group">
@@ -23,29 +26,34 @@
                                     <td>{{medium['medium_id']}}</td>
                                     <td><input type="text" class="form-control" name="full_name" value='{{medium['full_name']}}'></td>
                                     <td>
+                                        <!--Save button-->
                                         <input class="btn btn-primary" type="submit" id="UpdateMedium" value="Save">
                                         <input type="hidden" name="action" value="update">
                                         <input type="hidden" name="medium_id" value={{medium['medium_id']}} </td>
                                 </form>
                             </div>
+                            <!--Cancel button-->
                             <td>
                                 <form id="cancel" method="GET">
                                     <input class="btn btn-dark" type="submit" id="cancel" value="Cancel">
                             </td>
                             </form>
                         </tr>
+                    <!--Otherwise row just displays info about the Medium-->
                     {% else %}
 
                         <tr>
 
                             <td>{{medium['medium_id']}}</td>
                             <td>{{medium['full_name']}}</td>
+                            <!--Update button-->
                             <td>
                                 <form id="UpdateMedium" method="POST">
                                     <input class="btn btn-secondary" type="submit" id="UpdateMedium" value="Update">
                                     <input type="hidden" name="action" value="tagupdate">
                                     <input type="hidden" name="medium_id" value={{medium['medium_id']}} </td>
                                 </form>
+                            <!--Delete button-->
                             <td>
                                 <form id="DeleteMedium" method="POST">
                                     <input class="btn btn-danger" type="submit" id="DeleteMedium" value="Delete">
@@ -57,6 +65,7 @@
                     {% endif %}
                 {% endfor %}
 
+                <!--Last row in table is a form for inserting a new Medium-->
                 <tr>
                     <div class="form-group">
                         <form id="InsertMedium" method="POST">
@@ -65,9 +74,9 @@
                             <td colspan=2><input class="btn btn-dark" type="submit" id="InsertMedium" value="Insert Medium">
                                 <input type="hidden" name="action" value="insert">
                             </td>
+                        </form>
                     </div>
                 </tr>
-                </form>
 
             </tbody>
         </table>

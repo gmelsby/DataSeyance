@@ -1,8 +1,9 @@
+<!--Content for Channelings page-->
 {% extends 'baselayout.html' %}
-{% block title %}Channelings{% endblock %}
 {% block content %}
     <div class="container-fluid">
 
+        <!--Filter for choosing which seance to view channelings for-->
         <form id="FilterList">
             <div class="row">
                 <div class="col">
@@ -23,11 +24,15 @@
         </form>
 
         <div>&nbsp;</div>
+
+        <!--Page title-->
         <h3 align="center">Channelings from
             {% if chosen_seance==None %}All Seances
             {% else %}{{chosen_seance['date']}} at {{chosen_seance['name']}} | seance_id: {{chosen_seance['seance_id']}}{% endif %}
         </h3>
         <div>&nbsp</div>
+        
+        <!--Main display table-->
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -44,9 +49,9 @@
                 </tr>
             </thead>
             <tbody>
-
-
+                <!--Display data for all channelings in passed-in channeling data-->
                 {% for channeling in channeling_data %}
+                    <!--If edit is marked then show form instead of standard row-->
                     {%if channeling['channeling_id']==channeling_id_to_edit %}
                         <tr>
                             <div class="form-group">
@@ -95,8 +100,6 @@
                                             {% endfor %}
                                         </select>
                                     </td>
-
-
                                     <td>
                                         <select class="form-control" name="is_successful">
                                             {% for item in[ {'string':'Yes', 'value':1}  , {'string':'No', 'value':0}  ] %}
@@ -105,18 +108,23 @@
                                                 </option>
                                             {% endfor %}
                                         </select>
-
-
                                     </td>
-                                    <td><input class="form-control" type="integer" name="length_in_minutes" {% if channeling['length_in_minutes']!=None %}value={{channeling['length_in_minutes']}}{% endif %}></td>
+
 
                                     <td>
+                                        <input class="form-control" type="integer" name="length_in_minutes" {% if channeling['length_in_minutes']!=None %}value={{channeling['length_in_minutes']}}{% endif %}>
+                                    </td>
 
+                                    <!--Submit button-->
+                                    <td>
                                         <input class="btn btn-primary" type="submit" id="UpdateChanneling" value="Save">
                                         <input type="hidden" name="action" value="update">
-                                        <input type="hidden" name="id_input" value={{channeling['channeling_id']}} <input type="hidden" name="channeling_id_to_edit" value={{channeling['channeling_id']}} </td>
+                                        <input type="hidden" name="id_input" value={{channeling['channeling_id']}} <input type="hidden" name="channeling_id_to_edit" value={{channeling['channeling_id']}} 
+                                    </td>
+
                                 </form>
                             </div>
+                            <!--Cancel button-->
                             <td>
                                 <form id="cancel" method="GET">
                                     <input class="btn btn-dark" type="submit" id="cancel" value="Cancel">
@@ -129,6 +137,7 @@
                         </tr>
 
 
+                    <!--Otherwise just display the data with no edit form-->
                     {% else %}
                         <tr>
                             <td>{{channeling['channeling_id']}}</td>
@@ -140,26 +149,30 @@
                             <td>{{channeling['is_successful']}}</td>
                             <td>{{channeling['length_in_minutes']}}</td>
 
+                            <!--Edit button-->
                             <td>
                                 <form id="UpdateChanneling" method="POST">
                                     <input class="btn btn-secondary" type="submit" id="UpdateChanneling" value="Update">
                                     <input type="hidden" name="action" value="tagupdate">
-                                    <input type="hidden" name="channeling_id" value={{channeling['channeling_id']}} <input type="hidden" name="channeling_id_to_edit" value={{channeling['channeling_id']}} </td>
+                                    <input type="hidden" name="channeling_id" value={{channeling['channeling_id']}} <input type="hidden" name="channeling_id_to_edit" value={{channeling['channeling_id']}}
                                 </form>
+                            </td>
 
+                            
+                            <!--Delete button-->
                             <td>
                                 <form id="DeleteChanneling" method="POST">
                                     <input class="btn btn-danger" type="submit" id="DeleteChanneling" value="Delete">
                                     <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="channeling_id" value={{channeling['channeling_id']}} </td>
+                                    <input type="hidden" name="channeling_id" value={{channeling['channeling_id']}}
                                 </form>
-
-
+                             </td>
                         </tr>
                     {% endif %}
                 {% endfor %}
 
 
+                <!--Insert new Channeling form-->
                 <tr>
                     <div class="form-group">
                         <form id="InsertChanneling" method="POST">
@@ -194,6 +207,7 @@
                             <td colspan="2">
                                 <select name="seance_date" class="form-control">
                                     <option value=""></option>
+                                    <!--Autoselect current seance if a seance is currently selected-->
                                     {% for seance in seance_data %}
                                         <option value={{seance['seance_id']}} {% if chosen_seance['seance_id']==seance['seance_id'] %} selected {% endif %}>
                                             {{seance['date']}} {{seance['name']}} | seance_id: {{seance['seance_id']}}

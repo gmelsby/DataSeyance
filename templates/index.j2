@@ -1,15 +1,16 @@
+<!--Home page for app-->
 {% extends 'baselayout.html' %}
-{% block title %}Data Seyance {% endblock %}
-
 
 {% block content %}
-    <div class="container-fluid" align=middle>
-        <h1> Welcome to Data Seyance</h1>
-        <p>Please use the menu at the top to Create, Read, Update or Delete our records.</p>
+<div class="container-fluid" align=middle>
+    <h1> Welcome to Data Seyance</h1>
+    <p>Please use the menu at the top to access pages where you can Create, Read, Update or Delete our records.</p>
 
-        {# image free to use from https://commons.wikimedia.org/wiki/File:A_seance.png #}
-
-        <img src="{{ url_for('static', filename = '/A_seance.png') }}" width="640" height="840" alt="previous" title="Previous" border="0">
-        <p>- photo from: <a href="https://commons.wikimedia.org/wiki/File:A_seance.png">Wikimedia Commons</a></p>
-    </div>
+    {# image free to use from https://commons.wikimedia.org/wiki/File:A_seance.png #}
+    <!--Image to display on home page-->
+    <img src="{{ url_for('static', filename = '/A_seance.png') }}" width="640" height="840" alt="previous"
+        title="Previous" border="0">
+    <!--Citation-->
+    <p>- photo from: <a href="https://commons.wikimedia.org/wiki/File:A_seance.png">Wikimedia Commons</a></p>
+</div>
 {% endblock %}
