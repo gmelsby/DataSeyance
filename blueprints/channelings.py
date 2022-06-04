@@ -1,10 +1,10 @@
-# Author: Ed Wise
-# Date: 
-# Description:
+# Author: Ed Wise and Greg Melsby
+# Date:  6\4\2022
+
 from flask import Blueprint, render_template, request
 import database.db_connector as db
 import toml
-
+# our queries are read from here
 queries = toml.load("models/queries.toml")
 channelings = Blueprint("channelings", __name__, static_folder="static", template_folder="templates")
 
@@ -13,16 +13,22 @@ channelings = Blueprint("channelings", __name__, static_folder="static", templat
 def channelings_func():
     channeling_query = queries['channelings']['select']
     channeling_params = ()
+    # used to tag record on line to be edited
     channeling_id_to_edit = -1
     chosen_seance = None
+
+    # we had a post so we are going to look at a parameter passed from a hidden form value
+    # get form values as dict
 
     if request.method == 'POST':
         content = request.form.to_dict()
 
+        # this hidden form value will tell us what to do
+
+        # we do not get an action tag if we nav from seance button to channelings here so we handle that here.
         if 'action' in content.keys():
             action = content['action']
         else:
-            # content['action'] = None
             action = None
 
         for key, value in content.items():
@@ -32,7 +38,7 @@ def channelings_func():
                 content[key] = None
             else:
                 content[key] = int(value)
-
+        # read and execute action
         if action == 'insert':
             db.execute_query(queries['channelings'][action], (
                 content['medium_id'],
@@ -42,14 +48,14 @@ def channelings_func():
                 content['is_successful'],
                 content['length_in_minutes']
             ), quantity="zero")
-
+        # read and execute action
         if action == 'delete':
             db.execute_query(queries['channelings'][action],
                              (int(content['channeling_id']),), quantity="zero")
-
+        # read and execute action
         if action == 'tagupdate':
             channeling_id_to_edit = int(content['channeling_id'])
-
+        # read and execute action
         if action == 'update':
             db.execute_query(queries['channelings'][action], (
                 content['medium_id'],

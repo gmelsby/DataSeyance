@@ -1,16 +1,17 @@
-# Author: Ed Wise
-# Date: 
-# Description:
+# Author: Ed Wise and Greg Melsby
+# Date:  6\4\2022
+
 from flask import Blueprint, render_template, request
 import database.db_connector as db
 import toml
-
+# our queries are read from here
 queries = toml.load("models/queries.toml")
 attendees = Blueprint("attendees", __name__, static_folder="static", template_folder="templates")
 
 
 @attendees.route('/attendees', methods=['GET', 'POST'])
 def attendees_func():
+    # used to tag record on line to be edited
     edit_form = -1
 
     # we had a post so we are going to look at a parameter passed from a hidden form value
@@ -46,7 +47,6 @@ def attendees_func():
             edit_form = int(content['id_input'])
 
     # displays the table of all attendees
-    # if request.method == 'GET':
     args = request.args
     # we could potentially ahve no get query parameters, so attendee_to_edit starts as None
     attendee_to_edit = None

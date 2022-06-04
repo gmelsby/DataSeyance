@@ -1,22 +1,24 @@
-# Author: Ed Wise
-# Date: 
-# Description:
+# Author: Ed Wise and Greg Melsby
+# Date:  6\4\2022
+
 from flask import Blueprint, render_template, request
 import database.db_connector as db
 import toml
-
+# our queries are read from here
 queries = toml.load("models/queries.toml")
 locations = Blueprint("locations", __name__, static_folder="static", template_folder="templates")
 
 
 @locations.route('/locations', methods=['GET', 'POST'])
 def locations_func():
-    channeling_params = ()
+
+    # used to tag record on line to be edited
     location_to_edit = -1
     if request.method == 'POST':
         content = request.form.to_dict()
         print(content)
         action = content['action']
+        # replace empty strings with None
         for key, value in content.items():
             if key == 'action':
                 continue
