@@ -4,8 +4,9 @@
 <div class="container-fluid">
 
 <form id="FilterList">
-<label for="seance-select">Choose a seance to view channelings for:</label>
-<select name="chosen_seance_id" id="seance-select">
+<div class="row">
+<div class="col">
+<select name="chosen_seance_id" class="form-control" id="seance-select">
     <option value="">Show me channelings from all seances</option>
     {% for seance in seance_data %}
     <option value={{seance['seance_id']}}
@@ -13,7 +14,12 @@
     {{seance['date']}} at {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
     {% endfor %}
 </select>
+<label for="seance-select">Choose a seance to view channelings for:</label>
+</div>
+<div class="col-sm-4">
 <input class="btn btn-dark" type="submit" id="filter" value="Filter">
+</div>
+</div>
 </form>
 
 <div>&nbsp;</div>

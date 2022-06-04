@@ -4,8 +4,9 @@
 {% block content %}
 <div class="container-fluid">
 <form>
-<label for="seance_id_input">Choose a seance to view attendees for:</label>
-<select name="seance_id_input" id="seance-select">
+<div class="row">
+<div class="col">
+<select name="seance_id_input" class="form-control" id="seance-select">
     <option value=''>View all attendees for all seances</option>
     {% for seance in seance_data %}
     <option value={{seance['seance_id']}} 
@@ -13,7 +14,12 @@
     {{seance['date']}} at {{seance['name']}} | seance_id: {{seance['seance_id']}}</option>
     {% endfor %}
 </select>
+<label for="seance_id_input">Choose a seance to view its attendees</label>
+</div>
+<div class="col-sm-4">
 <input class="btn btn-dark" type="submit" id="filter" value="Filter">
+</div>
+</div>
 </form>
 
 <div>&nbsp;</div>
