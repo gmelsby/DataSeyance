@@ -55,11 +55,21 @@ def seanceattendees_func():
                                                        , (seanceattendees_id_to_edit,), quantity="one")
 
         if content['action'] == 'update':
-            db.execute_query(queries['seanceattendees']['inline_update'], (
-                int(content['seance_id']),
-                int(content['attendee_id']),
-                int(content['seanceattendees_id']),
-            ), quantity="zero")
+
+            attendee_data = db.execute_query(query=attendee_query)
+            attendee_records = [(record['attendee_id'], record['seance_id']) for record in attendee_data]
+
+            # see if requested insert already exists
+            if (int(content['attendee_id']),int(content['seance_id'])) in attendee_records:
+                # if so this variable will alert user that the record exists and not insert dupe
+                duplicate_event = True
+            else:
+
+                db.execute_query(queries['seanceattendees']['inline_update'], (
+                    int(content['seance_id']),
+                    int(content['attendee_id']),
+                    int(content['seanceattendees_id']),
+                ), quantity="zero")
 
     args = request.args
     # chosen attendee defaults to None unless we have id passed in in GET args
