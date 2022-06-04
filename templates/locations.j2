@@ -28,28 +28,28 @@
     <div class="form-group">
     <form id="UpdateLocation" method="POST">
       <td><input type="text" name="location_name" 
-        value={% if location['name']==None %}''{% else %}'{{location['name']}}'{% endif %}
-        placeholder="Name" class="form-control">
+        value={% if location['name']==None %}''{% else %}"{{location['name']}}"{% endif %}
+        class="form-control">
       </td>
       <td><input type="text" name="street_address" 
-        value={% if location['street_address']==None %}''{% else %}'{{location['street_address']}}'{% endif %}
-        placeholder="Address" class="form-control">
+        value={% if location['street_address']==None %}''{% else %}"{{location['street_address']}}"{% endif %}
+        class="form-control">
       </td>
       <td><input type="text" name="city" 
-        value={% if location['city']==None %}''{% else %}'{{location['city']}}'{% endif %}
-        placeholder="City" class="form-control">
+        value={% if location['city']==None %}''{% else %}"{{location['city']}}"{% endif %}
+        class="form-control">
       </td>
       <td><input type="text" name="zip" 
-        value={% if location['zip']==None %}''{% else %}'{{location['zip']}}'{% endif %}
-        placeholder="Zip (12345)" pattern="[0-9]{5}" class="form-control">
+        value={% if location['zip']==None %}''{% else %}"{{location['zip']}}"{% endif %}
+        class="form-control">
       </td>
       <td><input type="text" name="state" 
-        value={% if location['state']==None %}''{% else %}'{{location['state']}}'{% endif %}
-        placeholder="State (AB)" pattern="[A-Z]{2}" class="form-control">
+        value={% if location['state']==None %}''{% else %}"{{location['state']}}"{% endif %}
+        class="form-control">
       </td>
       <td><input type="text" name="country" 
-        value={% if location['country']==None %}''{% else %}'{{location['country']}}'{% endif %}
-        placeholder="Country" class="form-control">
+        value={% if location['country']==None %}''{% else %}"{{location['country']}}"{% endif %}
+        class="form-control">
       </td>
       <td>
         <input class="btn btn-primary" type="submit" id="UpdateLocation" value="Save">
