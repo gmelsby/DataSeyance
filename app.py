@@ -6,7 +6,6 @@
 from flask import Flask
 from flask_mysqldb import MySQL
 import os
-import toml
 
 from blueprints.index import index
 from blueprints.seances import seances
@@ -20,8 +19,6 @@ from blueprints.seanceattendees import seanceattendees
 
 app = Flask(__name__)
 mysql = MySQL(app)
-
-queries = toml.load("models/queries.toml")
 
 app.register_blueprint(index)
 app.register_blueprint(seances)
