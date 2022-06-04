@@ -380,7 +380,7 @@ def seances():
             location_id_input = f'{request.form["new_location_id"]}' if request.form.get('new_location_id') else None
 
             # query for updating seance with matching id
-            db.execute_query(queries['seances']['update'], (date_input, location_id_input, id_input))
+            db.execute_query(queries['seances']['update'], (date_input, location_id_input, id_input), quantity="none")
             return redirect('/seances')
 
         # otherwise we are creating a new seance
@@ -390,7 +390,7 @@ def seances():
             location_id_input = f'{request.form["location_id"]}' if request.form.get('location_id') else None
 
             # query for creating a new Seance
-            db.execute_query(queries['seances']['insert'], (date_input, location_id_input))
+            db.execute_query(queries['seances']['insert'], (date_input, location_id_input), quantity="none")
             return redirect('/seances')
 
     # Read functionality
@@ -412,7 +412,7 @@ def seances():
 @app.route('/delete_seance/<int:id>')
 def delete_seance(id):
     # removes a seance by id
-    db.execute_query(queries['seances']['delete'], (int(id),))
+    db.execute_query(queries['seances']['delete'], (int(id),), quantity="none")
     return redirect('/seances')
 
 
@@ -435,14 +435,14 @@ def spirits():
             #get update query from toml and send it with parameters (see /home/ed/DataSeyance/models/queries.toml)
             print(int(content['id_input']))
             db.execute_query(queries['spirits'][action]
-                             , (content['new_name'].strip(), int(content['id_input'])))
+                             , (content['new_name'].strip(), int(content['id_input'])), quantity="none")
         # get insert query from toml and send it with parameter (see /home/ed/DataSeyance/models/queries.toml)
         # only allow insertion if name is nonempty
         if action == 'insert' and content.get('insert_full_name').strip():
-            db.execute_query(queries['spirits'][action], (content['insert_full_name'].strip(),))
+            db.execute_query(queries['spirits'][action], (content['insert_full_name'].strip(),), quantity="none")
 
         if action == 'delete':
-            db.execute_query(queries['spirits'][action], (content['spirit_id'],))
+            db.execute_query(queries['spirits'][action], (content['spirit_id'],), quantity="none")
 
     spirit_data = db.execute_query(queries['spirits']['select'])
 
