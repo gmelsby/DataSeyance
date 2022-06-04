@@ -1,7 +1,7 @@
 # Author: Ed Wise
 # Date: 
 # Description:
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, flash
 import database.db_connector as db
 import toml
 
@@ -11,8 +11,10 @@ seanceattendees = Blueprint("seanceattendees", __name__, static_folder="static",
 
 @seanceattendees.route('/seanceattendees', methods=['GET', 'POST'])
 def seanceattendees_func():
+    attendee_query = queries['seanceattendees']['select']
     seanceattendees_id_to_edit = -1
     seanceattendees_to_edit = None
+    duplicate_event = False
     if request.method == 'POST':
 
         content = request.form.to_dict()
@@ -23,10 +25,16 @@ def seanceattendees_func():
             content['action'] = None
 
         if content['action'] == 'insert':
-            db.execute_query(queries['seanceattendees'][action], (
-                int(content['attendee_id']),
-                int(content['seance_id']),
-            ), quantity="zero")
+
+            attendee_data = db.execute_query(query=attendee_query)
+            attendee_records = [(record['attendee_id'], record['seance_id']) for record in attendee_data]
+            if (int(content['attendee_id']),int(content['seance_id'])) in attendee_records:
+                duplicate_event = True
+            else:
+                db.execute_query(queries['seanceattendees'][action], (
+                    int(content['attendee_id']),
+                    int(content['seance_id']),
+                ), quantity="zero")
 
         if content['action'] == 'delete':
             db.execute_query(queries['seanceattendees'][action], (
@@ -70,7 +78,7 @@ def seanceattendees_func():
     all_attendees_query = queries['attendees']['select']
     all_attendees = db.execute_query(all_attendees_query)
 
-    attendee_query = queries['seanceattendees']['select']
+
 
     attendee_params = ()
     if chosen_seance_id:
@@ -85,4 +93,4 @@ def seanceattendees_func():
                            attendee_data=attendee_data,
                            all_attendees=all_attendees,
                            seanceattendees_id_to_edit=seanceattendees_id_to_edit,
-                           seanceattendees_to_edit=seanceattendees_to_edit)
+                           seanceattendees_to_edit=seanceattendees_to_edit, duplicate_event=duplicate_event)

@@ -121,8 +121,9 @@
   </tr>
       {% endif %}
   {% endfor %}
-
-
+{% if seanceattendees_id_to_edit ==28 %}
+<p>  WWWWWW</p>
+{% endif %}
     <tr>
       <div class="form-group">
        <form id="InsertSeanceAttendee" method="POST">
@@ -160,4 +161,11 @@
   </tbody>
 </table>
 
+{% if duplicate_event %}
+<div align=middle>
+<p style="color:red;" >That seance attendee record already exists and was not added again! Please take care when entering data.
+ - <img><img src="{{ url_for('static', filename = '/ghost.png') }}" width="32" height="32" alt="previous" title="Previous" border="0">
+</img> </p>
+</div>
+{% endif %}
 {% endblock %}
