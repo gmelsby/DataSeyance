@@ -27,8 +27,9 @@
                                 <div class="form-group">
                                     <td>{{method['method_id']}}</td>
                                     <td><input type="text" class="form-control" name="name" value='{{method['name']}}'></td>
-                                    <td><input type="text" class="form-control" name="description">
-                                        value={% if method['description']!=None%}"{{method['description']}}"{% else %}''{% endif %}></td>
+                                    <td><input type="text" class="form-control" name="description"
+                                        value={% if method['description']!=None%}"{{method['description']}}"{% else %}''{% endif %}>
+                                    </td>
                                     <td>
                                         <!--Save button-->
                                         <input class="btn btn-primary" type="submit" id="SaveUpdate" value="Save">
