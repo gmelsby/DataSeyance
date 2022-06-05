@@ -112,7 +112,7 @@
 
 
                                     <td>
-                                        <input class="form-control" type="integer" name="length_in_minutes" {% if channeling['length_in_minutes']!=None %}value={{channeling['length_in_minutes']}}{% endif %}>
+                                        <input class="form-control" type="number" name="length_in_minutes" {% if channeling['length_in_minutes']!=None %}value={{channeling['length_in_minutes']}}{% endif %}>
                                     </td>
 
                                     <!--Submit button-->
@@ -223,7 +223,7 @@
                                     <option value=1>Yes</option>
                                 </select>
                             </td>
-                            <td><input class="form-control" type="integer" name="length_in_minutes"></td>
+                            <td><input class="form-control" type="number" name="length_in_minutes"></td>
                             <td colspan="2">
                                 <input class="btn btn-dark" type="submit" id="InsertChanneling" value="Insert Channeling">
                             </td>
