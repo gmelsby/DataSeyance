@@ -1,6 +1,9 @@
 # Citation for the following file
-# Date:  6\4\20225/19/2022
-# Mostly Copied from CS340 Flask Starter App
+# Date:  6/4/2022
+# Adapted from CS340 Flask Starter App
+# Several modifications made to ensure functionality--original program returned a cursor instead of query results
+# Also, original program would time out because it did not call db_connection.ping(True)
+# execute_queries function is also original. Alllows mutliple queries to be executed as a single transaction.
 # source URL: https://github.com/osu-cs340-ecampus/flask-starter-app/blob/master/database/db_connector.py
 # Added db_connection.ping(True) and execute_queries function ourselves
 
@@ -23,13 +26,14 @@ def connect_to_database(host = host, user = user, passwd = passwd, db = db):
     '''
     db_connection = MySQLdb.connect(host,user,passwd,db)
             
-            
+    # see info about function at http://www.neotitans.com/resources/python/mysql-python-connection-error-2006.html
+    # fixed CS340 Flask Starter App by adding this line--otherwise it times out!
     db_connection.ping(True)
     return db_connection
 
 def execute_query(query, query_params=(), quantity="many"):
     '''
-    executes a given SQL query on the given db connection and returns a Cursor object
+    executes a given SQL query on the given db connection and returns results specified by quantity kwarg
 
     db_connection: a MySQLdb connection object created by connect_to_database()
     query: string containing SQL query
