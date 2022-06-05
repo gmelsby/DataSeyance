@@ -58,8 +58,6 @@
 
                                     <td colspan="3">
                                         <select name="seance_id" class="form-control">
-
-                                            <option value=""></option>
                                             {% for seance in seance_data %}
                                                 <option value={{seance['seance_id']}} {% if seance['seance_id']==attendee['seance_id'] %} selected {% endif %}>
                                                     {{seance['date']}} {{seance['name']}} | seance_id: {{seance['seance_id']}}
@@ -70,7 +68,6 @@
                                     <td colspan="2">
                                         <select name="attendee_id" class="form-control">
                                             Select Attendee
-                                            <option value=""></option>
                                             {% for attendees in all_attendees %}
                                                 <option value={{attendees['attendee_id']}} {% if attendees['attendee_id']==attendee['attendee_id'] %} selected {% endif %}>
                                                     {{attendees['full_name']}} | attendee_id: {{attendees['attendee_id']}}
