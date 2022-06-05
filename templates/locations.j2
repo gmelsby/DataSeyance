@@ -46,7 +46,8 @@
                                     <td>
                                         <input class="btn btn-primary" type="submit" id="UpdateLocation" value="Save">
                                         <input type="hidden" name="action" value="update">
-                                        <input type="hidden" name="location_id" value={{location['location_id']}} </td>
+                                        <input type="hidden" name="location_id" value={{location['location_id']}}>
+                                    </td>
                                 </form>
                             </div>
                             <!--Cancel button-->
@@ -71,14 +72,16 @@
                                 <form id="UpdateLocation" method="POST">
                                     <input class="btn btn-secondary" type="submit" id="UpdateLocation" value="Update">
                                     <input type="hidden" name="action" value="tagupdate">
-                                    <input type="hidden" name="location_id" value={{location['location_id']}} </td>
+                                    <input type="hidden" name="location_id" value={{location['location_id']}}>
                                 </form>
+                            </td>
                             <td>
                                 <form id="DeleteLocation" method="POST">
                                     <input class="btn btn-danger" type="submit" id="DeleteLocation" value="Delete">
                                     <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="location_id" value={{location['location_id']}} </td>
+                                    <input type="hidden" name="location_id" value={{location['location_id']}}>
                                 </form>
+                            </td>
                         </tr>
                     {% endif %}
                 {% endfor %}
@@ -93,7 +96,7 @@
                             <td><input type="text" class="form-control" name="zip" placeholder="Zip (12345)" pattern="[0-9]{5}"></td>
                             <td><input type="text" class="form-control" name="state" placeholder="State (AB)" pattern="[A-Z]{2}"></td>
                             <td><input type="text" class="form-control" name="country" placeholder="Country"></td>
-                            <td colspan=2> <input class="btn btn-dark" type="submit" id="InsertLocation" value="Insert Location">
+                            <td colspan=2><input class="btn btn-dark" type="submit" id="InsertLocation" value="Insert Location"></td>
                             <input type="hidden" name="action" value="insert">
                         </form>
                     </div>

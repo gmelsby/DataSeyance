@@ -29,9 +29,12 @@
                                     <form id="UpdateSpirit" method="POST">
                                         <input type="text" class="form-control" name="new_name" value='{{spirit['full_name']}}'>
                                 </td>
-                                <td><input class="btn btn-primary" type="submit" id="SaveUpdateSpirit" value="Save">
+                                <td>
+                                    <input class="btn btn-primary" type="submit" id="SaveUpdateSpirit" value="Save">
                                     <input type="hidden" name="id_input" value={{spirit['spirit_id']}}>
-                                    <input type="hidden" name="action" value="update"> <input type="hidden" name="edit_form" value=-1 </td>
+                                    <input type="hidden" name="action" value="update">
+                                    <input type="hidden" name="edit_form" value=-1>
+                                </td>
                             </form>
                             <td>
                                 <form id="cancel" method="GET">
@@ -74,7 +77,8 @@
                         <form id="InsertSpirit" method="POST">
                             <td>Insert New Spirit</td>
                             <td><input type="text" required class="form-control" name="insert_full_name"></td>
-                            <td colspan=2> <input class="btn btn-dark" type="submit" id="InsertSpirit" value="Insert Spirit">
+                            <td colspan=2> 
+                                <input class="btn btn-dark" type="submit" id="InsertSpirit" value="Insert Spirit">
                                 <input type="hidden" name="action" value="insert">
                             </td>
                         </form>

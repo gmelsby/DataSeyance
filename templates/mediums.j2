@@ -29,7 +29,8 @@
                                         <!--Save button-->
                                         <input class="btn btn-primary" type="submit" id="UpdateMedium" value="Save">
                                         <input type="hidden" name="action" value="update">
-                                        <input type="hidden" name="medium_id" value={{medium['medium_id']}} </td>
+                                        <input type="hidden" name="medium_id" value={{medium['medium_id']}}>
+                                    </td>
                                 </form>
                             </div>
                             <!--Cancel button-->
@@ -51,15 +52,17 @@
                                 <form id="UpdateMedium" method="POST">
                                     <input class="btn btn-secondary" type="submit" id="UpdateMedium" value="Update">
                                     <input type="hidden" name="action" value="tagupdate">
-                                    <input type="hidden" name="medium_id" value={{medium['medium_id']}} </td>
+                                    <input type="hidden" name="medium_id" value={{medium['medium_id']}}>
                                 </form>
+                            </td>
                             <!--Delete button-->
                             <td>
                                 <form id="DeleteMedium" method="POST">
                                     <input class="btn btn-danger" type="submit" id="DeleteMedium" value="Delete">
                                     <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="medium_id" value={{medium['medium_id']}} </td>
+                                    <input type="hidden" name="medium_id" value={{medium['medium_id']}}>
                                 </form>
+                             </td>
                         </tr>
 
                     {% endif %}
@@ -71,7 +74,8 @@
                         <form id="InsertMedium" method="POST">
                             <td>Insert New Medium</td>
                             <td> <input type="text" required class="form-control" name="full_name"></td>
-                            <td colspan=2><input class="btn btn-dark" type="submit" id="InsertMedium" value="Insert Medium">
+                            <td colspan=2>
+                                <input class="btn btn-dark" type="submit" id="InsertMedium" value="Insert Medium">
                                 <input type="hidden" name="action" value="insert">
                             </td>
                         </form>

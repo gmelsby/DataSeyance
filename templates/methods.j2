@@ -27,13 +27,13 @@
                                 <div class="form-group">
                                     <td>{{method['method_id']}}</td>
                                     <td><input type="text" class="form-control" name="name" value='{{method['name']}}'></td>
-                                    <td><input type="text" class="form-control" name="description" 
+                                    <td><input type="text" class="form-control" name="description">
                                         value={% if method['description']!=None%}"{{method['description']}}"{% else %}''{% endif %}></td>
                                     <td>
                                         <!--Save button-->
                                         <input class="btn btn-primary" type="submit" id="SaveUpdate" value="Save">
                                         <input type="hidden" name="action" value="update">
-                                        <input type="hidden" name="method_id" value={{method['method_id']}} 
+                                        <input type="hidden" name="method_id" value={{method['method_id']}}>
                                     </td>
                                 </div>
                             </form>
@@ -58,14 +58,16 @@
                                 <td>
                                     <input class="btn btn-secondary" type="submit" id="UpdateMethod" value="Update">
                                     <input type="hidden" name="action" value="tagupdate">
-                                    <input type="hidden" name="method_id" value={{method['method_id']}} </td>
+                                    <input type="hidden" name="method_id" value={{method['method_id']}}>
+                                </td>
                             </form>
                             <!--Button for delete-->
                             <form id="DeleteMethod" method="POST">
                                 <td>
                                     <input class="btn btn-danger" type="submit" id="DeleteMethod" value="Delete">
                                     <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="method_id" value={{method['method_id']}} </td>
+                                    <input type="hidden" name="method_id" value={{method['method_id']}}>
+                                </td>
                             </form>
                         </tr>
                     {% endif %}

@@ -25,7 +25,7 @@
                                 <td>{{attendee['attendee_id']}} </td>
                                 <td>
                                     <form id="UpdateSpirit" method="POST">
-                                        <input type="text" class="form-control" name="new_name" value='{{attendee['full_name']}}'>
+                                        <input type="text" class="form-control" name="new_name" required value='{{attendee['full_name']}}'>
                                 </td>
                                 <td><input class="btn btn-primary" type="submit" id="SaveUpdateAttendee" value="Save">
                                     <input type="hidden" name="id_input" value={{attendee['attendee_id']}}>
@@ -52,8 +52,10 @@
                                 <form id="UpdateSpirit" method="POST">
                                     <input class="btn btn-secondary" type="submit" id="UpdateAttendee" value="Update">
                                     <input type="hidden" name="action" value="tagupdate">
-                                    <input type="hidden" name="id_input" value={{attendee['attendee_id']}} <input type="hidden" name="edit_form" value={{attendee['attendee_id']}} </td>
+                                    <input type="hidden" name="id_input" value={{attendee['attendee_id']}}> 
+                                    <input type="hidden" name="edit_form" value={{attendee['attendee_id']}}>
                                 </form>
+                            </td>
 
 
                             <!--Button for Deleting-->
@@ -61,8 +63,9 @@
                                 <form id="DeleteAttendee" method="POST">
                                     <input class="btn btn-danger" type="submit" id="DeleteAttendee" value="Delete">
                                     <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="attendee_id" value={{attendee['attendee_id']}} </td>
+                                    <input type="hidden" name="attendee_id" value={{attendee['attendee_id']}}> 
                                 </form>
+                            </td>
                         </tr>
 
                     {% endif %}
