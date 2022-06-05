@@ -1,3 +1,6 @@
+-- Set of queries to create tables and populate database with the sample values found in our CS 340 Project
+-- Schema of resulting database will match the schema and ERD found in our CS 340 Project
+
 SET FOREIGN_KEY_CHECKS = 0;
 SET AUTOCOMMIT = 0;
 
