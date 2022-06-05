@@ -112,10 +112,10 @@
 
                             <td>Insert New Seance</td>
 
-                            <td> <input type="date" class="form-control" name="date"></td>
+                            <td> <input type="date" required class="form-control" name="date"></td>
 
                             <td colspan="2">
-                                <select name="location_id" class="form-control" id="newloc">
+                                <select name="location_id" required class="form-control" id="newloc">
                                     <option value="">Select Location</option>
                                     {% for location in location_data %}
                                         <option value={{location['location_id']}} {% if seance_to_edit['location_id']==location['location_id'] %} selected {% endif %}>
