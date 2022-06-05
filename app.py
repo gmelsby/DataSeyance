@@ -1,8 +1,3 @@
-# Citation for following file
-# Date:  6/4/2022
-# Routing inspired/guided by CS340 Flask Starter App
-# URL: https://github.com/osu-cs340-ecampus/flask-starter-app/blob/master/bsg_people_app/app.py
-
 from flask import Flask
 from flask_mysqldb import MySQL
 import os
