@@ -27,5 +27,6 @@ app.register_blueprint(methods)
 app.register_blueprint(seanceattendees)
 
 if __name__ == '__main__':
+    print("running")
     port = int(os.environ.get('PORT', 3023))
     app.run(port=port, debug=True)
